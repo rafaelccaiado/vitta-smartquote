@@ -241,6 +241,24 @@ class ValidationService:
                         found_matches.extend(exam_map[name])
                     if found_matches: strategy = "fuzzy_fallback"
 
+            # 2e. Simplify & Retry (V61)
+            if not found_matches:
+                tokens = term_norm.split()
+                if len(tokens) > 1:
+                    last_token = tokens[-1]
+                    is_code_like = len(last_token) <= 4 or last_token.startswith("anti") 
+                    if is_code_like:
+                         if last_token in exam_map:
+                             found_matches = exam_map[last_token]
+                             strategy = f"simplified_exact ({last_token})"
+                         elif last_token in SYNONYMS:
+                            for syn in SYNONYMS[last_token]:
+                                syn_key = ValidationService.normalize_text(syn)
+                                if syn_key in exam_map:
+                                    found_matches = exam_map[syn_key]
+                                    strategy = f"simplified_synonym ({last_token})"
+                                    break
+
             # Processar resultados encontrados
             if found_matches:
                 unique_matches = {}
