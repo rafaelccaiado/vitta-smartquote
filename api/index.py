@@ -6,20 +6,25 @@ import sys
 # Add current directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import local modules
+# Decoupled Imports for Robustness (V42)
+OCRProcessor = None
 try:
     from ocr_processor import OCRProcessor
+except Exception as e:
+    print(f"❌ Critical OCR Import Error: {e}")
+
+BigQueryClient = None
+ValidationService = None
+learning_service = None
+
+try:
     from bigquery_client import BigQueryClient
     from validation_logic import ValidationService
     from services.learning_service import learning_service
-except ImportError as e:
-    print(f"⚠️ Import Error: {e}")
-    OCRProcessor = None
-    BigQueryClient = None
-    ValidationService = None
 except Exception as e:
-    print(f"❌ Critical Import Error: {e}")
-    OCRProcessor = None
+    print(f"⚠️ Validation/Backend Import Error: {e}")
+    # We continue without validation features if this fails, but OCR should survive
+
 
 app = FastAPI(title="Vitta SmartQuote API (Vercel)")
 
