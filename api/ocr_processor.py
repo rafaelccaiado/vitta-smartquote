@@ -245,7 +245,7 @@ class OCRProcessor:
             r"paciente[:\s].*", r"convênio[:\s].*", r"unimed.*", r"data[:\s].*",
             r"ass\..*", r"assinatura.*", r"carimbo.*", r"receitu[áa]rio.*", r"médic[oa].*",
             r"goi[âa]nia.*", r"aparecida.*", r"bras[íi]lia.*", # Cidades comuns
-            r"cid[:\s].*", r"cid-?10.*", r"h\.?d\.?.*", r"hds[:\s].*", # Diagnósticos
+            r"^cid.*", r"cid[:\-\s].*", r"cid-?10.*", r"h\.?d\.?.*", r"hds[:\s].*", # Diagnósticos (CID START)
             r"hosp.*", r"denmar.*", r"instituto.*", r"laborat[óo]rio.*", # Logos
             r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
             r"^id[:\s]\d+", r"^unidade:.*", r"^exames$", r"^solicito$", 
@@ -253,7 +253,8 @@ class OCRProcessor:
             r"^sexo:.*", r"^nascimento:.*", r"^idade:.*", 
             r"^documento gerado.*", r"^assinado digitalmente.*", r"^amorsaúde.*",
             r"^impresso em.*", r"^data da impressão.*", r"^usuário.*",
-            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$" # Remove números sozinhos ou letras isoladas (leitura ruim)
+            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$",
+            r"^sust.*", r"^sus$" # Noise specific
         ]
         
         regexes = [re.compile(p, re.IGNORECASE) for p in patterns]
