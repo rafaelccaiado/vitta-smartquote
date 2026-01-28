@@ -1,27 +1,16 @@
-import os
-import sys
+from http.server import BaseHTTPRequestHandler
+import json
 
-# Adicionar o diretório raiz ao PYTHONPATH para encontrar o backend
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({
+            "status": "V21_DEPENDENCY_PROBE_SUCCESS",
+            "message": "Dependencies installed successfully. Logic disconnected."
+        }).encode())
+        return
 
-# Importar o app real
-try:
-    from backend.main import app
-except ImportError as e:
-    from fastapi import FastAPI
-    from fastapi.responses import JSONResponse
-    app = FastAPI()
-    
-    @app.get("/api/{path:path}")
-    def fallback(path: str):
-        return JSONResponse(
-            status_code=500,
-            content={
-                "error": "Failed to import backend application",
-                "detail": str(e),
-                "cwd": os.getcwd(),
-                "sys_path": sys.path
-            }
-        )
+    def do_POST(self):
+        self.do_GET()
