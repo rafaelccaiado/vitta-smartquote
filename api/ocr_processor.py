@@ -301,7 +301,8 @@ class OCRProcessor:
             
             # V54 SAFEGUARD: Don't treat exams starting with these as names
             line_upper = line.upper()
-            is_medical_term = line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "VDRL", "HIV", "HTLV", "IG", "HEMO", "CULTURA", "ELETRO"))
+            # V55: Added DOSAGENS (Plural), IMUNO, ANTICORPO
+            is_medical_term = line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "VDRL", "HIV", "HTLV", "IG", "HEMO", "CULTURA", "ELETRO", "IMUNO", "ANTICORPO"))
             
             words = line.split()
             if not is_medical_term and len(words) > 1 and not any(char.isdigit() for char in line):
@@ -351,7 +352,37 @@ class OCRProcessor:
 
             extracted.append(line)
                 
-        return "\n".join(extracted)
+            # V55: Python-side Antibody Expansion (Force Split)
+            # Post-process extracted lines to split merged antibodies (IgG IgM)
+            final_extracted = []
+            for item in extracted:
+                expanded = self._expand_antibody_line(item)
+                final_extracted.extend(expanded)
+            
+            return "\n".join(final_extracted)
+
+    def _expand_antibody_line(self, text: str) -> List[str]:
+        """
+        V55: Deterministically splits lines with multiple antibodies.
+        Ex: "Dengue IgG IgM" -> ["Dengue IgG", "Dengue IgM"]
+        """
+        # Encontra todas as ocorrências de IgA, IgG, IgM
+        igs = re.findall(r'\b(Ig[GAM]|IG[GAM])\b', text, re.IGNORECASE)
+        
+        # Se tiver mais de uma imunoglobulina DIFERENTE na mesma linha
+        if len(set(x.upper() for x in igs)) >= 2:
+            base_text = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', text, flags=re.IGNORECASE).strip()
+            # Remove conectores soltos no final (ex: "Dengue e")
+            base_text = re.sub(r'\s+e\s*$', '', base_text, flags=re.IGNORECASE)
+            
+            expanded = []
+            for ig in igs:
+                # Reconstrói: "Nome Base + IgG"
+                expanded.append(f"{base_text} {ig.upper()}")
+            print(f"🧬 Antibody Split: '{text}' -> {expanded}")
+            return expanded
+            
+        return [text]
 
     def _apply_deterministic_rules(self, text: str) -> str:
         """Aplica regras fixas para siglas médicas comuns que o OCR costuma errar"""
