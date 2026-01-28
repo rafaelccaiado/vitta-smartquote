@@ -329,7 +329,7 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
             )}
             {/* Debug Tag */}
             <div className="text-[8px] text-gray-300 text-right mt-4 uppercase">
-                Build: 2026-01-28-V9 (No OpenCV Build)
+                Build: 2026-01-28-V10 (Back to Basics)
             </div>
         </div>
     )
