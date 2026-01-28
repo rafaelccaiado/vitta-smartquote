@@ -1,12 +1,12 @@
 fastapi
 uvicorn
 python-multipart
-google-cloud-bigquery
-google-cloud-vision
-google-generativeai
-requests
-pydantic-settings
-rapidfuzz
-pillow
-python-dotenv
-numpy
+# google-cloud-bigquery
+# google-cloud-vision
+# google-generativeai
+# requests
+# pydantic-settings
+# rapidfuzz
+# pillow
+# python-dotenv
+# numpy
