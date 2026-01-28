@@ -11,32 +11,16 @@ def get_gcp_credentials():
     
     Espera env var: GCP_SA_KEY_BASE64
     """
-    encoded_key = os.getenv("GCP_SA_KEY_BASE64")
-    
-    if not encoded_key:
-        return None
-        
-    # try:  <-- REMOVED TRY
+    # SIMPLIFIED V30 LOGIC: CRASH IF FAILS
     decoded_bytes = base64.b64decode(encoded_key)
-    try:
-        info = json.loads(decoded_bytes)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"CRITICAL: Failed to decode JSON from Base64 key. Content preview: {decoded_bytes[:20]}... Error: {e}")
+    info = json.loads(decoded_bytes) # This WILL raise exception if invalid JSON
 
     # Verifica o tipo de credencial
     cred_type = info.get("type")
     
     if cred_type == "authorized_user":
-        print("⚠️ Usando credenciais de USUÁRIO (Teste apenas).")
-        # Credenciais de usuário (local gcloud login)
         creds = credentials.Credentials.from_authorized_user_info(info)
     else:
-        print("🔑 Usando credenciais de CONTA DE SERVIÇO (Produção).")
-        # Credenciais de serviço (padrão)
         creds = service_account.Credentials.from_service_account_info(info)
         
     return creds
-        
-    # except Exception as e: <-- REMOVED EXCEPT
-    #     print(f"⚠️ Erro ao carregar credenciais da ENV VAR: {e}")
-    #     return None
