@@ -327,6 +327,8 @@ class OCRProcessor:
             line_processed = re.sub(r'\s*\+\s*', '<SPLIT>', line_processed)
             # 3. " e " (isolado)
             line_processed = re.sub(r'\s+e\s+', '<SPLIT>', line_processed, flags=re.IGNORECASE)
+            # 4. Vígula (,) - V51 Fix
+            line_processed = re.sub(r'\s*,\s*', '<SPLIT>', line_processed)
             
             if '<SPLIT>' in line_processed:
                 parts = line_processed.split('<SPLIT>')
