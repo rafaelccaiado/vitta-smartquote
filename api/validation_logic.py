@@ -380,7 +380,8 @@ class ValidationService:
                              continue
 
                         # 2. Fuzzy Check
-                        best_match = fuzzy_matcher.find_best_match(norm_key, min_score=80)
+                        # V68: Lowered threshold from 80 to 70 because we trust the LLM normalization
+                        best_match = fuzzy_matcher.find_best_match(norm_key, min_score=70)
                         if best_match:
                              match_name = best_match["match"]
                              matches = exam_map[match_name]

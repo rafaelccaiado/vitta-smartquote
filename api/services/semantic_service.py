@@ -27,15 +27,25 @@ class SemanticService:
             return {}
 
         prompt = f"""
-        You are a medical billing expert acting as a normalizer.
-        Task: Convert these handwritten/abbreviated exam names into their standard TUSS/CBHPM nomenclature (technical name).
+        You are a medical billing expert specialized in Brazilian TUSS/CBHPM coding.
+        
+        Task: Normalize these raw text strings (from OCR/Handwriting) into the exact standard TUSS/CBHPM exam name.
+        
+        Examples:
+        - Input: "Ac. Anti-TPO" -> Output: "Anti-Tireoperoxidase"
+        - Input: "TGO / TGP" -> Output: "TGO" (Split items should be handled by caller, but if stuck, map to first main exam)
+        - Input: "EAS" -> Output: "Urina Tipo I"
+        - Input: "H. Pylori" -> Output: "Pesquisa de Helicobacter Pylori"
+        - Input: "Vit D" -> Output: "25 Hidroxivitamina D"
+        - Input: "TSH Ultra" -> Output: "Hormonio Tireoestimulante"
+        - Input: "Glicemia Jejum" -> Output: "Glicose"
         
         Rules:
         1. Return ONLY valid JSON format {{ "original": "standard_name" }}.
-        2. If a term is already correct or unrecognized, map it to itself or null.
-        3. Do not add explanations.
-        4. Focus on Brazilian Portuguese medical terminology.
-
+        2. IF the term refers to a specific antibody (IgG/IgM), INCLUDE it in the name.
+        3. Correct typos (e.g., "Hemagroma" -> "Hemograma").
+        4. Expand abbreviations.
+        
         Input Terms:
         {json.dumps(valid_terms, ensure_ascii=False)}
 
