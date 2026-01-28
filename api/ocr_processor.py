@@ -298,15 +298,19 @@ class OCRProcessor:
             
             # --- FASE 3: Heurística de Nomes (Assinaturas/Médicos) ---
             # Remove linhas que parecem nomes de pessoas (ex: "Aniele N. de Siqueira")
-            # Critério: Maioria das palavras começa com maiúscula OU contem conectores de nome
+            
+            # V54 SAFEGUARD: Don't treat exams starting with these as names
+            line_upper = line.upper()
+            is_medical_term = line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "VDRL", "HIV", "HTLV", "IG", "HEMO", "CULTURA", "ELETRO"))
+            
             words = line.split()
-            if len(words) > 1 and not any(char.isdigit() for char in line):
+            if not is_medical_term and len(words) > 1 and not any(char.isdigit() for char in line):
                  capitalized_count = sum(1 for w in words if w[0].isupper())
                  connectors = ['de', 'da', 'do', 'dos', 'das', 'e']
                  has_connector = any(w.lower() in connectors for w in words)
                  
                  # Se > 70% das palavras são Capitalized, é provavelmente um nome/assinatura
-                 # OU se tem conectores de nome e pelo menos uma maiúscula (para pegar 'quele A. de Siqueira')
+                 # OU se tem conectores de nome e pelo menos uma maiúscula
                  is_name_structure = (capitalized_count / len(words) > 0.6) or (has_connector and capitalized_count >= 1)
                  
                  if is_name_structure:
