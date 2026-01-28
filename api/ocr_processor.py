@@ -352,14 +352,14 @@ class OCRProcessor:
 
             extracted.append(line)
                 
-            # V55: Python-side Antibody Expansion (Force Split)
-            # Post-process extracted lines to split merged antibodies (IgG IgM)
-            final_extracted = []
-            for item in extracted:
-                expanded = self._expand_antibody_line(item)
-                final_extracted.extend(expanded)
-            
-            return "\n".join(final_extracted)
+        # V55: Python-side Antibody Expansion (Force Split)
+        # Post-process extracted lines to split merged antibodies (IgG IgM)
+        final_extracted = []
+        for item in extracted:
+            expanded = self._expand_antibody_line(item)
+            final_extracted.extend(expanded)
+        
+        return "\n".join(final_extracted)
 
     def _expand_antibody_line(self, text: str) -> List[str]:
         """
