@@ -11,3 +11,4 @@ rapidfuzz
 pillow
 numpy
 # opencv-python-headless
+# CACHE_BUST: V33 (Force Rebuild)
