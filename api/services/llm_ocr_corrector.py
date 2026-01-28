@@ -117,13 +117,19 @@ TAREFA:
     - Ex: "Complemento C3, C4" -> ["Complemento C3", "Complemento C4"]
     - Ex: "TGO / TGP" -> ["TGO", "TGP"]
 
-4.  **IDENTIFIQUE** os exames laboratoriais válidos.
+4.  **EXPANDA ANTICORPOS (IgG/IgM/IgA)**:
+    - Se houver múltiplos anticorpos na mesma linha, crie exames separados PRESERVANDO o nome base.
+    - Ex: "Anti Beta 2 Glicoproteina IgM IgG" -> ["Anti Beta 2 Glicoproteina IgM", "Anti Beta 2 Glicoproteina IgG"]
+    - Ex: "Sorologia Dengue IgG e IgM" -> ["Dengue IgG", "Dengue IgM"]
 
-5.  **CORRIJA** erros de OCR nos exames identificados:
+5.  **IDENTIFIQUE** os exames laboratoriais válidos.
+    - Inclua **Autoanticorpos**: FAN, Anti-DNA, Anti-SM, Anti-RO, Anti-LA, Anti-RNP, ANCA.
+
+6.  **CORRIJA** erros de OCR nos exames identificados:
     - Contexto médico brasileiro (ex: "Hemograma", "TSH", "EAS")
     - Corrija siglas e erros de digitação (ex: "Homograma" -> "Hemograma")
 
-6. Para cada termo identificado e corrigido, retorne:
+7. Para cada termo identificado e corrigido, retorne:
    - O texto original do OCR
    - A correção sugerida
    - Nível de confiança (0.0 a 1.0)

@@ -147,9 +147,11 @@ class OCRProcessor:
             # Trigger LLM if: 
             # 1. Contains numbers (codes/results mixing)
             # 2. Contains comma (potential multi-exam line like "C3, C4")
-            # 3. Very short list (might be noise)
+            # 3. Contains "IgG", "IgM", "IgA" (antibody lists)
+            # 4. Very short list (might be noise)
             needs_llm = any(re.search(r'^\d{3,6}$', l) for l in current_text_lines) or \
                         any(',' in l for l in current_text_lines) or \
+                        any(x in clean_text for x in ["IgG", "IgM", "IgA", "IGG", "IGM", "IGA"]) or \
                         len(current_text_lines) < 2
             
             if self.use_llm_correction and clean_text and needs_llm:
