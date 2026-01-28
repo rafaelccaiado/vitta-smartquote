@@ -267,9 +267,31 @@ class OCRProcessor:
         extracted = []
         found_anchor = False
         
+        latest_context = None # V57: Track parent exam context
+        
         for line in lines:
             line = line.strip()
             if not line: continue
+            
+            # --- FASE 0: Context Reconnection (V57) ---
+            # Check if this line is an "Orphan Antibody" (e.g., just "IgM" or "IgG")
+            is_orphan = re.match(r'^\W*(Ig[GAM]|IG[GAM])\W*$', line, re.IGNORECASE)
+            
+            if is_orphan and latest_context:
+                print(f"🔗 Reconnecting Orphan: '{line}' -> '{latest_context} {line}'")
+                line = f"{latest_context} {line}"
+            
+            # Update Context if this line is a valid "Parent"
+            # Must start with medical term AND be long enough
+            line_upper = line.upper()
+            if line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "IMUNO")):
+                 # Remove the specific Ig from the context so we get a clean base
+                 # Ex: "Dosagens.. IgA" -> "Dosagens.."
+                 clean_context = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', line, flags=re.IGNORECASE).strip()
+                 # Remove trailing punctuation like " e", ","
+                 clean_context = re.sub(r'[\s,e]+$', '', clean_context, flags=re.IGNORECASE)
+                 if len(clean_context) > 5:
+                     latest_context = clean_context
             
             # --- FASE 1: Detecção de Âncora ---
             line_lower = line.lower()
