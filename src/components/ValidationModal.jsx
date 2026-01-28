@@ -22,8 +22,9 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
             let rawTerms = []
 
             if (ocrResult?.lines && Array.isArray(ocrResult.lines) && ocrResult.lines.length > 0) {
-                // Usa as linhas já processadas e possivelmente editadas pelo usuário
-                rawTerms = ocrResult.lines.map(l => l.corrected).filter(t => t && t.trim().length > 2)
+                // usa as linhas já processadas e possivelmente editadas pelo usuário
+                // V64: Allow short codes (len >= 2) like C4, T4
+                rawTerms = ocrResult.lines.map(l => l.corrected).filter(t => t && t.trim().length >= 2)
             } else {
                 // Fallback para texto bruto
                 const ignoreTerms = ['solicito', 'pedido', 'data', 'assinatura', 'dr', 'crm', 'paciente', ':', 'médico']
@@ -31,8 +32,8 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                 rawTerms = rawText
                     .split(/[\n,]+/)
                     .map(t => t.trim())
-                    .filter(t => t.length > 2)
-                    .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
+                    .filter(t => t.length >= 2) # V64: Allow len >= 2
+                        .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
             }
 
             if (rawTerms.length === 0) {
