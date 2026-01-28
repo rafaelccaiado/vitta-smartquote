@@ -66,8 +66,9 @@ class TussService:
             self.synonyms["h pylori"] = "antigeno helicobacter pylori"
             self.synonyms["pylori"] = "antigeno helicobacter pylori"
             self.synonyms["helicobacter pylori"] = "antigeno helicobacter pylori"
-            self.synonyms["antigeno fecal"] = "antigeno helicobacter pylori"
-            self.synonyms["pesquisa antigeno fecal para h.pylori"] = "antigeno helicobacter pylori"
+            # Removed fecal override to allow material heuristic in validation_logic.py
+            # self.synonyms["antigeno fecal"] = "antigeno helicobacter pylori"
+            # self.synonyms["pesquisa antigeno fecal para h.pylori"] = "antigeno helicobacter pylori"
             
             # Perfil Lipídico
             self.synonyms["perfil lipidico"] = "lipidograma"
