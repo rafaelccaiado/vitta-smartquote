@@ -29,11 +29,26 @@ def get_gcp_credentials():
         except:
              info = json.loads(clean_str)
              
-        # FIX DEEP: Corrigir a chave privada que precisa de quebras de linha REAIS
+        # FIX DEEP V38: Reconstrução Nuclear da Chave Privada
         if "private_key" in info:
-             # Se a chave privada veio com \\n literais, converte para \n reais
-             info["private_key"] = info["private_key"].replace("\\n", "\n")
+             raw_key = info["private_key"]
              
+             # Se já tem quebras reais e parece válido, não toca (pra não estragar o que funciona)
+             if "\n" in raw_key and not "\\n" in raw_key:
+                 pass
+             else:
+                 # Limpeza agressiva: Remove cabeçalhos e tudo que não é base64
+                 import re
+                 # Remove headers
+                 body = raw_key.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "")
+                 # Remove whitespace e backslashes
+                 body = re.sub(r'[\s\\]+', '', body)
+                 
+                 # Reconstroi formato PEM padrão (64 chars por linha)
+                 chunked_body = '\n'.join(body[i:i+64] for i in range(0, len(body), 64))
+                 
+                 info["private_key"] = f"-----BEGIN PRIVATE KEY-----\n{chunked_body}\n-----END PRIVATE KEY-----\n"
+
     except Exception as e:
          raise ValueError(f"CRITICAL: Final Sanitizer failed. Raw preview: {raw_str[:30]}... Error: {e}")
 
