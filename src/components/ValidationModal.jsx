@@ -240,9 +240,17 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                     <div className="text-3xl font-bold text-green-600">{confirmedCount}</div>
                     <div className="text-sm text-green-800">Confirmados</div>
                 </div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center relative">
                     <div className="text-3xl font-bold text-yellow-600">{pendingCount}</div>
                     <div className="text-sm text-yellow-800">Pendentes</div>
+
+                    {/* Semantic Status Badge - V67 */}
+                    {exams.length > 0 && (
+                        <div className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase
+                           ${exams[0]?._meta?.semantic_active ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-500'}`}>
+                            {exams[0]?._meta?.semantic_active ? '🔮 AI On' : '❌ AI Off'}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -268,6 +276,16 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                     <div className="flex justify-between items-center w-full">
                                         <div className="font-semibold text-gray-900 text-lg mb-1">
                                             "{exam.term}"
+                                        </div>
+                                        {/* Exibir termo normalizado pela AI se houver */}
+                                        {exam.normalized_term && (
+                                            <div className="text-xs text-blue-600 mt-0.5 mb-1">
+                                                ✨ AI: {exam.normalized_term}
+                                            </div>
+                                        )}
+                                        {/* Debug Strategy */}
+                                        <div className="text-[9px] text-gray-400 font-mono mb-1">
+                                            Strat: {exam.match_strategy || 'N/A'}
                                         </div>
                                         <button
                                             onClick={() => handleRemove(exam.id)}
