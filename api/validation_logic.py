@@ -245,8 +245,20 @@ class ValidationService:
                                     strategy = f"simplified_synonym ({last_token})"
                                     break
 
+
+            # 3. SEMANTIC AI MATCH (V67 - Smart Match) =========================================
+            # If standard fuzzy failed, ask Gemini to normalize the term
+            # Collect candidates first to batch (but for now we do inside the loop or just before returning??)
+            # PROB: We are inside a loop `for term in terms`. Batching requires refactoring loop.
+            # WORKAROUND: For V67, we do one-by-one or small batch inside? 
+            # Generating content 10 times is slow.
+            # OPTION B: Run Semantic Step AFTER the loop for all "not_found" items?
+            # Yes. Let's finish the loop, then re-process "not_found" items.
+            pass 
+
             # Processar resultados encontrados
             if found_matches:
+
                 unique_matches = {}
                 for m in found_matches:
                     unique_matches[m['item_id']] = m
@@ -322,6 +334,65 @@ class ValidationService:
                 
             results["items"].append(item)
             
+                
+                
+        # --- V67: SEMANTIC BATCH PROCESSING ("Smart Match") ---
+        # Filter items that are still "not_found" (and not just placeholder mocks if we implement semantics before mocks)
+        # Actually, V62 mocks have status="multiple". Real failures have "not_found".
+        # Let's collect items that are "not_found" OR "manual_fallback" (if we want to improve them) -> No, mock is last resort.
+        # But wait, the loop creates the item and appends it.
+        # So we iterate over `results["items"]` looking for "not_found".
+        
+        candidates = []
+        candidate_indices = []
+        
+        for idx, item in enumerate(results["items"]):
+             if item["status"] == "not_found" and len(item["term"]) > 3:
+                 candidates.append(item["term"])
+                 candidate_indices.append(idx)
+        
+        if candidates:
+            # Import locally to avoid circular deps
+            try:
+                from services.semantic_service import semantic_service
+                print(f"🧠 Semantic Service: Normalizando {len(candidates)} termos...")
+                
+                normalized_map = semantic_service.normalize_batch(candidates)
+                
+                for i, original_term in zip(candidate_indices, candidates):
+                    if original_term in normalized_map:
+                        normalized_term = normalized_map[original_term]
+                        if not normalized_term: continue
+                        
+                        print(f"✨ AI Normalized: '{original_term}' -> '{normalized_term}'")
+                        
+                        # Run Fuzzy Match on Normalized Term
+                        norm_key = ValidationService.normalize_text(normalized_term)
+                        
+                        # 1. Exact/Map Check
+                        if norm_key in exam_map:
+                             matches = exam_map[norm_key]
+                             results["items"][i]["matches"] = matches
+                             results["items"][i]["status"] = "confirmed" if len(matches)==1 else "multiple"
+                             results["items"][i]["match_strategy"] = "ai_semantic_exact"
+                             results["stats"]["not_found"] -= 1
+                             results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
+                             continue
+
+                        # 2. Fuzzy Check
+                        best_match = fuzzy_matcher.find_best_match(norm_key, min_score=80)
+                        if best_match:
+                             match_name = best_match["match"]
+                             matches = exam_map[match_name]
+                             results["items"][i]["matches"] = matches
+                             results["items"][i]["status"] = "confirmed" if len(matches)==1 else "multiple"
+                             results["items"][i]["match_strategy"] = "ai_semantic_fuzzy"
+                             results["items"][i]["normalized_term"] = normalized_term
+                             results["stats"]["not_found"] -= 1
+                             results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
+            except Exception as e:
+                print(f"❌ Erro Semantic Service: {e}")
+
         return results
 
     @staticmethod
