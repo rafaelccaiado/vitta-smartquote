@@ -34,10 +34,15 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
             setProgress(60)
 
             if (!response.ok) {
-                throw new Error('Falha no processamento OCR')
+                const errorBody = await response.text()
+                throw new Error(`HTTP ${response.status}: ${errorBody.slice(0, 100)}`)
             }
 
             const data = await response.json()
+
+            if (data.error) {
+                throw new Error(`SERVER: ${data.error}`)
+            }
 
             setProgress(90)
 
