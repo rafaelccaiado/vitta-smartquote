@@ -25,7 +25,12 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
 
             setProgress(30)
 
-            const API_URL = import.meta.env.VITE_API_URL || ''
+            let API_URL = import.meta.env.VITE_API_URL || ''
+            // Se estivermos em produção (não localhost) mas VITE_API_URL for localhost, limpar
+            if (window.location.hostname !== 'localhost' && API_URL.includes('localhost')) {
+                API_URL = ''
+            }
+
             const response = await fetch(`${API_URL}/api/ocr`, {
                 method: 'POST',
                 body: formData,
@@ -322,6 +327,10 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                     </div>
                 </div>
             )}
+            {/* Debug Tag */}
+            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase">
+                Build: 2026-01-28-V4 (Detailed Errors)
+            </div>
         </div>
     )
 }
