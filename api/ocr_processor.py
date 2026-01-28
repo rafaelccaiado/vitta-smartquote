@@ -287,7 +287,8 @@ class OCRProcessor:
             # Update Context if this line is a valid "Parent"
             # Must start with medical term AND be long enough
             line_upper = line.upper()
-            if line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "IMUNO")):
+            # V59: Added COMPLEMENTO to context triggers (For "Complemento C3, C4")
+            if line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "IMUNO", "COMPLEMENTO")):
                  # Remove the specific Ig from the context so we get a clean base
                  # Ex: "Dosagens.. IgA" -> "Dosagens.."
                  clean_context = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', line, flags=re.IGNORECASE).strip()
@@ -371,7 +372,10 @@ class OCRProcessor:
                 parts = line_processed.split('<SPLIT>')
                 for part in parts:
                     part = part.strip()
-                    if part and len(part) > 2: # Evita sujeira vazia
+                    # V59: WHITELIST CHECK INSIDE SPLITTER (Fixes Missing C4)
+                    is_valid_short = part.strip().upper() in ["C3", "C4", "T3", "T4", "CK", "PTA", "K+", "NA+", "CA", "P", "MG", "FE", "LI", "ZN", "CU", "LDH"]
+                    
+                    if part and (len(part) > 2 or is_valid_short): 
                         extracted.append(part)
                 print(f"✂️ Linha dividida: '{line}' -> {parts}")
                 continue # Já adicionou as partes, pula o append do original
