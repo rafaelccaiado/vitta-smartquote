@@ -1,0 +1,14 @@
+node_modules
+dist
+venv
+backend/venv
+__pycache__
+*.pyc
+.env
+.env.local
+.vscode
+.idea
+*.log
+backend/*.log
+backend/logs
+temp_tuss
