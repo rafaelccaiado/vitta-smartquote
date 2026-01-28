@@ -16,24 +16,27 @@ def get_gcp_credentials():
     if not encoded_key:
         return None
         
+    # try:  <-- REMOVED TRY
+    decoded_bytes = base64.b64decode(encoded_key)
     try:
-        decoded_bytes = base64.b64decode(encoded_key)
         info = json.loads(decoded_bytes)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"CRITICAL: Failed to decode JSON from Base64 key. Content preview: {decoded_bytes[:20]}... Error: {e}")
+
+    # Verifica o tipo de credencial
+    cred_type = info.get("type")
+    
+    if cred_type == "authorized_user":
+        print("⚠️ Usando credenciais de USUÁRIO (Teste apenas).")
+        # Credenciais de usuário (local gcloud login)
+        creds = credentials.Credentials.from_authorized_user_info(info)
+    else:
+        print("🔑 Usando credenciais de CONTA DE SERVIÇO (Produção).")
+        # Credenciais de serviço (padrão)
+        creds = service_account.Credentials.from_service_account_info(info)
         
-        # Verifica o tipo de credencial
-        cred_type = info.get("type")
+    return creds
         
-        if cred_type == "authorized_user":
-            print("⚠️ Usando credenciais de USUÁRIO (Teste apenas).")
-            # Credenciais de usuário (local gcloud login)
-            creds = credentials.Credentials.from_authorized_user_info(info)
-        else:
-            print("🔑 Usando credenciais de CONTA DE SERVIÇO (Produção).")
-            # Credenciais de serviço (padrão)
-            creds = service_account.Credentials.from_service_account_info(info)
-            
-        return creds
-        
-    except Exception as e:
-        print(f"⚠️ Erro ao carregar credenciais da ENV VAR: {e}")
-        return None
+    # except Exception as e: <-- REMOVED EXCEPT
+    #     print(f"⚠️ Erro ao carregar credenciais da ENV VAR: {e}")
+    #     return None
