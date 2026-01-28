@@ -106,13 +106,24 @@ O OCR extraiu este texto de um pedido manuscrito:
 
 TAREFA:
 1. Identifique termos que parecem ser nomes de exames laboratoriais
-2. Corrija erros óbvios de OCR considerando:
-   - Erros comuns: letras trocadas (m↔n, l↔i, o↔a)
-   - Números confundidos com letras (4↔A, 5↔S, 1↔I, 0↔O)
-   - Palavras parciais ou mal escritas
-   - Contexto médico brasileiro
+2. Ignore termos que NÃO são exames, como:
+    - Diagnósticos (CID, HDS, HD)
+    - Números aleatórios ou códigos internos
+    - Logotipos ("Hosp", "Denmar", "Unimed")
 
-3. Para cada termo identificado, retorne:
+3.  **SEPARE EXAMES AGRUPADOS**:
+    - Se uma linha tiver múltiplos exames, quebre em itens separados.
+    - Ex: "Ureia, Creatinina" -> ["Ureia", "Creatinina"]
+    - Ex: "Complemento C3, C4" -> ["Complemento C3", "Complemento C4"]
+    - Ex: "TGO / TGP" -> ["TGO", "TGP"]
+
+4.  **IDENTIFIQUE** os exames laboratoriais válidos.
+
+5.  **CORRIJA** erros de OCR nos exames identificados:
+    - Contexto médico brasileiro (ex: "Hemograma", "TSH", "EAS")
+    - Corrija siglas e erros de digitação (ex: "Homograma" -> "Hemograma")
+
+6. Para cada termo identificado e corrigido, retorne:
    - O texto original do OCR
    - A correção sugerida
    - Nível de confiança (0.0 a 1.0)

@@ -329,8 +329,8 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                 </div>
             )}
             {/* Debug Tag */}
-            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-indigo-500 font-bold">
-                Build: 2026-01-28-V48 (Semantic Guard)
+            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-green-600 font-bold">
+                Build: 2026-01-28-V49 (Multi-Splitter)
             </div>
         </div>
     )
