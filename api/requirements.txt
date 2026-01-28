@@ -1,13 +1,2 @@
 fastapi
 uvicorn
-python-multipart
-google-cloud-bigquery
-google-cloud-vision
-google-generativeai
-requests
-pydantic-settings
-rapidfuzz
-opencv-python-headless
-pillow
-python-dotenv
-numpy
