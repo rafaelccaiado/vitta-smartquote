@@ -243,12 +243,17 @@ class OCRProcessor:
             r"rua\s.*", r"av\.?\s.*", r"avenida\s.*", r"alameda\s.*", r"bairro\s.*",
             r"cep[:\s].*", r"crm[:\s].*", r"crm-?go.*", r"crv[:\s].*", r"crv-?go.*", r"dra?\.?\s.*", 
             r"paciente[:\s].*", r"convênio[:\s].*", r"unimed.*", r"data[:\s].*",
-            r"ass\..*", r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
+            r"ass\..*", r"assinatura.*", r"carimbo.*", r"receitu[áa]rio.*", r"médic[oa].*",
+            r"goi[âa]nia.*", r"aparecida.*", r"bras[íi]lia.*", # Cidades comuns
+            r"cid[:\s].*", r"cid-?10.*", r"h\.?d\.?.*", r"hds[:\s].*", # Diagnósticos
+            r"hosp.*", r"denmar.*", r"instituto.*", r"laborat[óo]rio.*", # Logos
+            r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
             r"^id[:\s]\d+", r"^unidade:.*", r"^exames$", r"^solicito$", 
             r"^pedido de exame$", r"^indicação clínica.*", r"^código.*", 
             r"^sexo:.*", r"^nascimento:.*", r"^idade:.*", 
             r"^documento gerado.*", r"^assinado digitalmente.*", r"^amorsaúde.*",
-            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$" # Remove números sozinhos grandes ou linhas só com chars especiais
+            r"^impresso em.*", r"^data da impressão.*", r"^usuário.*",
+            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$" # Remove números sozinhos ou letras isoladas (leitura ruim)
         ]
         
         regexes = [re.compile(p, re.IGNORECASE) for p in patterns]
