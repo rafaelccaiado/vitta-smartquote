@@ -11,9 +11,17 @@ def get_gcp_credentials():
     
     Espera env var: GCP_SA_KEY_BASE64
     """
-    # SIMPLIFIED V30 LOGIC: CRASH IF FAILS
     decoded_bytes = base64.b64decode(encoded_key)
-    info = json.loads(decoded_bytes) # This WILL raise exception if invalid JSON
+    
+    # SANITIZER V31: Limpa sujeira da string antes de ler
+    try:
+        json_str = decoded_bytes.decode('utf-8')
+        # Remove quebras de linha e escapes perigosos que podem ter vindo do copy-paste
+        json_str = json_str.replace('\r', '').replace('\n', '').strip()
+        
+        info = json.loads(json_str)
+    except Exception as e:
+         raise ValueError(f"CRITICAL: Sanitizer failed. Raw: {decoded_bytes[:20]}... Error: {e}")
 
     # Verifica o tipo de credencial
     cred_type = info.get("type")
