@@ -15,15 +15,29 @@ def get_gcp_credentials():
     if not encoded_key: raise ValueError("Env Var GCP_SA_KEY_BASE64 Missing!")
     decoded_bytes = base64.b64decode(encoded_key)
     
-    # SANITIZER V31: Limpa sujeira da string antes de ler
+    # SUPER SANITIZER V34: Limpeza em profundidade
     try:
-        json_str = decoded_bytes.decode('utf-8')
-        # Remove quebras de linha e escapes perigosos que podem ter vindo do copy-paste
-        json_str = json_str.replace('\r', '').replace('\n', '').strip()
+        raw_str = decoded_bytes.decode('utf-8', errors='ignore')
         
-        info = json.loads(json_str)
+        # Estágio 1: Remover escapes literais comuns de copy-paste incorreto
+        clean_str = raw_str.replace('\\n', ' ').replace('\\r', '')
+        
+        # Estágio 2: Remover quebras reais
+        clean_str = clean_str.replace('\n', ' ').replace('\r', '')
+        
+        # Estágio 3: Remover aspas escapadas incorretamente se houver
+        # (Não vamos mexer nas aspas por enquanto para não quebrar JSON, focar no whitespace)
+        
+        clean_str = clean_str.strip()
+        
+        info = json.loads(clean_str)
     except Exception as e:
-         raise ValueError(f"CRITICAL: Sanitizer failed. Raw: {decoded_bytes[:20]}... Error: {e}")
+         # Se falhar, tenta estratégia de fallback: literal eval se parecer um dict python stringificado
+         try:
+            import ast
+            info = ast.literal_eval(clean_str)
+         except:
+             raise ValueError(f"CRITICAL: Super Sanitizer failed. Raw preview: {raw_str[:30]}... Error: {e}")
 
     # Verifica o tipo de credencial
     cred_type = info.get("type")
