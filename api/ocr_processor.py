@@ -370,15 +370,53 @@ class OCRProcessor:
             
             if '<SPLIT>' in line_processed:
                 parts = line_processed.split('<SPLIT>')
-                for part in parts:
+                
+                # V60: Intelligent Context Propagation in Splitter
+                # Determine context from the first part (Local) or use Global `latest_context`
+                first_part = parts[0].strip()
+                first_part_upper = first_part.upper()
+                
+                local_context = None
+                parent_triggers = ("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "IMUNO", "COMPLEMENTO")
+                
+                # Check if first part defines a new context (e.g., "Complemento C3...")
+                if first_part_upper.startswith(parent_triggers):
+                    clean = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', first_part, flags=re.IGNORECASE).strip()
+                    clean = re.sub(r'[\s,e.-]+$', '', clean, flags=re.IGNORECASE)
+                    clean = re.sub(r'\b[A-Z0-9]{1,3}\b$', '', clean).strip() # Remove short trailing codes like "C3"
+                    if len(clean) > 3:
+                        local_context = clean
+                
+                # Decide which context to use for siblings
+                active_context = local_context if local_context else latest_context
+                
+                for i, part in enumerate(parts):
                     part = part.strip()
-                    # V59: WHITELIST CHECK INSIDE SPLITTER (Fixes Missing C4)
+                    if not part: continue
+                    
+                    # V59 Clean whitelist check
                     is_valid_short = part.strip().upper() in ["C3", "C4", "T3", "T4", "CK", "PTA", "K+", "NA+", "CA", "P", "MG", "FE", "LI", "ZN", "CU", "LDH"]
                     
-                    if part and (len(part) > 2 or is_valid_short): 
-                        extracted.append(part)
-                print(f"✂️ Linha dividida: '{line}' -> {parts}")
-                continue # Já adicionou as partes, pula o append do original
+                    # Logic: 
+                    # If i==0: It works as is context is normally embedded. 
+                    # If i>0 (Siblings): We MUST prepend context if it's missing.
+                    
+                    final_part = part
+                    if i > 0 and active_context:
+                        # Don't double paste if somehow already present (rare in split parts)
+                        if not part.upper().startswith(active_context.upper()[:5]): 
+                            final_part = f"{active_context} {part}"
+                    
+                    # Also handle the edge case where Part 0 needs global context (e.g. Line 1: Header, Line 2: "C3, C4")
+                    if i == 0 and not local_context and latest_context:
+                         if not part.upper().startswith(latest_context.upper()[:5]):
+                             final_part = f"{latest_context} {part}"
+
+                    if len(part) > 2 or is_valid_short: 
+                        extracted.append(final_part)
+                        
+                print(f"✂️ Linha dividida context: '{line}' -> {[active_context] + parts}")
+                continue # Já adicionou as partes
 
             extracted.append(line)
                 
