@@ -9,9 +9,14 @@ class MissingTermsLogger:
     Gera relatórios para curadoria de sinônimos e exames faltantes.
     """
     
-    def __init__(self, log_dir: str = "logs"):
+    def __init__(self, log_dir: str = "/tmp"):
+        # Vercel: Only /tmp is writable
         self.log_dir = log_dir
-        os.makedirs(log_dir, exist_ok=True)
+        try:
+            os.makedirs(log_dir, exist_ok=True)
+        except Exception as e:
+            print(f"⚠️ Failed to create log dir {log_dir}: {e}")
+            # Fallback to no-op or print only if /tmp fails (unlikely)
         
         self.not_found_file = os.path.join(log_dir, "exames_nao_encontrados.json")
         self.fuzzy_matches_file = os.path.join(log_dir, "sugestoes_sinonimos.json")
