@@ -65,7 +65,10 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                 term: item.term,
                 status: item.status, // confirmed, multiple, not_found, duplicate
                 matches: item.matches || [],
-                selectedMatch: item.status === 'confirmed' ? 0 : null
+                selectedMatch: item.status === 'confirmed' ? 0 : null,
+                match_strategy: item.match_strategy, // V67 Debug
+                normalized_term: item.normalized_term, // V67 UI
+                _meta: data.stats // Hack to access stats in mapping
             }))
 
             setExams(processedExams)

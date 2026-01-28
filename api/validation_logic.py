@@ -392,6 +392,13 @@ class ValidationService:
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
             except Exception as e:
                 print(f"❌ Erro Semantic Service: {e}")
+        
+        # Add Semantic Status to Stats
+        try:
+            from services.semantic_service import semantic_service
+            results["stats"]["semantic_active"] = semantic_service.model is not None
+        except:
+             results["stats"]["semantic_active"] = False
 
         return results
 
