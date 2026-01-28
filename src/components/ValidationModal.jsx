@@ -11,7 +11,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
     const searchExams = async () => {
         try {
             setLoading(true)
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+            const API_URL = import.meta.env.VITE_API_URL || ''
 
             // 1. Separar termos (por quebra de linha ou vírgula)
             // Remove termos comuns de cabeçalho/assinatura
@@ -86,7 +86,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
         // Trigger Learning System in Background
         try {
             const learningPromises = []
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+            const API_URL = import.meta.env.VITE_API_URL || ''
 
             validatedExams.forEach(finalItem => {
                 // Se o termo original for diferente do selecionado (correção manual ou fuzzy distante)
@@ -160,7 +160,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
 
         setIsSearching(true)
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+            const API_URL = import.meta.env.VITE_API_URL || ''
             const response = await fetch(`${API_URL}/api/search-exams`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

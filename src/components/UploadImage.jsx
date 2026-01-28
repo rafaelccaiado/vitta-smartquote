@@ -20,7 +20,7 @@ export default function UploadImage({ onUpload, selectedUnit, onUnitChange }) {
     useEffect(() => {
         const fetchUnits = async () => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+                const API_URL = import.meta.env.VITE_API_URL || ''
                 const response = await fetch(`${API_URL}/api/units`)
                 if (response.ok) {
                     const data = await response.json()

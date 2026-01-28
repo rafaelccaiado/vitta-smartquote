@@ -25,7 +25,7 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
 
             setProgress(30)
 
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+            const API_URL = import.meta.env.VITE_API_URL || ''
             const response = await fetch(`${API_URL}/api/ocr`, {
                 method: 'POST',
                 body: formData,
