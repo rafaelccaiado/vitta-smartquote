@@ -15,29 +15,27 @@ def get_gcp_credentials():
     if not encoded_key: raise ValueError("Env Var GCP_SA_KEY_BASE64 Missing!")
     decoded_bytes = base64.b64decode(encoded_key)
     
-    # SUPER SANITIZER V34: Limpeza em profundidade
+    # FINAL SANITIZER V36: Fix PEM Private Key
     try:
         raw_str = decoded_bytes.decode('utf-8', errors='ignore')
         
-        # Estágio 1: Remover escapes literais comuns de copy-paste incorreto
-        clean_str = raw_str.replace('\\n', ' ').replace('\\r', '')
+        # Clean up whitespace noise for JSON structure
+        # Substitui \\r e \\n por espaços para garantir que o JSON parse funcione
+        clean_str = raw_str.replace('\\r', '').replace('\\n', ' ').replace('\n', ' ').replace('\r', '').strip()
         
-        # Estágio 2: Remover quebras reais
-        clean_str = clean_str.replace('\n', ' ').replace('\r', '')
-        
-        # Estágio 3: Remover aspas escapadas incorretamente se houver
-        # (Não vamos mexer nas aspas por enquanto para não quebrar JSON, focar no whitespace)
-        
-        clean_str = clean_str.strip()
-        
-        info = json.loads(clean_str)
+        import ast
+        try:
+             info = ast.literal_eval(clean_str)
+        except:
+             info = json.loads(clean_str)
+             
+        # FIX DEEP: Corrigir a chave privada que precisa de quebras de linha REAIS
+        if "private_key" in info:
+             # Se a chave privada veio com \\n literais, converte para \n reais
+             info["private_key"] = info["private_key"].replace("\\n", "\n")
+             
     except Exception as e:
-         # Se falhar, tenta estratégia de fallback: literal eval se parecer um dict python stringificado
-         try:
-            import ast
-            info = ast.literal_eval(clean_str)
-         except:
-             raise ValueError(f"CRITICAL: Super Sanitizer failed. Raw preview: {raw_str[:30]}... Error: {e}")
+         raise ValueError(f"CRITICAL: Final Sanitizer failed. Raw preview: {raw_str[:30]}... Error: {e}")
 
     # Verifica o tipo de credencial
     cred_type = info.get("type")
