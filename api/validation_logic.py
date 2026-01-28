@@ -126,7 +126,11 @@ class ValidationService:
         for term in terms:
             clean_term = clean_pattern.sub('', term).strip(" .:;-")
             
-            if len(clean_term) < 3: continue 
+            # V63: Allow short valid medical codes (C3, C4, T4, etc.)
+            clean_upper = clean_term.upper()
+            is_valid_short = clean_upper in ["C3", "C4", "T3", "T4", "CK", "PTA", "K+", "NA+", "CA", "P", "MG", "FE", "LI", "ZN", "CU", "LDH", "IGM", "IGG", "IGA", "IGE"]
+            
+            if len(clean_term) < 3 and not is_valid_short: continue 
             if date_pattern.search(clean_term): continue
             
             term_lower = clean_term.lower()
@@ -312,7 +316,7 @@ class ValidationService:
                 missing_terms_logger.log_not_found(term=term, unit=unit)
                 results["stats"]["not_found"] += 1
                 
-                # V62: Last Resort - Create Generic Match from Simplified Term
+                # V62/V63: Last Resort - Create Generic Match from Simplified Term
                 # If we have a simplified code-like term (e.g. "IgM", "C4"), but it wasn't in the DB,
                 # we create a placeholder so the user sees something instead of "0 exams".
                 tokens = term_norm.split()
@@ -320,15 +324,16 @@ class ValidationService:
                     fallback_name = tokens[-1].upper()
                     # Only for code-like terms
                     if len(fallback_name) <= 4 or fallback_name.startswith("ANTI"):
-                         item["status"] = "pending" # Mark as pending so user checks it
+                         # V63: Use 'multiple' status so it counts as Pending (Yellow) in Frontend
+                         item["status"] = "multiple" 
                          item["matches"] = [{
-                             "item_id": 0, # Custom ID
+                             "item_id": 99999, # Safe Mock ID
                              "item_name": f"{fallback_name} (Verificar Cadastro)", 
                              "search_name": fallback_name,
                              "price": 0.0,
                              "unit_name": unit
                          }]
-                         item["selectedMatch"] = 0
+                         item["selectedMatch"] = None # Force user to look (or default select?) None is safer for "Pending"
                          item["match_strategy"] = "manual_fallback"
                          results["stats"]["pending"] += 1
                          results["stats"]["not_found"] -= 1 # Correct stats
