@@ -11,6 +11,8 @@ def get_gcp_credentials():
     
     Espera env var: GCP_SA_KEY_BASE64
     """
+    encoded_key = os.getenv("GCP_SA_KEY_BASE64")
+    if not encoded_key: raise ValueError("Env Var GCP_SA_KEY_BASE64 Missing!")
     decoded_bytes = base64.b64decode(encoded_key)
     
     # SANITIZER V31: Limpa sujeira da string antes de ler
