@@ -14,12 +14,16 @@ from services.learning_service import learning_service
 app = FastAPI(title="Vittá SmartQuote API")
 
 # Inicializar clientes
+ocr_processor = None
+bq_client = None
+
 try:
+    print("⏳ Inicializando clientes...")
     ocr_processor = OCRProcessor()
     bq_client = BigQueryClient()
     print("✅ Clientes inicializados com sucesso")
 except Exception as e:
-    print(f"❌ Erro ao inicializar clientes: {e}")
+    print(f"❌ Erro crítico ao inicializar clientes: {e}")
 
 # Configurar CORS
 app.add_middleware(
@@ -29,6 +33,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/api/health")
+def health_check():
+    return {
+        "status": "online",
+        "ocr_initialized": ocr_processor is not None,
+        "bq_initialized": bq_client is not None,
+        "gemini_api_key": "Configurada" if os.getenv("GEMINI_API_KEY") else "AUSENTE",
+        "gcp_key": "Configurada" if os.getenv("GCP_SA_KEY_BASE64") else "AUSENTE"
+    }
 
 @app.get("/")
 def read_root():

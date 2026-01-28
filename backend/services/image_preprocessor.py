@@ -1,4 +1,9 @@
-import cv2
+try:
+    import cv2
+    OPENCV_AVAILABLE = True
+except ImportError:
+    print("⚠️ OpenCV não disponível. Pré-processamento será desativado.")
+    OPENCV_AVAILABLE = False
 import numpy as np
 from PIL import Image
 import io
@@ -24,6 +29,9 @@ class ImagePreprocessor:
         Returns:
             Imagem processada em bytes (PNG)
         """
+        if not OPENCV_AVAILABLE:
+            return image_bytes
+
         # Converter bytes para numpy array
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
