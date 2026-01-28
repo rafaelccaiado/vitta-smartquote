@@ -22,6 +22,7 @@ class OCRProcessor:
                  self.client = vision.ImageAnnotatorClient()
                  
             print("Client Google Vision inicializado!")
+            self.init_error = None
             
             # Novos componentes do pipeline
             self.use_preprocessing = True  # Flag para ativar/desativar pré-processamento
@@ -29,6 +30,7 @@ class OCRProcessor:
             
         except Exception as e:
             print(f"Erro ao inicializar Google Vision Client: {e}")
+            self.init_error = str(e)
             self.client = None
 
     def process_image(self, image_bytes: bytes) -> Dict[str, Any]:

@@ -37,16 +37,33 @@ if OCRProcessor:
 
 @app.get("/api/health")
 def health_check():
+    import base64
+    env_key = os.getenv("GCP_SA_KEY_BASE64")
+    key_status = "MISSING"
+    if env_key:
+        try:
+            base64.b64decode(env_key)
+            key_status = "PRESENT_AND_VALID_B64"
+        except:
+            key_status = "PRESENT_BUT_INVALID_B64"
+
     return {
         "status": "online",
-        "mode": "Vercel Monolith V24 (Root Deps Removed)",
-        "ocr_ready": ocr_processor is not None
+        "mode": "Vercel Monolith V26 (Diagnostic Mode)",
+        "ocr_ready": ocr_processor is not None,
+        "ocr_init_error": getattr(ocr_processor, "init_error", None) if ocr_processor else "Not Attempted",
+        "env_check": {
+            "GCP_SA_KEY_BASE64": key_status,
+        }
     }
 
 @app.post("/api/ocr")
 async def process_ocr(file: UploadFile = File(...)):
     if not ocr_processor:
-        return {"error": "OCR Processor not initialized (Dependencies missing)"}
+        return {
+            "error": "OCR Processor not initialized",
+            "detail": getattr(ocr_processor, "init_error", "Unknown Error") if ocr_processor else "Import Failed"
+        }
     
     contents = await file.read()
     return ocr_processor.process_image(contents)
