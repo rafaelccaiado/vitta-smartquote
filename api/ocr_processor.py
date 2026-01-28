@@ -288,7 +288,11 @@ class OCRProcessor:
 
             # --- FASE 2: Filtros Universais (Blacklist) ---
             if any(r.search(line) for r in regexes): continue
-            if len(line) < 3: continue
+            
+            # V52: Allow short lines if they are known exam parts (C3, C4, T3, T4, CK, Pta)
+            # Normal < 3 rule kills "C4".
+            is_valid_short = line.upper() in ["C3", "C4", "T3", "T4", "CK", "PTA", "K+", "NA+", "CA", "P", "MG", "FE", "LI", "ZN", "CU"]
+            if len(line) < 3 and not is_valid_short: continue
             
             # --- FASE 3: Heurística de Nomes (Assinaturas/Médicos) ---
             # Remove linhas que parecem nomes de pessoas (ex: "Aniele N. de Siqueira")
