@@ -32,8 +32,8 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                 rawTerms = rawText
                     .split(/[\n,]+/)
                     .map(t => t.trim())
-                    .filter(t => t.length >= 2) # V64: Allow len >= 2
-                        .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
+                    .filter(t => t.length >= 2) // V64: Allow len >= 2
+                    .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
             }
 
             if (rawTerms.length === 0) {
