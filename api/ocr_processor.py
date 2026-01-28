@@ -273,13 +273,16 @@ class OCRProcessor:
             line = line.strip()
             if not line: continue
             
-            # --- FASE 0: Context Reconnection (V57) ---
-            # Check if this line is an "Orphan Antibody" (e.g., just "IgM" or "IgG")
-            is_orphan = re.match(r'^\W*(Ig[GAM]|IG[GAM])\W*$', line, re.IGNORECASE)
+            # --- FASE 0: Context Reconnection (V58 Improved) ---
+            # Broaden orphan check: matches "IgM", "- IgM", "IgM.", "IgM "
+            # Must strictly match the Ig pattern with optional non-word chars around
+            is_orphan = re.search(r'^\W*(Ig[GAM]|IG[GAM])\W*$', line, re.IGNORECASE)
             
             if is_orphan and latest_context:
-                print(f"🔗 Reconnecting Orphan: '{line}' -> '{latest_context} {line}'")
-                line = f"{latest_context} {line}"
+                # Extract the actual Ig part
+                ig_part = is_orphan.group(0).strip(" -.,")
+                print(f"🔗 Reconnecting Orphan: '{line}' -> '{latest_context} {ig_part}'")
+                line = f"{latest_context} {ig_part}"
             
             # Update Context if this line is a valid "Parent"
             # Must start with medical term AND be long enough
@@ -289,7 +292,7 @@ class OCRProcessor:
                  # Ex: "Dosagens.. IgA" -> "Dosagens.."
                  clean_context = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', line, flags=re.IGNORECASE).strip()
                  # Remove trailing punctuation like " e", ","
-                 clean_context = re.sub(r'[\s,e]+$', '', clean_context, flags=re.IGNORECASE)
+                 clean_context = re.sub(r'[\s,e.-]+$', '', clean_context, flags=re.IGNORECASE)
                  if len(clean_context) > 5:
                      latest_context = clean_context
             

@@ -329,8 +329,8 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                 </div>
             )}
             {/* Debug Tag */}
-            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-pink-500 font-bold">
-                Build: 2026-01-28-V57 (Contextual Brain)
+            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-red-500 font-bold">
+                Build: 2026-01-28-V58 (Final Context)
             </div>
         </div>
     )
