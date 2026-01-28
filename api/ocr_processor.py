@@ -1,0 +1,400 @@
+from typing import Dict, Any, List, Tuple
+from google.cloud import vision
+import io
+import traceback
+from PIL import Image
+import re
+from auth_utils import get_gcp_credentials
+
+# Novo pipeline de OCR
+from services.image_preprocessor import image_preprocessor
+from services.llm_ocr_corrector import llm_ocr_corrector
+from services.fuzzy_matcher import fuzzy_matcher
+
+class OCRProcessor:
+    def __init__(self):
+        print("Inicializando OCRProcessor com Google Cloud Vision API ☁️")
+        try:
+            creds = get_gcp_credentials()
+            if creds:
+                 self.client = vision.ImageAnnotatorClient(credentials=creds)
+            else:
+                 self.client = vision.ImageAnnotatorClient()
+                 
+            print("Client Google Vision inicializado!")
+            
+            # Novos componentes do pipeline
+            self.use_preprocessing = True  # Flag para ativar/desativar pré-processamento
+            self.use_llm_correction = True  # Flag para ativar/desativar correção LLM
+            
+        except Exception as e:
+            print(f"Erro ao inicializar Google Vision Client: {e}")
+            self.client = None
+
+    def process_image(self, image_bytes: bytes) -> Dict[str, Any]:
+        """
+        Processa imagem usando pipeline completo de OCR:
+        1. Pré-processamento (OpenCV)
+        2. Google Cloud Vision OCR
+        3. Correção com LLM (Gemini)
+        4. Smart parsing
+        """
+        if not self.client:
+            return {"error": "Serviço de OCR indisponível (Cliente não inicializado)", "confidence": 0.0}
+
+        try:
+            # === CAMADA 1: PRÉ-PROCESSAMENTO ===
+            processed_image_bytes = image_bytes
+            preprocessing_applied = False
+            
+            if self.use_preprocessing:
+                try:
+                    print("🔧 Aplicando pré-processamento de imagem...")
+                    processed_image_bytes = image_preprocessor.preprocess(image_bytes)
+                    preprocessing_applied = True
+                    print("✅ Pré-processamento concluído")
+                except Exception as e:
+                    print(f"⚠️ Erro no pré-processamento: {e}")
+                    print("Continuando com imagem original...")
+                    processed_image_bytes = image_bytes
+
+            # === CAMADA 2: GOOGLE VISION OCR ===
+            image = vision.Image(content=processed_image_bytes)
+            print("Enviando imagem para Google Cloud... 🚀")
+            
+            response = self.client.document_text_detection(image=image)
+
+            if response.error.message:
+                error_msg = f"Erro da API Vision: {response.error.message}"
+                print(error_msg)
+                return {
+                    "text": "", 
+                    "confidence": 0.0, 
+                    "error": error_msg,
+                    "model_used": "Google Cloud Vision (Error)"
+                }
+
+            # Extração do texto completo
+            raw_ocr_text = response.full_text_annotation.text
+            print(f"📄 OCR extraiu: {len(raw_ocr_text)} caracteres")
+            
+            # === CAMADA 2.1: SMART PARSE (LIMPEZA INICIAL) ===
+            clean_text = self._smart_parse(raw_ocr_text)
+            print(f"🧹 Smart Parse limpou para {len(clean_text)} caracteres")
+
+            # Estrutura de dados detalhada
+            detailed_lines = []
+            
+            # Divide em linhas e aplica correções linha a linha
+            raw_lines = clean_text.split('\n')
+            deterministic_count = 0
+            
+            # === CAMADA 3.1: REGRAS DETERMINÍSTICAS (SIGLAS) ===
+            for line in raw_lines:
+                original_line = line
+                corrected_line = self._apply_deterministic_rules(line)
+                
+                method = "ocr"
+                confidence = 0.90 # Base confidence
+                
+                if corrected_line != original_line:
+                    deterministic_count += 1
+                    method = "deterministic_rule"
+                    confidence = 1.0
+                else:
+                    # Tenta Fuzzy Match se a regra determinística falhou
+                    fuzzy_corrected, fuzzy_conf = self._apply_fuzzy_correction(line)
+                    if fuzzy_corrected != line:
+                        corrected_line = fuzzy_corrected
+                        method = "fuzzy_match"
+                        confidence = fuzzy_conf
+
+                if len(line) < 4 and line.isupper() and method == "ocr": # Siglas curtas mantidas
+                    confidence = 0.95
+                
+                detailed_lines.append({
+                    "original": original_line,
+                    "corrected": corrected_line,
+                    "confidence": confidence,
+                    "method": method
+                })
+
+            # Reconstrói texto limpo para LLM (se necessário)
+            current_text_lines = [item["corrected"] for item in detailed_lines]
+            clean_text = "\n".join(current_text_lines)
+            
+            print(f"🧩 Siglas corrigidas: {deterministic_count}")
+
+            # === CAMADA 3.2: CORREÇÃO COM LLM (SOMENTE SE NECESSÁRIO) ===
+            llm_correction_data = None
+            needs_llm = any(re.search(r'^\d{3,6}$', l) for l in current_text_lines) or len(current_text_lines) < 1
+            
+            if self.use_llm_correction and clean_text and needs_llm:
+                try:
+                    print("🤖 Corrigindo erros complexos com LLM...")
+                    llm_result = llm_ocr_corrector.correct_ocr_text(clean_text)
+                    llm_correction_data = llm_result
+                    
+                    if llm_result.get("corrected_terms"):
+                        corrected_terms = llm_result["corrected_terms"]
+                        # Tenta mapear correções de volta para as linhas
+                        # Isso é heurístico, assumindo ordem. 
+                        # Idealmente o LLM retornaria indices, mas vamos simplificar.
+                        
+                        new_detailed_lines = []
+                        llm_iter = iter(corrected_terms)
+                        
+                        try:
+                            for i, line_item in enumerate(detailed_lines):
+                                # Se a linha estava confusa (method=ocr) e temos correcao
+                                if line_item["method"] == "ocr":
+                                    # Pega proxima correcao disponivel
+                                    term_data = next(llm_iter, None)
+                                    if term_data:
+                                        # Atualiza
+                                        line_item["corrected"] = term_data["corrected"]
+                                        line_item["method"] = "llm_correction"
+                                        line_item["confidence"] = term_data.get("confidence", 0.9)
+                        except StopIteration:
+                            pass
+                            
+                        print(f"✅ LLM aplicou correções")
+                except Exception as e:
+                    print(f"⚠️ Erro na correção LLM: {e}")
+
+            # === CAMADA 3.3: DICIONÁRIO CONTEXTUAL ===
+            # Extrai apenas os textos para contexto
+            final_terms_list = [item["corrected"] for item in detailed_lines]
+            final_terms, context_stats = self._apply_context_rules(final_terms_list)
+            
+            # Atualiza detailed_lines com contexto (se houve mudanca)
+            # A funcao _apply_context_rules retorna a lista modificada, entao comparamos indices
+            for i, term in enumerate(final_terms):
+                if i < len(detailed_lines):
+                    if detailed_lines[i]["corrected"] != term:
+                        detailed_lines[i]["corrected"] = term
+                        detailed_lines[i]["method"] = "context_rule"
+                        detailed_lines[i]["confidence"] = 0.98
+
+            clean_text = "\n".join(final_terms)
+
+            # Calcular confiança media
+            avg_confidence = sum(item["confidence"] for item in detailed_lines) / len(detailed_lines) if detailed_lines else 0.0
+
+            # Calcular estatísticas reais para a UI
+            stats = {
+                "auto_confirmed": deterministic_count,
+                "context_corrected": context_stats.get("corrections", 0),
+                "llm_applied": llm_correction_data is not None
+            }
+
+            return {
+                "text": clean_text,
+                "lines": detailed_lines, # NOVO: Retorna estrutura detalhada
+                "confidence": round(avg_confidence, 2),
+                "stats": stats,
+                "model_used": "Google Cloud Vision API (Enhanced Pipeline)",
+                "pipeline_info": {
+                    "preprocessing_applied": preprocessing_applied,
+                    "llm_correction_applied": llm_correction_data is not None,
+                    "raw_ocr_text": raw_ocr_text,
+                    "llm_corrections": llm_correction_data
+                },
+                "debug_raw": [{
+                    "model": "google-vision-enhanced", 
+                    "text_preview": clean_text[:100]
+                }]
+            }
+
+        except Exception as e:
+            print(f"Exceção no processamento OCR: {e}")
+            traceback.print_exc()
+            return {
+                "text": "",
+                "confidence": 0.0, 
+                "error": str(e),
+                "model_used": "Google Cloud Vision (Error)"
+            }
+
+    def _smart_parse(self, text: str) -> str:
+        """Filtra cabeçalhos, rodapés e ruídos comuns de receitas médicas"""
+        lines = text.split('\n')
+        
+        # Padrões para remover (Blacklist)
+        patterns = [
+            r"cpf[:\s].*", r"cnpj[:\s].*", r"rg[:\s].*", r"tel[:\s].*",
+            r"rua\s.*", r"av\.?\s.*", r"avenida\s.*", r"alameda\s.*", r"bairro\s.*",
+            r"cep[:\s].*", r"crm[:\s].*", r"crm-?go.*", r"crv[:\s].*", r"crv-?go.*", r"dra?\.?\s.*", 
+            r"paciente[:\s].*", r"convênio[:\s].*", r"unimed.*", r"data[:\s].*",
+            r"ass\..*", r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
+            r"^id[:\s]\d+", r"^unidade:.*", r"^exames$", r"^solicito$", 
+            r"^pedido de exame$", r"^indicação clínica.*", r"^código.*", 
+            r"^sexo:.*", r"^nascimento:.*", r"^idade:.*", 
+            r"^documento gerado.*", r"^assinado digitalmente.*", r"^amorsaúde.*",
+            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$" # Remove números sozinhos grandes ou linhas só com chars especiais
+        ]
+        
+        regexes = [re.compile(p, re.IGNORECASE) for p in patterns]
+        start_anchors = ["solicito", "prescrição", "prescrevo", "exames abaixo"]
+        
+        # Verifica se TEM alguma âncora no texto inteiro
+        global_has_anchor = any(a in text.lower() for a in start_anchors)
+        
+        extracted = []
+        found_anchor = False
+        
+        for line in lines:
+            line = line.strip()
+            if not line: continue
+            
+            # --- FASE 1: Detecção de Âncora ---
+            line_lower = line.lower()
+            is_anchor_line = False
+            for anchor in start_anchors:
+                if anchor in line_lower:
+                    is_anchor_line = True
+                    found_anchor = True
+                    # Remove a palavra âncora da linha, mas mantém o resto (ex: "Solicito: Hemograma")
+                    line = re.sub(anchor, "", line, flags=re.IGNORECASE).strip(" :")
+                    break
+            
+            # Se tem âncora no texto global, DESCARTA tudo antes dela
+            if global_has_anchor and not found_anchor:
+                continue
+
+            if not line: continue
+
+            # --- FASE 2: Filtros Universais (Blacklist) ---
+            if any(r.search(line) for r in regexes): continue
+            if len(line) < 3: continue
+            
+            # --- FASE 3: Heurística de Nomes (Assinaturas/Médicos) ---
+            # Remove linhas que parecem nomes de pessoas (ex: "Aniele N. de Siqueira")
+            # Critério: Maioria das palavras começa com maiúscula OU contem conectores de nome
+            words = line.split()
+            if len(words) > 1 and not any(char.isdigit() for char in line):
+                 capitalized_count = sum(1 for w in words if w[0].isupper())
+                 connectors = ['de', 'da', 'do', 'dos', 'das', 'e']
+                 has_connector = any(w.lower() in connectors for w in words)
+                 
+                 # Se > 70% das palavras são Capitalized, é provavelmente um nome/assinatura
+                 # OU se tem conectores de nome e pelo menos uma maiúscula (para pegar 'quele A. de Siqueira')
+                 is_name_structure = (capitalized_count / len(words) > 0.6) or (has_connector and capitalized_count >= 1)
+                 
+                 if is_name_structure:
+                     print(f"👻 Linha removida por parecer nome: {line}")
+                     continue
+
+            # --- FASE 4: Limpeza Fina (Bullets e Enumeração) ---
+            # Remove hífens, bolinhas, números de lista (1., 2.) do início da linha
+            # Ex: "- Hemograma" -> "Hemograma", "1. Glicose" -> "Glicose"
+            line = re.sub(r'^[\s\-\*\•\>]+', '', line) # Bullets simples
+            line = re.sub(r'^\s*\d+[\.\)\-]\s*', '', line) # Enumeração (1. 1) 01-)
+            
+            line = line.strip()
+            if not line: continue
+
+            # --- FASE 5: Detecção de Exames Combinados (Split) ---
+            # Separa linhas como "TGO/TGP", "Ureia / Creatinina", "Hemograma + Glicose"
+            # Separadores comuns: /  \  +  e  - (com cuidado para não quebrar hífens de nomes)
+            
+            # Padroniza separadores para um token único <SPLIT>
+            # 1. Barra (/) ou Backslash (\)
+            line_processed = re.sub(r'\s*[\/\\]\s*', '<SPLIT>', line)
+            # 2. Mais (+)
+            line_processed = re.sub(r'\s*\+\s*', '<SPLIT>', line_processed)
+            # 3. " e " (isolado)
+            line_processed = re.sub(r'\s+e\s+', '<SPLIT>', line_processed, flags=re.IGNORECASE)
+            
+            if '<SPLIT>' in line_processed:
+                parts = line_processed.split('<SPLIT>')
+                for part in parts:
+                    part = part.strip()
+                    if part and len(part) > 2: # Evita sujeira vazia
+                        extracted.append(part)
+                print(f"✂️ Linha dividida: '{line}' -> {parts}")
+                continue # Já adicionou as partes, pula o append do original
+
+            extracted.append(line)
+                
+        return "\n".join(extracted)
+
+    def _apply_deterministic_rules(self, text: str) -> str:
+        """Aplica regras fixas para siglas médicas comuns que o OCR costuma errar"""
+        rules = [
+            (r'(?i)[4T][S5][H47]', 'TSH'),
+            (r'(?i)[F|P][S5][H4]', 'FSH'),
+            (r'(?i)T4\s?Li[o|v]re', 'T4 Livre'),
+            (r'(?i)H[o|e|a]m[o|a|e]?gr[o|a]ma', 'Hemograma'), # Homgrama (missing vowel)
+            (r'(?i)L[i|1]p[i|1]d[o|a][\-\s]?gr[a|o]ma', 'Lipidograma'), # Lipido-gama
+            (r'(?i)G[l|1][i|1]c[e|i]m[i|e]a', 'Glicemia'),
+            (r'(?i)Ur+e+i+a+', 'Ureia'),
+            (r'(?i)Jr[e|a]l[a|o]', 'Ureia'), 
+            (r'(?i)Cr[e|i]at[i|e]n[i|e]na', 'Creatinina'),
+            (r'(?i)T[G|6]O', 'TGO'),
+            (r'(?i)T[G|6]P', 'TGP'),
+            (r'^\s*4\s*754\s*$', 'TSH'),
+        ]
+        
+        for pattern, replacement in rules:
+            if re.search(pattern, text):
+                return replacement
+        return text
+
+    def _apply_fuzzy_correction(self, text: str) -> Tuple[str, float]:
+        """
+        Aplica correção fuzzy agressiva baseada na lista de exames comuns.
+        Retorna (texto_corrigido, confiança)
+        """
+        COMMON_EXAMS = [
+            "HEMOGRAMA", "LIPIDOGRAMA", "COLESTEROL", "TSH", "FSH", 
+            "T4 LIVRE", "T3", "GLICEMIA", "UREIA", "CREATININA",
+            "TGO", "TGP", "EAS", "PARASITOLOGICO"
+        ]
+        
+        from rapidfuzz import fuzz
+        
+        best_match = None
+        best_score = 0
+        
+        text_upper = text.upper()
+        
+        for exam in COMMON_EXAMS:
+            # Ratio simples costuma ser melhor para erros de OCR (substituição/falta de chars)
+            score = fuzz.ratio(text_upper, exam)
+            
+            if score > best_score:
+                best_score = score
+                best_match = exam
+        
+        # Threshold de 60% conforme solicitado
+        if best_score >= 60:
+            # Se for muito alto (>90), confiança alta, senão média
+            confidence = 0.95 if best_score > 90 else 0.80
+            return best_match, confidence
+            
+        return text, 0.0
+
+    def _apply_context_rules(self, terms: List[str]) -> Tuple[List[str], Dict[str, Any]]:
+        """Aplica lógica de contexto: se tiver X, prioriza Y no mesmo grupo"""
+        context_groups = {
+            'tireoide': ['TSH', 'T4 Livre', 'T3', 'T4', 'Anticorpo Anti-TPO'],
+            'lipidico': ['Colesterol Total', 'HDL', 'LDL', 'VLDL', 'Triglicerídeos', 'Lipidograma'],
+            'glicemia': ['Glicemia de Jejum', 'Hemoglobina Glicada', 'Insulina']
+        }
+        
+        detected_contexts = set()
+        stats = {"corrections": 0}
+        
+        for term in terms:
+            term_upper = term.upper()
+            if any(k in term_upper for k in ['TSH', 'T4', 'T3']): detected_contexts.add('tireoide')
+            if any(k in term_upper for k in ['COLESTEROL', 'LIPID', 'TRIGLI']): detected_contexts.add('lipidico')
+            if any(k in term_upper for k in ['GLICEMA', 'GLICADA']): detected_contexts.add('glicemia')
+        
+        # Otimização: se o contexto for detectado, podemos expandir termos curtos
+        # ou ambíguos baseados no grupo. Por enquanto, apenas logamos.
+        if detected_contexts:
+            print(f"🧠 Contextos médicos detectados: {detected_contexts}")
+            
+        return terms, stats
