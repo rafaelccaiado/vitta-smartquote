@@ -41,10 +41,6 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
 
             setProgress(90)
 
-            if (data.error) {
-                throw new Error(data.error)
-            }
-
             setExtractedText(data.text)
             setLinesData(data.lines || [])
             setConfidence(Math.round((data.confidence || 0.85) * 100))
@@ -56,6 +52,7 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
 
         } catch (error) {
             console.error('Erro no OCR:', error)
+            setExtractedText(`Erro: ${error.message}`) // Guardar erro no texto para debug
             setStatus('error')
         }
     }

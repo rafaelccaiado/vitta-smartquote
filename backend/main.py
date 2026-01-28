@@ -6,24 +6,31 @@ import uvicorn
 import shutil
 
 # Importar processadores reais
-from ocr_processor import OCRProcessor
-from bigquery_client import BigQueryClient
-from validation_logic import ValidationService
-from services.learning_service import learning_service
+ocr_processor = None
+bq_client = None
+ValidationService = None
+learning_service = None
+
+try:
+    from ocr_processor import OCRProcessor
+    from bigquery_client import BigQueryClient
+    from validation_logic import ValidationService
+    from services.learning_service import learning_service
+except Exception as e:
+    print(f"⚠️ Erro ao importar dependências: {e}")
 
 app = FastAPI(title="Vittá SmartQuote API")
 
 # Inicializar clientes
-ocr_processor = None
-bq_client = None
-
 try:
     print("⏳ Inicializando clientes...")
-    ocr_processor = OCRProcessor()
-    bq_client = BigQueryClient()
-    print("✅ Clientes inicializados com sucesso")
+    if 'OCRProcessor' in globals() and OCRProcessor:
+        ocr_processor = OCRProcessor()
+    if 'BigQueryClient' in globals() and BigQueryClient:
+        bq_client = BigQueryClient()
+    print("✅ Clientes inicializados")
 except Exception as e:
-    print(f"❌ Erro crítico ao inicializar clientes: {e}")
+    print(f"❌ Erro crítico na inicialização: {e}")
 
 # Configurar CORS
 app.add_middleware(
