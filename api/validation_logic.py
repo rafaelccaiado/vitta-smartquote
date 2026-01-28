@@ -312,6 +312,27 @@ class ValidationService:
                 missing_terms_logger.log_not_found(term=term, unit=unit)
                 results["stats"]["not_found"] += 1
                 
+                # V62: Last Resort - Create Generic Match from Simplified Term
+                # If we have a simplified code-like term (e.g. "IgM", "C4"), but it wasn't in the DB,
+                # we create a placeholder so the user sees something instead of "0 exams".
+                tokens = term_norm.split()
+                if len(tokens) > 0:
+                    fallback_name = tokens[-1].upper()
+                    # Only for code-like terms
+                    if len(fallback_name) <= 4 or fallback_name.startswith("ANTI"):
+                         item["status"] = "pending" # Mark as pending so user checks it
+                         item["matches"] = [{
+                             "item_id": 0, # Custom ID
+                             "item_name": f"{fallback_name} (Verificar Cadastro)", 
+                             "search_name": fallback_name,
+                             "price": 0.0,
+                             "unit_name": unit
+                         }]
+                         item["selectedMatch"] = 0
+                         item["match_strategy"] = "manual_fallback"
+                         results["stats"]["pending"] += 1
+                         results["stats"]["not_found"] -= 1 # Correct stats
+                
             results["items"].append(item)
             
         return results
