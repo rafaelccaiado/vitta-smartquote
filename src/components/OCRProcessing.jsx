@@ -76,6 +76,7 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
     const handleContinue = () => {
         onComplete({
             text: extractedText,
+            lines: linesData, // Passando dados estruturados e editados
             confidence,
             modelUsed
         })

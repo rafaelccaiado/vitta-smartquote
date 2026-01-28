@@ -11,18 +11,29 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
     const searchExams = async () => {
         try {
             setLoading(true)
-            const API_URL = import.meta.env.VITE_API_URL || ''
+            setLoading(true)
+            let API_URL = import.meta.env.VITE_API_URL || ''
+            // FIX VERCEL: Se estivermos em produção (não localhost) mas VITE_API_URL for localhost, limpar
+            if (window.location.hostname !== 'localhost' && API_URL.includes('localhost')) {
+                API_URL = ''
+            }
 
-            // 1. Separar termos (por quebra de linha ou vírgula)
-            // Remove termos comuns de cabeçalho/assinatura
-            const ignoreTerms = ['solicito', 'pedido', 'data', 'assinatura', 'dr', 'crm', 'paciente', ':', 'médico']
+            // 1. Obter termos (preferência para dados estruturados do OCRProcessing)
+            let rawTerms = []
 
-            const rawText = ocrResult?.text || ''
-            const rawTerms = rawText
-                .split(/[\n,]+/) // Divide por newline ou vírgula
-                .map(t => t.trim())
-                .filter(t => t.length > 2) // Remove muito curtos
-                .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
+            if (ocrResult?.lines && Array.isArray(ocrResult.lines) && ocrResult.lines.length > 0) {
+                // Usa as linhas já processadas e possivelmente editadas pelo usuário
+                rawTerms = ocrResult.lines.map(l => l.corrected).filter(t => t && t.trim().length > 2)
+            } else {
+                // Fallback para texto bruto
+                const ignoreTerms = ['solicito', 'pedido', 'data', 'assinatura', 'dr', 'crm', 'paciente', ':', 'médico']
+                const rawText = ocrResult?.text || ''
+                rawTerms = rawText
+                    .split(/[\n,]+/)
+                    .map(t => t.trim())
+                    .filter(t => t.length > 2)
+                    .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
+            }
 
             if (rawTerms.length === 0) {
                 console.warn('Nenhum termo extraído para busca')
