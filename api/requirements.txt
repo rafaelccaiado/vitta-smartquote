@@ -3,3 +3,11 @@ uvicorn
 python-multipart
 requests
 python-dotenv
+google-cloud-bigquery
+google-cloud-vision
+google-generativeai
+pydantic-settings
+rapidfuzz
+pillow
+numpy
+# opencv-python-headless
