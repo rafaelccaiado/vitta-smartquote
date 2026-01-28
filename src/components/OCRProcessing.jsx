@@ -328,8 +328,8 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                 </div>
             )}
             {/* Debug Tag */}
-            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-yellow-300 font-bold">
-                Build: 2026-01-28-V26 (Diagnostic Mode)
+            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-yellow-500 font-bold">
+                Build: 2026-01-28-V27 (Auth Check)
             </div>
         </div>
     )

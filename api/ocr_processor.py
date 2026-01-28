@@ -42,7 +42,20 @@ class OCRProcessor:
         4. Smart parsing
         """
         if not self.client:
-            return {"error": "Serviço de OCR indisponível (Cliente não inicializado)", "confidence": 0.0}
+            # Diagnóstico detalhado para o frontend
+            import os
+            key_preview = "NOT_SET"
+            env_val = os.getenv("GCP_SA_KEY_BASE64")
+            if env_val:
+                key_preview = f"{env_val[:5]}...{env_val[-5:]} (len={len(env_val)})"
+            
+            error_details = self.init_error if hasattr(self, 'init_error') and self.init_error else "Unknown Init Error"
+            
+            return {
+                "error": f"CONFIG ERROR: GCP Creds Failed. Key: {key_preview}. Detail: {error_details}",
+                "confidence": 0.0,
+                "status": "config_error"
+            }
 
         try:
             # === CAMADA 1: PRÉ-PROCESSAMENTO ===
