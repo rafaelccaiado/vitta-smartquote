@@ -99,7 +99,17 @@ class ValidationService:
             "creatinina": ["dosagem de creatinina", "creatinina"],
             "acido urico": ["dosagem de acido urico", "acido urico"],
             "beta hcg": ["beta hcg qualitativo", "beta hcg quantitativo"],
-            "grupo sanguineo": ["tipagem sanguinea", "grupo sanguineo fator rh"]
+            "grupo sanguineo": ["tipagem sanguinea", "grupo sanguineo fator rh"],
+            # V61 Synonyms
+            "complemento c3": ["c3", "complemento c3"],
+            "complemento c4": ["c4", "complemento c4"],
+            "ch 50": ["ch50", "complemento ch50"],
+            "dosagens de imunoglobulinas igg": ["igg", "imunoglobulina g"],
+            "dosagens de imunoglobulinas igm": ["igm", "imunoglobulina m"],
+            "dosagens de imunoglobulinas iga": ["iga", "imunoglobulina a"],
+            "igg": ["imunoglobulina g", "dosagem de igg"],
+            "igm": ["imunoglobulina m", "dosagem de igm"],
+            "iga": ["imunoglobulina a", "dosagem de iga"]
         }
         
         seen_terms = set()
