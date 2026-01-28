@@ -17,8 +17,10 @@ class OCRProcessor:
         try:
             creds = get_gcp_credentials()
             if creds:
+                 print("🔑 Credenciais carregadas com sucesso via auth_utils!")
                  self.client = vision.ImageAnnotatorClient(credentials=creds)
             else:
+                 print("⚠️ Credenciais retornaram None, tentando ADC padrão...")
                  self.client = vision.ImageAnnotatorClient()
                  
             print("Client Google Vision inicializado!")
