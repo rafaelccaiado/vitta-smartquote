@@ -1,0 +1,77 @@
+
+Testando microsoft/trocr-base-handwritten...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We
+
+Testando microsoft/trocr-small-handwritten...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We
+
+Testando microsoft/trocr-large-handwritten...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We
+
+Testando chinmays18/medical-prescription-ocr...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We
+
+Testando nlpconnect/vit-gpt2-image-captioning...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We
+
+Testando Salesforce/blip-image-captioning-base...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We
+
+Testando facebook/detr-resnet-50...
+Status: 410
+Erro: <!doctype html>
+<html class="">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<meta name="description" content="We

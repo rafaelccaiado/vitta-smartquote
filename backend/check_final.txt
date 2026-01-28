@@ -1,0 +1,81 @@
+﻿Consultando API...
+Status: 200
+{
+  "items": [
+    {
+      "term": "Ureia",
+      "status": "confirmed",
+      "matches": [
+        {
+          "item_id": 1478,
+          "item_name": "UREIA EXAMES LABORATORIAIS",
+          "search_name": "ureia",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 8.0
+        }
+      ],
+      "original_term": "Ureia",
+      "selectedMatch": 0,
+      "match_strategy": "exact"
+    },
+    {
+      "term": "Perfil Lipido",
+      "status": "multiple",
+      "matches": [
+        {
+          "item_id": 1327,
+          "item_name": "PRIMIDONA - EXAMES LABORATORIAIS",
+          "search_name": "primidona -",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 96.0
+        },
+        {
+          "item_id": 928,
+          "item_name": "ESTRIOL LIVRE - EXAMES LABORATORIAIS",
+          "search_name": "estriol livre -",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 33.0
+        },
+        {
+          "item_id": 980,
+          "item_name": "FOSFOLIPIDIOS - EXAMES LABORATORIAIS",
+          "search_name": "fosfolipidios -",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 54.0
+        }
+      ],
+      "original_term": "Perfil Lipido",
+      "selectedMatch": 0,
+      "match_strategy": "fuzzy"
+    },
+    {
+      "term": "EAS",
+      "status": "multiple",
+      "matches": [
+        {
+          "item_id": 786,
+          "item_name": "CEA - EXAMES LABORATORIAIS",
+          "search_name": "cea -",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 44.0
+        },
+        {
+          "item_id": 1478,
+          "item_name": "UREIA EXAMES LABORATORIAIS",
+          "search_name": "ureia",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 8.0
+        }
+      ],
+      "original_term": "EAS",
+      "selectedMatch": 0,
+      "match_strategy": "fuzzy"
+    }
+  ],
+  "stats": {
+    "confirmed": 1,
+    "pending": 2,
+    "not_found": 0,
+    "total": 3
+  }
+}

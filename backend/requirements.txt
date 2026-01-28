@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-multipart
+huggingface-hub
+google-cloud-bigquery
+google-cloud-vision
+google-generativeai
+requests
+pydantic-settings
+transformers
+torch
+pillow
+sentencepiece
+easyocr
+opencv-python
+rapidfuzz
