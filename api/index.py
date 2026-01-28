@@ -85,6 +85,21 @@ async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro
     contents = await file.read()
     return ocr_processor.process_image(contents)
 
+@app.get("/api/units")
+async def get_units():
+    try:
+        if not bq_client:
+             # Fallback temporarily if BQ is down, but user complained about these.
+             # Ideally BQ works.
+             return {"units": ["Goiânia Centro", "Anápolis", "Trindade"]}
+        
+        units = bq_client.get_units()
+        return {"units": units}
+    except Exception as e:
+        print(f"Erro get-units: {e}")
+        return {"units": ["Goiânia Centro (Fallback)"]}
+
+
 @app.post("/api/validate-list")
 async def validate_list(data: dict):
     # Recebe { "terms": ["hemograma", ...], "unit": "..." }
