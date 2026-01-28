@@ -328,8 +328,8 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                 </div>
             )}
             {/* Debug Tag */}
-            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-indigo-500 font-bold">
-                Build: 2026-01-28-V23 (Micro FastAPI)
+            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-cyan-500 font-bold">
+                Build: 2026-01-28-V24 (Root Cleared)
             </div>
         </div>
     )
