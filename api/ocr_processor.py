@@ -159,29 +159,22 @@ class OCRProcessor:
                     llm_correction_data = llm_result
                     
                     if llm_result.get("corrected_terms"):
-                        corrected_terms = llm_result["corrected_terms"]
-                        # Tenta mapear correções de volta para as linhas
-                        # Isso é heurístico, assumindo ordem. 
-                        # Idealmente o LLM retornaria indices, mas vamos simplificar.
+                        # V50: FULL REPLACEMENT STRATEGY
+                        # Instead of trying to map 1-to-1 (which breaks on splits),
+                        # we rebuild the detailed_lines entirely from the LLM output.
+                        # This enables true splitting (1 line -> 3 items) and filtering (removing noise).
                         
                         new_detailed_lines = []
-                        llm_iter = iter(corrected_terms)
+                        for term_data in llm_result["corrected_terms"]:
+                            new_detailed_lines.append({
+                                "original": term_data.get("ocr", "LLM Generated"),
+                                "corrected": term_data.get("corrected", ""),
+                                "confidence": term_data.get("confidence", 0.95),
+                                "method": "llm_split" if "," in term_data.get("ocr", "") else "llm_correction"
+                            })
                         
-                        try:
-                            for i, line_item in enumerate(detailed_lines):
-                                # Se a linha estava confusa (method=ocr) e temos correcao
-                                if line_item["method"] == "ocr":
-                                    # Pega proxima correcao disponivel
-                                    term_data = next(llm_iter, None)
-                                    if term_data:
-                                        # Atualiza
-                                        line_item["corrected"] = term_data["corrected"]
-                                        line_item["method"] = "llm_correction"
-                                        line_item["confidence"] = term_data.get("confidence", 0.9)
-                        except StopIteration:
-                            pass
-                            
-                        print(f"✅ LLM aplicou correções")
+                        detailed_lines = new_detailed_lines
+                        print(f"✅ V50: Reconstruído {len(detailed_lines)} linhas via LLM (Split/Filter Ativo)")
                 except Exception as e:
                     print(f"⚠️ Erro na correção LLM: {e}")
 
