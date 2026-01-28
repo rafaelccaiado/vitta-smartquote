@@ -72,6 +72,9 @@ async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro
         contents = await file.read()
         
         # Processar com OCR real
+        if not ocr_processor:
+             return {"error": "OCR Processor não inicializado no servidor. Verifique logs e chaves GCP."}
+             
         result = ocr_processor.process_image(contents)
         
         if "error" in result:

@@ -301,6 +301,11 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                         <p className="text-gray-600 mb-4">
                             Não foi possível processar a imagem. Tente novamente ou envie outra imagem.
                         </p>
+                        {extractedText && (
+                            <div className="bg-red-50 text-red-700 p-3 rounded-md text-xs font-mono break-all mb-4">
+                                {extractedText}
+                            </div>
+                        )}
                     </div>
                     <div className="flex gap-3">
                         <button onClick={onBack} className="btn-secondary flex-1">
