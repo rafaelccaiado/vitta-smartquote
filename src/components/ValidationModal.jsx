@@ -22,6 +22,9 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
             let rawTerms = []
 
             if (ocrResult?.lines && Array.isArray(ocrResult.lines) && ocrResult.lines.length > 0) {
+                // V65: Debug Input
+                console.log("Validation Input Corrected:", ocrResult.lines.map(l => l.corrected))
+
                 // usa as linhas já processadas e possivelmente editadas pelo usuário
                 // V64: Allow short codes (len >= 2) like C4, T4
                 rawTerms = ocrResult.lines.map(l => l.corrected).filter(t => t && t.trim().length >= 2)
