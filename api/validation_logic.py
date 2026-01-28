@@ -51,21 +51,6 @@ class ValidationService:
         
         # Dicionário de Sinônimos Médicos (Normalizados)
         SYNONYMS = {
-            "eas": ["urina tipo i", "urina tipo 1", "sumario de urina", "elementos anormais do sedimento"],
-            "elementos anormais do sedimento": ["urina tipo i"],
-            "urina tipo i": ["urina tipo i", "eas"],
-            "hemograma": ["hemograma completo", "hemograma com contagem de plaquetas"],
-            "hemograma completo": ["hemograma"],
-            "epf": ["parasitologico de fezes", "protoparasitologico"],
-            "parasitologico": ["parasitologico de fezes"],
-            "tgo": ["dosagem de tgo", "transaminase glutamico oxalacetica", "aspartato aminotransferase"],
-            "ast": ["dosagem de tgo", "aspartato aminotransferase"],
-            "tgp": ["dosagem de tgp", "transaminase glutamico piruvica", "alanina aminotransferase"],
-            "alt": ["dosagem de tgp", "alanina aminotransferase"],
-            "glicose": ["glicemia", "glicemia de jejum", "dosagem de glicose"],
-            "glicemia": ["glicemia", "glicemia de jejum"],
-            "colesterol": ["colesterol total", "colesterol total e fracoes"],
-        SYNONYMS = {
             "eas": ["urina rotina eas", "urina tipo i", "urina tipo 1", "sumario de urina", "elementos anormais do sedimento"],
             "elementos anormais do sedimento": ["urina tipo i", "urina rotina eas"],
             "urina tipo i": ["urina tipo i", "eas", "urina rotina eas"],
@@ -88,9 +73,6 @@ class ValidationService:
             "h pylori": ["antigeno helicobacter pylori"],
             "pylori": ["antigeno helicobacter pylori"],
             "helicobacter pylori": ["antigeno helicobacter pylori"],
-            # Remover mapeamento forçado de Fecal para deixar a Heuristica de Material atuar
-            # "antigeno fecal": ["antigeno helicobacter pylori"],
-            # "pesquisa antigeno fecal para h.pylori": ["antigeno helicobacter pylori"],
             "tsh": ["hormonio tireoestimulante", "tsh ultra sensivel"],
             "fsh": ["hormonio foliculo estimulante", "dosagem de hormonio foliculo estimulante", "fsh"],
             "hormonio foliculo estimulante": ["hormonio foliculo estimulante", "fsh"],
