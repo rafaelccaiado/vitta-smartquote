@@ -21,7 +21,6 @@ try:
 except ImportError as e:
     PIPELINE_STATUS = "IMPORT_ERROR"
     IMPORT_ERROR = str(e)
-    # Print para logs do Vercel
     print(f"❌ Critical Import Error: {e}")
     traceback.print_exc()
 except Exception as e:
@@ -43,7 +42,7 @@ def get_processor():
                 return None
     return _processor_instance
 
-# 4. HEADERS DICT (To be passed to JSONResponse)
+# 4. HEADERS DICT
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
@@ -53,7 +52,9 @@ CACHE_HEADERS = {
 
 # 5. SAFE RESPONSE HELPER
 def make_response(content: dict, status_code: int = 200):
-    # Enforce Contract: Always have lines, text, stats
+    # Enforce Contract (lines, text, stats) but mainly for POST
+    # For GET/Health, we allow simpler structure if needed, or enforce it.
+    # Let's enforce base contract for robustness.
     base = {
         "text": "",
         "lines": [],
@@ -65,7 +66,26 @@ def make_response(content: dict, status_code: int = 200):
     base.update(content)
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 6. ROUTE HANDLER
+# 6. ROUTE HANDLERS
+@app.get("/")
+async def health_check():
+    """GET /api/ocr -> Retorna status do pipeline e versão."""
+    processor = get_processor()
+    dic_size = 0
+    if processor and hasattr(processor, "exams_flat_list"):
+        dic_size = len(processor.exams_flat_list)
+        
+    return make_response({
+        "status": "online",
+        "description": "Vercel OCR Endpoint Root",
+        "debug_meta": {
+            "pipeline_status": PIPELINE_STATUS,
+            "dictionary_loaded": dic_size > 0,
+            "dictionary_size": dic_size,
+            "init_error": IMPORT_ERROR
+        }
+    })
+
 @app.post("/")
 async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
     
