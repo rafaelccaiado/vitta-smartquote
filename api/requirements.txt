@@ -7,6 +7,8 @@ google-generativeai
 requests
 pydantic-settings
 pillow
+opencv-python-headless
 rapidfuzz
+pymupdf
 python-dotenv
-# CACHE_BUST: V70.5 (Base)
+# CACHE_BUST: V70.6 (Restored CV2/PDF)
