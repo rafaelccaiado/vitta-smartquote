@@ -7,8 +7,7 @@ google-generativeai
 requests
 pydantic-settings
 pillow
-opencv-python-headless
 rapidfuzz
 pymupdf
 python-dotenv
-# CACHE_BUST: V70.7 (Force Sync)
+# CACHE_BUST: V70.8 (Lite-NoCV)
