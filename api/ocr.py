@@ -7,10 +7,8 @@ import traceback
 # 1. SETUP DE PATH
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# 2. APP FACTORY
-# FIX CRÍTICO: root_path="/api/ocr" diz ao FastAPI que a aplicação está montada nesse subcaminho.
-# Isso faz com que ele ignore o prefixo "/api/ocr" vindo do Vercel e case com as rotas "/".
-app = FastAPI(root_path="/api/ocr")
+# 2. APP FACTORY (CLEAN STANDARD)
+app = FastAPI()
 
 # 3. IMPORT PIPELINE
 OCRProcessor = None
@@ -64,7 +62,7 @@ def make_response(content: dict, status_code: int = 200):
     base.update(content)
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 5. ROTAS ("/" casa com "/api/ocr" graças ao root_path)
+# 5. ROTAS
 
 @app.get("/")
 async def health_check():
@@ -76,7 +74,7 @@ async def health_check():
         
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint (Root Path Fixed)",
+        "description": "Vercel OCR Endpoint (Standard Layout)",
         "debug_meta": {
             "pipeline_status": PIPELINE_STATUS,
             "dictionary_loaded": dic_size > 0,
