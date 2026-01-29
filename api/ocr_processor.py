@@ -65,18 +65,18 @@ class OCRProcessor:
             if b'%PDF' in image_bytes[:1024]:
                 print("📄 Detectado arquivo PDF. Convertendo para imagem...")
                 try:
-                    import fitz  # PyMuPDF
-                    doc = fitz.open(stream=image_bytes, filetype="pdf")
-                    images = []
-                    
-                    print(f"📄 PDF tem {len(doc)} páginas.")
-                    
-                    for i, page in enumerate(doc):
-                        # Renderiza com zoom 2x para melhor qualidade OCR
-                        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
-                        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                        images.append(img)
-                        print(f"   - Página {i+1} renderizada ({pix.width}x{pix.height})")
+# import fitz  # PyMuPDF
+#                    doc = fitz.open(stream=image_bytes, filetype="pdf")
+#                    images = []
+#                    
+#                    print(f"📄 PDF tem {len(doc)} páginas.")
+#                    
+#                    for i, page in enumerate(doc):
+#                        # Renderiza com zoom 2x para melhor qualidade OCR
+#                        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+#                        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+#                        images.append(img)
+#                        print(f"   - Página {i+1} renderizada ({pix.width}x{pix.height})")
 
                     if not images:
                         raise ValueError("PDF vazio ou ilegível")

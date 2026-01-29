@@ -3,11 +3,9 @@ uvicorn
 python-multipart
 google-cloud-bigquery
 google-cloud-vision
-google-generativeai
 requests
 pydantic-settings
 pillow
 rapidfuzz
-pymupdf
 python-dotenv
-# CACHE_BUST: V70.8 (Lite-NoCV)
+# CACHE_BUST: V70.12 (Ultra-Lite-Force)

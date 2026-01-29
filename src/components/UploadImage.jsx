@@ -238,7 +238,7 @@ export default function UploadImage({ onUpload, selectedUnit, onUnitChange }) {
 
             <div className="text-center mt-4">
                 <span className="text-[10px] text-gray-400 font-mono">
-                    System Version: V70.11 (Security Clean & Lite-Sync)
+                    System Version: V70.12 (Ultra-Lite-Sync No-PDF/No-AI)
                 </span>
             </div>
         </div >
