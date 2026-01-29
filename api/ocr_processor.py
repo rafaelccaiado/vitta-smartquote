@@ -308,6 +308,7 @@ class OCRProcessor:
             r"^sexo:.*", r"^nascimento:.*", r"^idade:.*", 
             r"^documento gerado.*", r"^assinado digitalmente.*", r"^amorsaúde.*",
             r"^impresso em.*", r"^data da impressão.*", r"^usuário.*",
+            r"ricardo eletro.*", r"gastroenter.*", r"^\s*we\.\s*$", r"^\s*dar é\s*$", # New noise from Screenshots
             r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$",
             r"^sust.*", r"^sus$" # Noise specific
         ]
