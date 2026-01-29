@@ -14,3 +14,4 @@ sentencepiece
 easyocr
 opencv-python
 rapidfuzz
+pymupdf
