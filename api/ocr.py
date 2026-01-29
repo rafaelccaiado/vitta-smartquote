@@ -1,28 +1,18 @@
-from fastapi import FastAPI, UploadFile, File, Response, Request
+from fastapi import FastAPI, UploadFile, File, Response
 from fastapi.responses import JSONResponse
 import os
 import sys
 import traceback
 
-# 1. PATH SETUP
+# 1. SETUP DE PATH
+# Garante que imports relativos (ocr_processor) funcionem no Lambda
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# 2. APP INITIALIZATION
+# 2. APP FACTORY
+# Explicitamente sem root_path ou docs customizados, seguindo padrão "Arquivo = Rota"
 app = FastAPI()
 
-# 3. MIDDLEWARE DE ROTEAMENTO (CRUCIAL)
-# Vercel envia o path completo "/api/ocr" para a função.
-# Como definimos a rota como "/", precisamos normalizar o path no request.
-@app.middleware("http")
-async def path_stripper(request: Request, call_next):
-    # Se o path for exatamente o esperado /api/ocr, mudamos para /
-    # para casar com @app.post("/")
-    if request.url.path == "/api/ocr":
-        request.scope["path"] = "/"
-    response = await call_next(request)
-    return response
-
-# 4. IMPORT PIPELINE
+# 3. IMPORT PIPELINE (V81.1)
 OCRProcessor = None
 PIPELINE_STATUS = "UNKNOWN"
 IMPORT_ERROR = None
@@ -40,7 +30,7 @@ except Exception as e:
     IMPORT_ERROR = str(e)
     print(f"❌ Init Error: {e}")
 
-# singleton
+# SINGLETON
 _processor_instance = None
 def get_processor():
     global _processor_instance
@@ -54,7 +44,7 @@ def get_processor():
                 return None
     return _processor_instance
 
-# 5. HEADERS DICT
+# 4. HEADERS E RESPONSE HELPERS
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
@@ -62,8 +52,8 @@ CACHE_HEADERS = {
     "X-Backend-Version": "V81.1-Fallback-System"
 }
 
-# 6. SAFE RESPONSE HELPER
 def make_response(content: dict, status_code: int = 200):
+    # Garante contrato mínimo para evitar crash no front
     base = {
         "text": "",
         "lines": [],
@@ -75,18 +65,19 @@ def make_response(content: dict, status_code: int = 200):
     base.update(content)
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 7. ROUTE HANDLERS
+# 5. ROTAS (Padrão Vercel: Rota deve ser "/" pois o arquivo define o prefixo)
+
 @app.get("/")
 async def health_check():
-    """GET /api/ocr -> Health Check"""
+    """Health Check para validar deploy e versão."""
     processor = get_processor()
     dic_size = 0
     if processor and hasattr(processor, "exams_flat_list"):
         dic_size = len(processor.exams_flat_list)
-    
+        
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint Root (Routed via Middleware)",
+        "description": "Vercel OCR Endpoint (Clean Routing)",
         "debug_meta": {
             "pipeline_status": PIPELINE_STATUS,
             "dictionary_loaded": dic_size > 0,
@@ -97,7 +88,9 @@ async def health_check():
 
 @app.post("/")
 async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
+    """Handler Principal de OCR."""
     
+    # Meta inicial
     meta = {
         "backend_version": "V81.1-Fallback-System",
         "dictionary_loaded": False,
@@ -108,7 +101,7 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         "error": None
     }
 
-    # A) Pipeline Check
+    # A) Pipeline Readiness
     if PIPELINE_STATUS != "READY":
         meta["error"] = f"Pipeline Error: {PIPELINE_STATUS} - {IMPORT_ERROR}"
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=503)
@@ -126,14 +119,14 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
     except:
         pass
 
-    # B) Read File
+    # B) Leitura do Arquivo
     try:
         contents = await file.read()
     except Exception as e:
         meta["error"] = f"Upload Error: {e}"
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=400)
 
-    # C) Execute
+    # C) Processamento
     try:
         result = processor.process_image(contents)
     except Exception as e:
@@ -141,7 +134,7 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         traceback.print_exc()
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=500)
 
-    # D) Validating & Fallback
+    # D) Validação de Segurança (Fallback)
     stats = result.get("stats", {})
     if stats:
         meta["raw_ocr_lines"] = stats.get("total_ocr_lines", 0)
@@ -159,8 +152,8 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         candidates = result.get("debug_raw", [])
         fallback_lines = []
         
+        # Recuperação de Emergência
         if candidates:
-            # Prefer LLM candidates
             for text in candidates:
                 fallback_lines.append({
                     "original": text,
@@ -169,7 +162,6 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
                     "method": "emergency_llm"
                 })
         else:
-             # Fallback to anything we can find
              raw_text = result.get("text", "")
              if raw_text:
                  fallback_lines.append({
@@ -180,8 +172,8 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
                  })
              else:
                  fallback_lines.append({
-                     "original": "Error",
-                     "corrected": "[⚠️ Erro de Extração] Entre manualmente.",
+                     "original": "Erro",
+                     "corrected": "[⚠️ Erro de Extração] Conteúdo detectado mas não processável.",
                      "confidence": 0.0,
                      "method": "emergency_fail"
                  })
@@ -190,10 +182,9 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         result["text"] = "\n".join([l["corrected"] for l in fallback_lines])
         result["backend_version"] += " (Emergency)"
 
-    # E) Merge Meta
+    # E) Merge Final
     if "debug_meta" not in result:
         result["debug_meta"] = {}
     result["debug_meta"].update(meta)
 
-    # Return with Headers
     return make_response(result, status_code=200)
