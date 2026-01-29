@@ -5,14 +5,14 @@ import sys
 import traceback
 
 # 1. SETUP DE PATH
-# Garante que imports relativos (ocr_processor) funcionem no Lambda
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 2. APP FACTORY
-# Explicitamente sem root_path ou docs customizados, seguindo padrão "Arquivo = Rota"
-app = FastAPI()
+# FIX CRÍTICO: root_path="/api/ocr" diz ao FastAPI que a aplicação está montada nesse subcaminho.
+# Isso faz com que ele ignore o prefixo "/api/ocr" vindo do Vercel e case com as rotas "/".
+app = FastAPI(root_path="/api/ocr")
 
-# 3. IMPORT PIPELINE (V81.1)
+# 3. IMPORT PIPELINE
 OCRProcessor = None
 PIPELINE_STATUS = "UNKNOWN"
 IMPORT_ERROR = None
@@ -53,7 +53,6 @@ CACHE_HEADERS = {
 }
 
 def make_response(content: dict, status_code: int = 200):
-    # Garante contrato mínimo para evitar crash no front
     base = {
         "text": "",
         "lines": [],
@@ -65,7 +64,7 @@ def make_response(content: dict, status_code: int = 200):
     base.update(content)
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 5. ROTAS (Padrão Vercel: Rota deve ser "/" pois o arquivo define o prefixo)
+# 5. ROTAS ("/" casa com "/api/ocr" graças ao root_path)
 
 @app.get("/")
 async def health_check():
@@ -77,7 +76,7 @@ async def health_check():
         
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint (Clean Routing)",
+        "description": "Vercel OCR Endpoint (Root Path Fixed)",
         "debug_meta": {
             "pipeline_status": PIPELINE_STATUS,
             "dictionary_loaded": dic_size > 0,
@@ -90,7 +89,6 @@ async def health_check():
 async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
     """Handler Principal de OCR."""
     
-    # Meta inicial
     meta = {
         "backend_version": "V81.1-Fallback-System",
         "dictionary_loaded": False,
@@ -101,7 +99,6 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         "error": None
     }
 
-    # A) Pipeline Readiness
     if PIPELINE_STATUS != "READY":
         meta["error"] = f"Pipeline Error: {PIPELINE_STATUS} - {IMPORT_ERROR}"
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=503)
@@ -111,7 +108,6 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         meta["error"] = "OCR Processor Init Failed"
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=503)
 
-    # Dictionary Stats
     try:
         if hasattr(processor, "exams_flat_list") and processor.exams_flat_list:
             meta["dictionary_loaded"] = True
@@ -119,14 +115,12 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
     except:
         pass
 
-    # B) Leitura do Arquivo
     try:
         contents = await file.read()
     except Exception as e:
         meta["error"] = f"Upload Error: {e}"
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=400)
 
-    # C) Processamento
     try:
         result = processor.process_image(contents)
     except Exception as e:
@@ -134,7 +128,6 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         traceback.print_exc()
         return make_response({"error": meta["error"], "debug_meta": meta}, status_code=500)
 
-    # D) Validação de Segurança (Fallback)
     stats = result.get("stats", {})
     if stats:
         meta["raw_ocr_lines"] = stats.get("total_ocr_lines", 0)
@@ -152,7 +145,6 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         candidates = result.get("debug_raw", [])
         fallback_lines = []
         
-        # Recuperação de Emergência
         if candidates:
             for text in candidates:
                 fallback_lines.append({
@@ -182,7 +174,6 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         result["text"] = "\n".join([l["corrected"] for l in fallback_lines])
         result["backend_version"] += " (Emergency)"
 
-    # E) Merge Final
     if "debug_meta" not in result:
         result["debug_meta"] = {}
     result["debug_meta"].update(meta)
