@@ -1,0 +1,17 @@
+﻿Target Unit: 'Plano Piloto' (Len: 12)
+Buscando unidades no banco...
+DEBUG: 'An├ípolis'
+DEBUG: 'Ap. Goi├ónia Buriti Shopping'
+DEBUG: 'B2J FacUnicamps'
+DEBUG: 'Goi├ónia Centro'
+DEBUG: 'Goi├ónia Garavelo'
+DEBUG: 'Goi├ónia Portal Shopping'
+DEBUG: 'Goi├ónia Sudoeste T. Bandeiras'
+DEBUG: 'Odontologia'
+DEBUG: 'Oftalmologia Vitta Olho'
+DEBUG: 'Plano Piloto'
+DEBUG: 'Taguatinga'
+DEBUG: 'Valpara├¡so'
+Tentando get_all_exams com match exato...
+Cache BigQuery carregado: 1177 itens para unidade 'Plano Piloto'
+Exames retornados: 1177

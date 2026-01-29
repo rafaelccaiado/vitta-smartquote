@@ -1,0 +1,70 @@
+{
+  "items": [
+    {
+      "term": "Coprologico funcional",
+      "status": "multiple",
+      "matches": [
+        {
+          "item_id": 1221,
+          "item_name": "MICOLOGICO DIRETO - EXAMES LABORATORIAIS",
+          "search_name": "micologico direto",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 33.0
+        },
+        {
+          "item_id": 1279,
+          "item_name": "PARASITOLOGICO MIF - EXAMES LABORATORIAIS",
+          "search_name": "parasitologico mif",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 20.0
+        },
+        {
+          "item_id": 1338,
+          "item_name": "PROTEINA C FUNCIONAL - EXAMES LABORATORIAIS",
+          "search_name": "proteina c funcional",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 116.0
+        },
+        {
+          "item_id": 1344,
+          "item_name": "PROTEINA S FUNCIONAL - EXAMES LABORATORIAIS",
+          "search_name": "proteina s funcional",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 188.0
+        },
+        {
+          "item_id": 1752,
+          "item_name": "TOXICOLOGICO CNH E CLT - EXAMES LABORATORIAIS",
+          "search_name": "toxicologico cnh e clt",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 72.0
+        }
+      ],
+      "original_term": "Coprologico funcional",
+      "selectedMatch": 0,
+      "match_strategy": "fuzzy"
+    },
+    {
+      "term": "Pesquisa antígeno fecal para H.pylori",
+      "status": "confirmed",
+      "matches": [
+        {
+          "item_id": 1883,
+          "item_name": "ANTIGENO HELICOBACTER PYLORI - EXAMES LABORATORIAIS",
+          "search_name": "antigeno helicobacter pylori",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 360.0
+        }
+      ],
+      "original_term": "Pesquisa antígeno fecal para H.pylori",
+      "selectedMatch": 0,
+      "match_strategy": "tuss_exact"
+    }
+  ],
+  "stats": {
+    "confirmed": 1,
+    "pending": 1,
+    "not_found": 0,
+    "total": 2
+  }
+}

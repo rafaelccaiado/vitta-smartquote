@@ -1,0 +1,75 @@
+﻿Consultando API...
+Status: 200
+{
+  "items": [
+    {
+      "term": "Ureia",
+      "status": "multiple",
+      "matches": [
+        {
+          "item_id": 1478,
+          "item_name": "UREIA EXAMES LABORATORIAIS",
+          "search_name": "ureia exames laboratoriais",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 8.0
+        },
+        {
+          "item_id": 1479,
+          "item_name": "UREIA POS DIALISE - EXAMES LABORATORIAIS",
+          "search_name": "ureia pos dialise - exames laboratoriais",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 11.0
+        },
+        {
+          "item_id": 818,
+          "item_name": "CLEARANCE DE UREIA - EXAMES LABORATORIAIS",
+          "search_name": "clearance de ureia - exames laboratoriais",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 17.0
+        },
+        {
+          "item_id": 1482,
+          "item_name": "UREIA URINA ISOLADA - EXAMES LABORATORIAIS",
+          "search_name": "ureia urina isolada - exames laboratoriais",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 11.0
+        },
+        {
+          "item_id": 1480,
+          "item_name": "UREIA URINA 12 HORAS - EXAMES LABORATORIAIS",
+          "search_name": "ureia urina 12 horas - exames laboratoriais",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 11.0
+        },
+        {
+          "item_id": 1481,
+          "item_name": "UREIA URINA 24 HORAS - EXAMES LABORATORIAIS",
+          "search_name": "ureia urina 24 horas - exames laboratoriais",
+          "group_name": "EXAMES LABORATORIAIS",
+          "price": 11.0
+        }
+      ],
+      "original_term": "Ureia",
+      "selectedMatch": 0,
+      "match_strategy": "substring"
+    },
+    {
+      "term": "Perfil Lip├¡dico",
+      "status": "not_found",
+      "matches": [],
+      "original_term": "Perfil Lip├¡dico"
+    },
+    {
+      "term": "EAS",
+      "status": "not_found",
+      "matches": [],
+      "original_term": "EAS"
+    }
+  ],
+  "stats": {
+    "confirmed": 0,
+    "pending": 1,
+    "not_found": 2,
+    "total": 3
+  }
+}

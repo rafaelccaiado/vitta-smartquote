@@ -1,0 +1,11 @@
+{
+  "text": "Hemograma completo,\nTSH, T4 livre, Glicemia de\njejum.",
+  "confidence": 0.95,
+  "model_used": "Google Cloud Vision API (Smart Parsed)",
+  "debug_raw": [
+    {
+      "model": "google-vision",
+      "text_preview": "Hemograma completo,\nTSH, T4 livre, Glicemia de\njejum."
+    }
+  ]
+}
