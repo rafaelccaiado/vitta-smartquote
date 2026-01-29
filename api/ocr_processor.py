@@ -8,7 +8,7 @@ from auth_utils import get_gcp_credentials
 
 # Novo pipeline de OCR
 from services.image_preprocessor import image_preprocessor
-from services.llm_ocr_corrector import llm_ocr_corrector
+from services.llm_interpreter import llm_interpreter
 from services.fuzzy_matcher import fuzzy_matcher
 
 class OCRProcessor:
@@ -129,9 +129,15 @@ class OCRProcessor:
 
             # === CAMADA 2: GOOGLE VISION OCR ===
             image = vision.Image(content=processed_image_bytes)
-            print("Enviando imagem para Google Cloud... 🚀")
+            print("Enviando imagem para Google Cloud (Document Mode)... 🚀")
             
-            response = self.client.document_text_detection(image=image)
+            # CRÍTICO: usar document_text_detection com language hints
+            response = self.client.document_text_detection(
+                image=image,
+                image_context=vision.ImageContext(
+                    language_hints=["pt", "pt-BR"]
+                )
+            )
 
             if response.error.message:
                 error_msg = f"Erro da API Vision: {response.error.message}"
@@ -147,98 +153,49 @@ class OCRProcessor:
             raw_ocr_text = response.full_text_annotation.text
             print(f"📄 OCR extraiu: {len(raw_ocr_text)} caracteres")
             
-            # === CAMADA 2.1: SMART PARSE (LIMPEZA INICIAL) ===
-            clean_text = self._smart_parse(raw_ocr_text)
-            print(f"🧹 Smart Parse limpou para {len(clean_text)} caracteres")
+            # extrair linhas de forma estruturada (conforme sugerido pelo usuário)
+            ocr_lines = self._extrair_linhas(response)
+            ocr_full_text = "\n".join(ocr_lines)
 
-            # Estrutura de dados detalhada
+            # === CAMADA 3: INTERPRETAÇÃO COM LLM (O SEGREDO!) ===
+            # Em vez de regex frágeis, usamos a inteligência do LLM para extrair os exames
+            print("🤖 LLM Interpretando e Extraindo exames...")
+            interpretation = llm_interpreter.extract_exams(ocr_full_text)
+            
             detailed_lines = []
             
-            # Divide em linhas e aplica correções linha a linha
-            raw_lines = clean_text.split('\n')
-            deterministic_count = 0
-            
-            # === CAMADA 3.1: REGRAS DETERMINÍSTICAS (SIGLAS) ===
-            for line in raw_lines:
-                original_line = line
-                corrected_line = self._apply_deterministic_rules(line)
-                
-                method = "ocr"
-                confidence = 0.90 # Base confidence
-                
-                if corrected_line != original_line:
-                    deterministic_count += 1
-                    method = "deterministic_rule"
-                    confidence = 1.0
-                else:
-                    # Tenta Fuzzy Match se a regra determinística falhou
-                    fuzzy_corrected, fuzzy_conf = self._apply_fuzzy_correction(line)
-                    if fuzzy_corrected != line:
-                        corrected_line = fuzzy_corrected
-                        method = "fuzzy_match"
-                        confidence = fuzzy_conf
-
-                if len(line) < 4 and line.isupper() and method == "ocr": # Siglas curtas mantidas
-                    confidence = 0.95
-                
-                detailed_lines.append({
-                    "original": original_line,
-                    "corrected": corrected_line,
-                    "confidence": confidence,
-                    "method": method
-                })
-
-            # Reconstrói texto limpo para LLM (se necessário)
-            current_text_lines = [item["corrected"] for item in detailed_lines]
-            clean_text = "\n".join(current_text_lines)
-            
-            print(f"🧩 Siglas corrigidas: {deterministic_count}")
-
-            # === CAMADA 3.2: CORREÇÃO COM LLM (SOMENTE SE NECESSÁRIO) ===
-            llm_correction_data = None
-            # Trigger LLM if: 
-            # 1. Contains numbers (codes/results mixing)
-            # 2. Contains comma (potential multi-exam line like "C3, C4")
-            # 3. Contains "IgG", "IgM", "IgA" (antibody lists)
-            # 4. Very short list (might be noise)
-            # 4. Very short list (might be noise)
-            # V70 Update: ALWAYS VALIDATE WITH LLM to ensure filtering of noise (Dr, Address, Date) works.
-            # Use heuristic only if you wanted to save cost, but for accuracy we need it always.
-            needs_llm = True
-            
-            if self.use_llm_correction and clean_text and needs_llm:
-                try:
-                    print("🤖 Corrigindo erros complexos com LLM...")
-                    llm_result = llm_ocr_corrector.correct_ocr_text(clean_text)
-                    llm_correction_data = llm_result
+            if interpretation.get("exames"):
+                for data in interpretation["exames"]:
+                    original = data.get("texto_original", "")
+                    identified = data.get("exame_identificado", "")
                     
-                    if llm_result.get("corrected_terms"):
-                        # V50: FULL REPLACEMENT STRATEGY
-                        # Instead of trying to map 1-to-1 (which breaks on splits),
-                        # we rebuild the detailed_lines entirely from the LLM output.
-                        # This enables true splitting (1 line -> 3 items) and filtering (removing noise).
-                        
-                        new_detailed_lines = []
-                        for term_data in llm_result["corrected_terms"]:
-                            new_detailed_lines.append({
-                                "original": term_data.get("ocr", "LLM Generated"),
-                                "corrected": term_data.get("corrected", ""),
-                                "confidence": term_data.get("confidence", 0.95),
-                                "method": "llm_split" if "," in term_data.get("ocr", "") else "llm_correction"
-                            })
-                        
-                        detailed_lines = new_detailed_lines
-                        print(f"✅ V50: Reconstruído {len(detailed_lines)} linhas via LLM (Split/Filter Ativo)")
-                except Exception as e:
-                    print(f"⚠️ Erro na correção LLM: {e}")
+                    # Tenta Fuzzy Match para validar contra o BigQuery se possível
+                    fuzzy_corrected, fuzzy_conf = self._apply_fuzzy_correction(identified)
+                    
+                    detailed_lines.append({
+                        "original": original,
+                        "corrected": fuzzy_corrected if fuzzy_corrected else identified,
+                        "confidence": data.get("confianca", 0.90),
+                        "method": "llm_resolute"
+                    })
+                print(f"✅ Resolute: Extraídos {len(detailed_lines)} exames via LLM")
+            else:
+                print("⚠️ LLM não retornou exames. Verifique texto original.")
+                # Fallback: se o LLM falhar, usamos o split por linhas simples
+                for line in ocr_lines:
+                    if len(line) > 3:
+                        detailed_lines.append({
+                            "original": line,
+                            "corrected": line,
+                            "confidence": 0.5,
+                            "method": "ocr_fallback"
+                        })
 
-            # === CAMADA 3.3: DICIONÁRIO CONTEXTUAL ===
-            # Extrai apenas os textos para contexto
+            # === CAMADA 4: DICIONÁRIO CONTEXTUAL (Refinamento Final) ===
             final_terms_list = [item["corrected"] for item in detailed_lines]
             final_terms, context_stats = self._apply_context_rules(final_terms_list)
             
-            # Atualiza detailed_lines com contexto (se houve mudanca)
-            # A funcao _apply_context_rules retorna a lista modificada, entao comparamos indices
+            # Atualiza detailed_lines com contexto
             for i, term in enumerate(final_terms):
                 if i < len(detailed_lines):
                     if detailed_lines[i]["corrected"] != term:
@@ -253,9 +210,9 @@ class OCRProcessor:
 
             # Calcular estatísticas reais para a UI
             stats = {
-                "auto_confirmed": deterministic_count,
+                "auto_confirmed": len(detailed_lines),
                 "context_corrected": context_stats.get("corrections", 0),
-                "llm_applied": llm_correction_data is not None
+                "llm_applied": True
             }
 
             return {
@@ -615,3 +572,22 @@ class OCRProcessor:
             print(f"🧠 Contextos médicos detectados: {detected_contexts}")
             
         return terms, stats
+    def _extrair_linhas(self, response) -> List[str]:
+        """
+        Extrai linha por linha para não perder nada (conforme sugerido pelo usuário).
+        Navega pela hierarquia de Blocos -> Parágrafos -> Palavras.
+        """
+        linhas = []
+        if not response.full_text_annotation:
+            return []
+            
+        for page in response.full_text_annotation.pages:
+            for block in page.blocks:
+                for paragraph in block.paragraphs:
+                    linha = ""
+                    for word in paragraph.words:
+                        palavra = "".join([s.text for s in word.symbols])
+                        linha += palavra + " "
+                    if linha.strip():
+                        linhas.append(linha.strip())
+        return linhas
