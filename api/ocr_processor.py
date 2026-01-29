@@ -10,6 +10,7 @@ from auth_utils import get_gcp_credentials
 from services.image_preprocessor import image_preprocessor
 from services.llm_interpreter import llm_interpreter
 from services.fuzzy_matcher import fuzzy_matcher
+from services.sanitizer_service import SanitizerService
 
 class OCRProcessor:
     def __init__(self):
@@ -169,45 +170,11 @@ class OCRProcessor:
                     original = data.get("texto_original", "")
                     identified = data.get("exame_identificado", "")
                     
-                    # === NOISE FIREWALL V70.21 (Definitive Address Shield) ===
-                    # Hard-coded address blockers that override LLM.
-                    firewall_text = identified.upper().strip()
-                    
-                    # 1. Salvaguarda Médica (Imunidade Expandida)
-                    # Adicionado: VITAMINA, T3, T4, GAMA, FOSFATASE, TRANSAMINASE, EAS, UROCULTURA
-                    is_immune = firewall_text.startswith((
-                        "ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "HEMO", "GLICO", "UREIA", "CREAT", "LIPID", "PROTEIN", 
-                        "TSH", "VHS", "PCR", "IGE", "IGG", "IGM", "VITAMINA", "T3", "T4", "GAMA", "FOSFATASE", "TRANSAMINASE",
-                        "EAS", "UROCULTURA", "CULTURA", "TESTE", "PERFIL"
-                    ))
-                    
-                    # 2. Blacklist (Kill Switch) - Regex Robust
-                    # \b força fronteira de palavra (evita pegar "TRAVESSA" com "AV")
-                    is_noise = False
-                    if not is_immune:
-                         noise_patterns = [
-                             # Endereços e Logradouros
-                             r"\bRUA\b", r"\bAV\b", r"\bAVENIDA\b", r"\bALAMEDA\b", r"\bTRAVESSA\b",
-                             r"\bQD\.?\b", r"\bQUADRA\b", r"\bLT\.?\b", r"\bLOTE\b", r"\bBL\.?\b", r"\bBLOCO\b",
-                             r"\bST\.?\b", r"\bSETOR\b", r"\bBAIRRO\b", r"\bCOND\.?\b", r"\bCONDOMINIO\b",
-                             r"\bRES\.?\b", r"\bRESIDENCIAL\b", r"\bED\.?\b", r"\bEDIFICIO\b", r"\bSALA\b",
-                             # Cidades Comuns (Goiás/DF)
-                             r"GOI[ÂA]NIA", r"BRAS[ÍI]LIA", r"APARECIDA", r"VALPARA[ÍI]SO", r"TAGUATINGA", 
-                             r"OCIDENTAL", r"LUZI[ÂA]NIA", r"ÁGUAS LINDAS", r"SENADOR CANEDO", r"TRINDADE",
-                             # Identificação Profissional/Pessoal
-                             r"\bDR\.?\b", r"\bDRA\.?\b", r"\bDOUTOR(A)?\b", r"\bCRM\b", r"\bCNPJ\b", r"\bCPF\b", r"\bRG\b",
-                             # Contato e Metadados
-                             r"\bTEL\b", r"\bTEL\:", r"\bFONE\b", r"\bCEL\b", r"\bWHATSAPP\b", 
-                             r"\bPÁGINA\b", r"\bFOLHA\b", r"\bIMPRESSO EM\b", r"\bDATA\:\b"
-                         ]
-                         for pattern in noise_patterns:
-                             if re.search(pattern, firewall_text, re.IGNORECASE):
-                                 is_noise = True
-                                 # Extra debug para saber qual padrão matou a linha
-                                 print(f"🔥 Firewall Kill: '{identified}' (Match: {pattern})")
-                                 break
-                    
-                    if is_noise:
+                    # === NOISE FIREWALL V80.0 (Orchestrated Shield) ===
+                    # Usa o serviço centralizado de sanitização.
+                    # Se não passar no firewall, descartamos imediatamente.
+                    if not SanitizerService.is_valid_exam(identified):
+                         print(f"🔥 Firewall Killed: '{identified}'")
                          continue
 
                     # Tenta Fuzzy Match para validar contra o BigQuery se possível

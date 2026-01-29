@@ -238,7 +238,7 @@ export default function UploadImage({ onUpload, selectedUnit, onUnitChange }) {
 
             <div className="text-center mt-4">
                 <span className="text-[10px] text-gray-400 font-mono">
-                    System Version: V70.21 (Definitive Regex Shield)
+                    System Version: V80.0 (Orchestrator Alpha)
                 </span>
             </div>
         </div >
