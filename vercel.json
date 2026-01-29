@@ -2,6 +2,10 @@
     "version": 2,
     "rewrites": [
         {
+            "source": "/api/ocr",
+            "destination": "/api/ocr.py"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/index.py"
         },
