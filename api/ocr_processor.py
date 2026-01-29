@@ -309,14 +309,13 @@ class OCRProcessor:
             r"^impresso em.*", r"^data da impressão.*", r"^usuário.*",
             r"ricardo eletro.*", r"gastroenter.*", r"^\s*we\.\s*$", r"^\s*dar é\s*$", 
             r"^especialidade:.*", r"^unidade:.*", r"^médico:.*", r"^paciente:.*",
-            r"taguatinga.*", r"valparaiso.*", r"ocidental.*", r"gleba.*", r"lote\s?\d+.*", 
-            r"quadra\s?\d+.*", r"etapa\s?.*", r"br-040.*", r"trecho.*",
+            # Location keywords moved to _clean_suffix_noise to avoid dropping lines
             r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$",
             r"^sust.*", r"^sus$" # Noise specific
         ]
         
         regexes = [re.compile(p, re.IGNORECASE) for p in patterns]
-        start_anchors = ["solicito", "prescrição", "prescrevo", "exames abaixo"]
+        start_anchors = ["solicito", "solicitação", "prescrição", "prescrevo", "exames abaixo", "pedido de exame", "pedido"]
         
         # Verifica se TEM alguma âncora no texto inteiro
         global_has_anchor = any(a in text.lower() for a in start_anchors)
@@ -365,14 +364,18 @@ class OCRProcessor:
                     line = re.sub(anchor, "", line, flags=re.IGNORECASE).strip(" :")
                     break
             
-            # Se tem âncora no texto global, DESCARTA tudo antes dela
-            if global_has_anchor and not found_anchor:
+            # --- FASE 2: Filtros Universais (Blacklist) ---
+            # V70.17: Medical Safeguard - NEVER drop if it starts with strong medical term
+            is_medical_term = line.upper().startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "HEMO", "GLICO", "UREIA", "CREAT", "LIPID", "PROTEIN", "TSH", "VHS", "PCR"))
+            
+            if not is_medical_term and any(r.search(line) for r in regexes): 
+                continue
+            
+            # Se tem âncora no texto global, DESCARTA tudo antes dela (Exceto se for um termo médico forte)
+            if global_has_anchor and not found_anchor and not is_medical_term:
                 continue
 
             if not line: continue
-
-            # --- FASE 2: Filtros Universais (Blacklist) ---
-            if any(r.search(line) for r in regexes): continue
             
             # V52: Allow short lines if they are known exam parts (C3, C4, T3, T4, CK, Pta)
             # Normal < 3 rule kills "C4".
