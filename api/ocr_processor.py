@@ -169,28 +169,45 @@ class OCRProcessor:
                     original = data.get("texto_original", "")
                     identified = data.get("exame_identificado", "")
                     
-                    # === NOISE FIREWALL (V70.20) ===
-                    # Mesmo vindo do LLM, aplicamos regex de segurança para matar endereços e médicos
-                    firewall_text = identified.upper()
+                    # === NOISE FIREWALL V70.21 (Definitive Address Shield) ===
+                    # Hard-coded address blockers that override LLM.
+                    firewall_text = identified.upper().strip()
                     
-                    # 1. Salvaguarda Médica (Imunidade)
-                    is_immune = firewall_text.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "HEMO", "GLICO", "UREIA", "CREAT", "LIPID", "PROTEIN", "TSH", "VHS", "PCR", "IGE", "IGG", "IGM"))
+                    # 1. Salvaguarda Médica (Imunidade Expandida)
+                    # Adicionado: VITAMINA, T3, T4, GAMA, FOSFATASE, TRANSAMINASE, EAS, UROCULTURA
+                    is_immune = firewall_text.startswith((
+                        "ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "HEMO", "GLICO", "UREIA", "CREAT", "LIPID", "PROTEIN", 
+                        "TSH", "VHS", "PCR", "IGE", "IGG", "IGM", "VITAMINA", "T3", "T4", "GAMA", "FOSFATASE", "TRANSAMINASE",
+                        "EAS", "UROCULTURA", "CULTURA", "TESTE", "PERFIL"
+                    ))
                     
-                    # 2. Blacklist (Kill Switch)
+                    # 2. Blacklist (Kill Switch) - Regex Robust
+                    # \b força fronteira de palavra (evita pegar "TRAVESSA" com "AV")
                     is_noise = False
                     if not is_immune:
                          noise_patterns = [
-                             r"RUA\s", r"AV\.\s", r"AVENIDA", r"ALAMEDA", r"QUADRA", r"LOTE", r"SETOR", r"BAIRRO",
-                             r"GOI[ÂA]NIA", r"BRAS[ÍI]LIA", r"APARECIDA", r"VALPARA[ÍI]SO", r"TAGUATINGA", r"OCIDENTAL",
-                             r"DR\.", r"DRA\.", r"CRM", r"CNPJ", r"TEL\:", r"PÁGINA", r"FOLHA", r"IMPRESSO EM"
+                             # Endereços e Logradouros
+                             r"\bRUA\b", r"\bAV\b", r"\bAVENIDA\b", r"\bALAMEDA\b", r"\bTRAVESSA\b",
+                             r"\bQD\.?\b", r"\bQUADRA\b", r"\bLT\.?\b", r"\bLOTE\b", r"\bBL\.?\b", r"\bBLOCO\b",
+                             r"\bST\.?\b", r"\bSETOR\b", r"\bBAIRRO\b", r"\bCOND\.?\b", r"\bCONDOMINIO\b",
+                             r"\bRES\.?\b", r"\bRESIDENCIAL\b", r"\bED\.?\b", r"\bEDIFICIO\b", r"\bSALA\b",
+                             # Cidades Comuns (Goiás/DF)
+                             r"GOI[ÂA]NIA", r"BRAS[ÍI]LIA", r"APARECIDA", r"VALPARA[ÍI]SO", r"TAGUATINGA", 
+                             r"OCIDENTAL", r"LUZI[ÂA]NIA", r"ÁGUAS LINDAS", r"SENADOR CANEDO", r"TRINDADE",
+                             # Identificação Profissional/Pessoal
+                             r"\bDR\.?\b", r"\bDRA\.?\b", r"\bDOUTOR(A)?\b", r"\bCRM\b", r"\bCNPJ\b", r"\bCPF\b", r"\bRG\b",
+                             # Contato e Metadados
+                             r"\bTEL\b", r"\bTEL\:", r"\bFONE\b", r"\bCEL\b", r"\bWHATSAPP\b", 
+                             r"\bPÁGINA\b", r"\bFOLHA\b", r"\bIMPRESSO EM\b", r"\bDATA\:\b"
                          ]
                          for pattern in noise_patterns:
                              if re.search(pattern, firewall_text, re.IGNORECASE):
                                  is_noise = True
+                                 # Extra debug para saber qual padrão matou a linha
+                                 print(f"🔥 Firewall Kill: '{identified}' (Match: {pattern})")
                                  break
                     
                     if is_noise:
-                         print(f"🔥 Firewall bloqueou ruído LLM: '{identified}'")
                          continue
 
                     # Tenta Fuzzy Match para validar contra o BigQuery se possível
