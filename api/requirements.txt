@@ -9,4 +9,4 @@ pillow
 rapidfuzz
 python-dotenv
 numpy
-# CACHE_BUST: V70.19 (Resolute-Skill-Fix)
+# CACHE_BUST: V70.20 (Firewall-Active)

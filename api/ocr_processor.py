@@ -169,6 +169,30 @@ class OCRProcessor:
                     original = data.get("texto_original", "")
                     identified = data.get("exame_identificado", "")
                     
+                    # === NOISE FIREWALL (V70.20) ===
+                    # Mesmo vindo do LLM, aplicamos regex de segurança para matar endereços e médicos
+                    firewall_text = identified.upper()
+                    
+                    # 1. Salvaguarda Médica (Imunidade)
+                    is_immune = firewall_text.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "HEMO", "GLICO", "UREIA", "CREAT", "LIPID", "PROTEIN", "TSH", "VHS", "PCR", "IGE", "IGG", "IGM"))
+                    
+                    # 2. Blacklist (Kill Switch)
+                    is_noise = False
+                    if not is_immune:
+                         noise_patterns = [
+                             r"RUA\s", r"AV\.\s", r"AVENIDA", r"ALAMEDA", r"QUADRA", r"LOTE", r"SETOR", r"BAIRRO",
+                             r"GOI[ÂA]NIA", r"BRAS[ÍI]LIA", r"APARECIDA", r"VALPARA[ÍI]SO", r"TAGUATINGA", r"OCIDENTAL",
+                             r"DR\.", r"DRA\.", r"CRM", r"CNPJ", r"TEL\:", r"PÁGINA", r"FOLHA", r"IMPRESSO EM"
+                         ]
+                         for pattern in noise_patterns:
+                             if re.search(pattern, firewall_text, re.IGNORECASE):
+                                 is_noise = True
+                                 break
+                    
+                    if is_noise:
+                         print(f"🔥 Firewall bloqueou ruído LLM: '{identified}'")
+                         continue
+
                     # Tenta Fuzzy Match para validar contra o BigQuery se possível
                     fuzzy_corrected, fuzzy_conf = self._apply_fuzzy_correction(identified)
                     

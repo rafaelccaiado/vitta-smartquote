@@ -26,13 +26,22 @@ class LLMInterpreter:
         if not self.api_key:
             return {"exames": [], "error": "API Key missing"}
             
+            
         prompt = f"""Você é um especialista em pedidos médicos brasileiros. Analise o texto OCR abaixo.
 
 TAREFA:
-1. Identifique TODOS os exames laboratoriais citados.
-2. Corrija erros óbvios de OCR (ex: "hmgrama" -> "Hemograma").
+1. Identifique APENAS os exames laboratoriais citados.
+2. Corrija erros óbvios de OCR (ex: "hmgrama" -> "Hemograma", "Gicose" -> "Glicose").
 3. Normalize siglas (ex: "T4L" -> "T4 Livre", "HbA1c" -> "Hemoglobina Glicada").
-4. Ignore nomes de pacientes, médicos, endereços, logotipos e metadados.
+
+REGRAS DE OURO (NOISE FIREWALL):
+❌ PROIBIDO RETORNAR ENDEREÇOS: Ignore "Rua", "Av", "Alameda", "Setor", "Quadra", "Lote".
+❌ PROIBIDO RETORNAR CIDADES: Ignore "Goiânia", "Brasília", "Aparecida", "Valparaíso".
+❌ PROIBIDO RETORNAR MÉDICOS: Ignore nomes de pessoas, "Dr.", "Dra.", "CRM".
+❌ PROIBIDO RETORNAR METADADOS: Ignore "Página", "Folha", "Impresso em", "Data", "Telefone".
+
+✅ EXEMPLOS DE EXAMES VÁLIDOS (SALVAGUARDA):
+Se o texto for "ANTI GLIADINA", "TSH", "HEMOGRAMA", "UREIA" -> SÃO EXAMES, MANTENHA.
 
 TEXTO OCR:
 \"\"\"
@@ -49,7 +58,7 @@ Siga RIGOROSAMENTE este formato JSON:
     }}
   ]
 }}
-Responda APENAS o JSON."""
+Responda APENAS o JSON. Se não houver exames, retorne {{"exames": []}}."""
 
         payload = {
             "contents": [{
