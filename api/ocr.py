@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Response
+from fastapi import FastAPI, UploadFile, File, Response, Request
 from fastapi.responses import JSONResponse
 import os
 import sys
@@ -10,7 +10,19 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # 2. APP INITIALIZATION
 app = FastAPI()
 
-# 3. IMPORT PIPELINE
+# 3. MIDDLEWARE DE ROTEAMENTO (CRUCIAL)
+# Vercel envia o path completo "/api/ocr" para a função.
+# Como definimos a rota como "/", precisamos normalizar o path no request.
+@app.middleware("http")
+async def path_stripper(request: Request, call_next):
+    # Se o path for exatamente o esperado /api/ocr, mudamos para /
+    # para casar com @app.post("/")
+    if request.url.path == "/api/ocr":
+        request.scope["path"] = "/"
+    response = await call_next(request)
+    return response
+
+# 4. IMPORT PIPELINE
 OCRProcessor = None
 PIPELINE_STATUS = "UNKNOWN"
 IMPORT_ERROR = None
@@ -42,7 +54,7 @@ def get_processor():
                 return None
     return _processor_instance
 
-# 4. HEADERS DICT
+# 5. HEADERS DICT
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
@@ -50,11 +62,8 @@ CACHE_HEADERS = {
     "X-Backend-Version": "V81.1-Fallback-System"
 }
 
-# 5. SAFE RESPONSE HELPER
+# 6. SAFE RESPONSE HELPER
 def make_response(content: dict, status_code: int = 200):
-    # Enforce Contract (lines, text, stats) but mainly for POST
-    # For GET/Health, we allow simpler structure if needed, or enforce it.
-    # Let's enforce base contract for robustness.
     base = {
         "text": "",
         "lines": [],
@@ -66,18 +75,18 @@ def make_response(content: dict, status_code: int = 200):
     base.update(content)
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 6. ROUTE HANDLERS
+# 7. ROUTE HANDLERS
 @app.get("/")
 async def health_check():
-    """GET /api/ocr -> Retorna status do pipeline e versão."""
+    """GET /api/ocr -> Health Check"""
     processor = get_processor()
     dic_size = 0
     if processor and hasattr(processor, "exams_flat_list"):
         dic_size = len(processor.exams_flat_list)
-        
+    
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint Root",
+        "description": "Vercel OCR Endpoint Root (Routed via Middleware)",
         "debug_meta": {
             "pipeline_status": PIPELINE_STATUS,
             "dictionary_loaded": dic_size > 0,
