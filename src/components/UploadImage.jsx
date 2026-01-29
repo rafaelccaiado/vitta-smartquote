@@ -233,6 +233,13 @@ export default function UploadImage({ onUpload, selectedUnit, onUnitChange }) {
                     <li>✓ Evite sombras e reflexos</li>
                     <li>✓ Enquadre todo o pedido médico</li>
                 </ul>
+                </ul>
+            </div>
+            
+            <div className="text-center mt-4">
+                 <span className="text-[10px] text-gray-400 font-mono">
+                    System Version: V70.1 (Anti-Hallucination & PDF Support)
+                 </span>
             </div>
         </div >
     )
