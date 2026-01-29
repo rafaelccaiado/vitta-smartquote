@@ -1,0 +1,938 @@
+{
+    "exames": [
+        {
+            "id": "hemograma",
+            "nome_oficial": "Hemograma Completo",
+            "codigo_tuss": "40304361",
+            "sinonimos": [
+                "HEMOGRAMA",
+                "HMG",
+                "HEMOG"
+            ],
+            "variacoes": [
+                "HEMOGRAMA COMPLETO",
+                "HEMOGRAMA COM PLAQUETAS",
+                "HEMOG COMPLETO"
+            ],
+            "erros_ocr_comuns": [
+                "HEMOGRMA",
+                "HEMOGAMA",
+                "HOMORAMA",
+                "HEMOGR",
+                "HMOGRAMA"
+            ],
+            "categoria": "HEMATOLOGIA"
+        },
+        {
+            "id": "glicemia_jejum",
+            "nome_oficial": "Glicemia de Jejum",
+            "codigo_tuss": "40302040",
+            "sinonimos": [
+                "GLICEMIA",
+                "GLICOSE JEJUM",
+                "GLI JEJUM",
+                "GLICOSE"
+            ],
+            "variacoes": [
+                "GLICEMIA EM JEJUM",
+                "GLICOSE DE JEJUM",
+                "DOSAGEM DE GLICOSE"
+            ],
+            "erros_ocr_comuns": [
+                "GLICEMA",
+                "GLICEMIA JEJUN",
+                "GLICOSE JEJUN",
+                "GLICEM"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "hba1c",
+            "nome_oficial": "Hemoglobina Glicada (HbA1c)",
+            "codigo_tuss": "40302067",
+            "sinonimos": [
+                "HBA1C",
+                "A1C",
+                "HEMOGLOBINA GLICOSILADA"
+            ],
+            "variacoes": [
+                "HEMOG GLICADA",
+                "HB GLICADA",
+                "GLICOHEMOGLOBINA"
+            ],
+            "erros_ocr_comuns": [
+                "HBA1",
+                "HBAIC",
+                "A1C",
+                "H8A1C"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "colesterol_total",
+            "nome_oficial": "Colesterol Total",
+            "codigo_tuss": "40301630",
+            "sinonimos": [
+                "CT",
+                "COLESTEROL"
+            ],
+            "variacoes": [
+                "COLESTEROL TOTAL SERICO",
+                "DOSAGEM COLESTEROL"
+            ],
+            "erros_ocr_comuns": [
+                "COLESTROL",
+                "COLESTERAL",
+                "COLESTEROL TOTA"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "hdl",
+            "nome_oficial": "HDL Colesterol",
+            "codigo_tuss": "40301621",
+            "sinonimos": [
+                "HDL",
+                "BOM COLESTEROL",
+                "HDL-C"
+            ],
+            "variacoes": [
+                "COLESTEROL HDL",
+                "HDL COLESTEROL SERICO"
+            ],
+            "erros_ocr_comuns": [
+                "HOL",
+                "HDI",
+                "MDL"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "ldl",
+            "nome_oficial": "LDL Colesterol",
+            "codigo_tuss": "40302199",
+            "sinonimos": [
+                "LDL",
+                "MAU COLESTEROL",
+                "LDL-C"
+            ],
+            "variacoes": [
+                "COLESTEROL LDL",
+                "LDL CALCULADO"
+            ],
+            "erros_ocr_comuns": [
+                "LOL",
+                "LDI",
+                "IDL"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "triglicerides",
+            "nome_oficial": "Triglicerídeos",
+            "codigo_tuss": "40302521",
+            "sinonimos": [
+                "TG",
+                "TRIG",
+                "TRIGLICERIDEOS"
+            ],
+            "variacoes": [
+                "TRIGLICERIDES",
+                "DOSAGEM TRIGLICERIDEOS"
+            ],
+            "erros_ocr_comuns": [
+                "TRIGLICERIOS",
+                "TRIGLICERIDOS",
+                "TRIGLIC"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "lipidograma",
+            "nome_oficial": "Lipidograma Completo",
+            "codigo_tuss": null,
+            "sinonimos": [
+                "PERFIL LIPIDICO",
+                "LIPIDOGRAMA"
+            ],
+            "variacoes": [
+                "PERFIL LIPIDICO COMPLETO"
+            ],
+            "erros_ocr_comuns": [
+                "LIPIDIO",
+                "LIPIDOGR",
+                "LIPIDIOGRAMA"
+            ],
+            "nota": "Composto por: CT, HDL, LDL, TG",
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "tsh",
+            "nome_oficial": "TSH",
+            "codigo_tuss": "40316521",
+            "sinonimos": [
+                "TSH ULTRASENSIVEL",
+                "TIREOTROFINA",
+                "HORMONIO TIREOESTIMULANTE"
+            ],
+            "variacoes": [
+                "TSH ULTRA SENSIVEL",
+                "TSH SERICO"
+            ],
+            "erros_ocr_comuns": [
+                "T5H",
+                "4454",
+                "TSN",
+                "754",
+                "15H"
+            ],
+            "categoria": "TIREOIDE"
+        },
+        {
+            "id": "t4_livre",
+            "nome_oficial": "T4 Livre",
+            "codigo_tuss": "40316491",
+            "sinonimos": [
+                "T4L",
+                "TIROXINA LIVRE",
+                "FT4"
+            ],
+            "variacoes": [
+                "T4 LIVRE SERICO"
+            ],
+            "erros_ocr_comuns": [
+                "T4L1VRE",
+                "T4 LIURE",
+                "T41",
+                "TAL"
+            ],
+            "categoria": "TIREOIDE"
+        },
+        {
+            "id": "t3_livre",
+            "nome_oficial": "T3 Livre",
+            "codigo_tuss": "40316483",
+            "sinonimos": [
+                "T3L",
+                "TRIIODOTIRONINA LIVRE",
+                "FT3"
+            ],
+            "variacoes": [
+                "T3 LIVRE SERICO"
+            ],
+            "erros_ocr_comuns": [
+                "T3 LIURE",
+                "T31",
+                "B3L"
+            ],
+            "categoria": "TIREOIDE"
+        },
+        {
+            "id": "t3_total",
+            "nome_oficial": "T3 Total",
+            "codigo_tuss": "40316475",
+            "sinonimos": [
+                "T3",
+                "TRIIODOTIRONINA TOTAL"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "B3"
+            ],
+            "ambiguidade": "T3 sozinho pode ser Total ou Livre - pedir confirmação",
+            "categoria": "TIREOIDE"
+        },
+        {
+            "id": "t4_total",
+            "nome_oficial": "T4 Total",
+            "codigo_tuss": "40316505",
+            "sinonimos": [
+                "T4",
+                "TIROXINA TOTAL"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [],
+            "ambiguidade": "T4 sozinho pode ser Total ou Livre - pedir confirmação",
+            "categoria": "TIREOIDE"
+        },
+        {
+            "id": "tgo",
+            "nome_oficial": "TGO (AST)",
+            "codigo_tuss": "40302571",
+            "sinonimos": [
+                "TGO",
+                "AST",
+                "TRANSAMINASE OXALACETICA",
+                "ASPARTATO AMINOTRANSFERASE"
+            ],
+            "variacoes": [
+                "TRANSAMINASE TGO",
+                "AST/TGO"
+            ],
+            "erros_ocr_comuns": [
+                "TG0",
+                "760",
+                "TCO"
+            ],
+            "categoria": "HEPATICO"
+        },
+        {
+            "id": "tgp",
+            "nome_oficial": "TGP (ALT)",
+            "codigo_tuss": "40302580",
+            "sinonimos": [
+                "TGP",
+                "ALT",
+                "TRANSAMINASE PIRUVICA",
+                "ALANINA AMINOTRANSFERASE"
+            ],
+            "variacoes": [
+                "TRANSAMINASE TGP",
+                "ALT/TGP"
+            ],
+            "erros_ocr_comuns": [
+                "TG9",
+                "TCP",
+                "769"
+            ],
+            "categoria": "HEPATICO"
+        },
+        {
+            "id": "gama_gt",
+            "nome_oficial": "Gama GT",
+            "codigo_tuss": "40302130",
+            "sinonimos": [
+                "GGT",
+                "GAMA GLUTAMIL TRANSFERASE",
+                "GAMA GLUTAMIL"
+            ],
+            "variacoes": [
+                "GAMA GT SERICO"
+            ],
+            "erros_ocr_comuns": [
+                "GAMA 67",
+                "GAMMA GT",
+                "GMT"
+            ],
+            "categoria": "HEPATICO"
+        },
+        {
+            "id": "fosfatase_alcalina",
+            "nome_oficial": "Fosfatase Alcalina",
+            "codigo_tuss": "40301990",
+            "sinonimos": [
+                "FA",
+                "FOSF ALCALINA",
+                "FAL"
+            ],
+            "variacoes": [
+                "FOSFATASE ALCALINA SERICA"
+            ],
+            "erros_ocr_comuns": [
+                "FOSF ALC",
+                "FOSFATAZE",
+                "FA1"
+            ],
+            "categoria": "HEPATICO"
+        },
+        {
+            "id": "bilirrubinas",
+            "nome_oficial": "Bilirrubinas Totais e Frações",
+            "codigo_tuss": "40301508",
+            "sinonimos": [
+                "BT",
+                "BTF",
+                "BILIRRUBINA TOTAL E FRACOES"
+            ],
+            "variacoes": [
+                "BILIRRUBINAS",
+                "BILIRRUBINA TOTAL DIRETA INDIRETA"
+            ],
+            "erros_ocr_comuns": [
+                "BILIRUBINA",
+                "BILIRRUB",
+                "BILIRR"
+            ],
+            "categoria": "HEPATICO"
+        },
+        {
+            "id": "ureia",
+            "nome_oficial": "Ureia",
+            "codigo_tuss": "40302547",
+            "sinonimos": [
+                "UREIA SERICA"
+            ],
+            "variacoes": [
+                "DOSAGEM UREIA"
+            ],
+            "erros_ocr_comuns": [
+                "UREA",
+                "URELA"
+            ],
+            "categoria": "RENAL"
+        },
+        {
+            "id": "creatinina",
+            "nome_oficial": "Creatinina",
+            "codigo_tuss": "40301702",
+            "sinonimos": [
+                "CREAT",
+                "CREATININA SERICA"
+            ],
+            "variacoes": [
+                "DOSAGEM CREATININA"
+            ],
+            "erros_ocr_comuns": [
+                "CREATIMINA",
+                "CREATINIMA",
+                "CREAT1NINA",
+                "CREATIN"
+            ],
+            "categoria": "RENAL"
+        },
+        {
+            "id": "acido_urico",
+            "nome_oficial": "Ácido Úrico",
+            "codigo_tuss": "40301400",
+            "sinonimos": [
+                "AC URICO",
+                "URICEMIA"
+            ],
+            "variacoes": [
+                "ACIDO URICO SERICO"
+            ],
+            "erros_ocr_comuns": [
+                "AC UR1CO",
+                "ACIDO UR1CO"
+            ],
+            "categoria": "RENAL"
+        },
+        {
+            "id": "vitamina_d",
+            "nome_oficial": "Vitamina D (25-OH)",
+            "codigo_tuss": "40302318",
+            "sinonimos": [
+                "VIT D",
+                "25 HIDROXIVITAMINA D",
+                "25-OH VITAMINA D",
+                "VITAMINA D"
+            ],
+            "variacoes": [
+                "25 OH COLECALCIFEROL",
+                "CALCIDIOL"
+            ],
+            "erros_ocr_comuns": [
+                "VIT 0",
+                "V1T D",
+                "VITAMINA 0",
+                "VIT.D"
+            ],
+            "categoria": "VITAMINAS"
+        },
+        {
+            "id": "vitamina_b12",
+            "nome_oficial": "Vitamina B12",
+            "codigo_tuss": "40302083",
+            "sinonimos": [
+                "VIT B12",
+                "CIANOCOBALAMINA",
+                "COBALAMINA"
+            ],
+            "variacoes": [
+                "DOSAGEM B12"
+            ],
+            "erros_ocr_comuns": [
+                "VIT 812",
+                "V1T B12",
+                "B12"
+            ],
+            "categoria": "VITAMINAS"
+        },
+        {
+            "id": "acido_folico",
+            "nome_oficial": "Ácido Fólico",
+            "codigo_tuss": "40301397",
+            "sinonimos": [
+                "FOLATO",
+                "VIT B9",
+                "VITAMINA B9"
+            ],
+            "variacoes": [
+                "DOSAGEM ACIDO FOLICO"
+            ],
+            "erros_ocr_comuns": [
+                "AC FOLICO",
+                "ACIDO FOL1CO"
+            ],
+            "categoria": "VITAMINAS"
+        },
+        {
+            "id": "ferro_serico",
+            "nome_oficial": "Ferro Sérico",
+            "codigo_tuss": "40301958",
+            "sinonimos": [
+                "FERRO",
+                "FE SERICO"
+            ],
+            "variacoes": [
+                "DOSAGEM FERRO"
+            ],
+            "erros_ocr_comuns": [
+                "FERR0"
+            ],
+            "categoria": "MINERAIS"
+        },
+        {
+            "id": "ferritina",
+            "nome_oficial": "Ferritina",
+            "codigo_tuss": "40301966",
+            "sinonimos": [
+                "FERRITINA SERICA"
+            ],
+            "variacoes": [
+                "DOSAGEM FERRITINA"
+            ],
+            "erros_ocr_comuns": [
+                "FERR1TINA",
+                "FERITINA"
+            ],
+            "categoria": "MINERAIS"
+        },
+        {
+            "id": "calcio",
+            "nome_oficial": "Cálcio",
+            "codigo_tuss": "40301559",
+            "sinonimos": [
+                "CA",
+                "CALCIO SERICO",
+                "CALCEMIA"
+            ],
+            "variacoes": [
+                "DOSAGEM CALCIO"
+            ],
+            "erros_ocr_comuns": [
+                "CALC1O"
+            ],
+            "categoria": "MINERAIS"
+        },
+        {
+            "id": "magnesio",
+            "nome_oficial": "Magnésio",
+            "codigo_tuss": "40302229",
+            "sinonimos": [
+                "MG",
+                "MAGNESIO SERICO"
+            ],
+            "variacoes": [
+                "DOSAGEM MAGNESIO"
+            ],
+            "erros_ocr_comuns": [
+                "MAGNES1O"
+            ],
+            "categoria": "MINERAIS"
+        },
+        {
+            "id": "potassio",
+            "nome_oficial": "Potássio",
+            "codigo_tuss": "40302342",
+            "sinonimos": [
+                "K",
+                "POTASSIO SERICO",
+                "CALEMIA"
+            ],
+            "variacoes": [
+                "DOSAGEM POTASSIO"
+            ],
+            "erros_ocr_comuns": [],
+            "categoria": "MINERAIS"
+        },
+        {
+            "id": "sodio",
+            "nome_oficial": "Sódio",
+            "codigo_tuss": "40302482",
+            "sinonimos": [
+                "NA",
+                "SODIO SERICO",
+                "NATREMIA"
+            ],
+            "variacoes": [
+                "DOSAGEM SODIO"
+            ],
+            "erros_ocr_comuns": [
+                "SOOIO",
+                "SOD1O"
+            ],
+            "categoria": "MINERAIS"
+        },
+        {
+            "id": "urina_rotina",
+            "nome_oficial": "Urina Rotina (EAS)",
+            "codigo_tuss": "40311058",
+            "sinonimos": [
+                "EAS",
+                "URINA TIPO I",
+                "SUMARIO URINA",
+                "URINA I",
+                "PARCIAL DE URINA"
+            ],
+            "variacoes": [
+                "EXAME DE URINA",
+                "URINA SIMPLES",
+                "ELEMENTOS ANORMAIS SEDIMENTO"
+            ],
+            "erros_ocr_comuns": [
+                "URINA ROTIMA",
+                "UR1NA",
+                "URINA I",
+                "URIMA"
+            ],
+            "categoria": "URINA"
+        },
+        {
+            "id": "urocultura",
+            "nome_oficial": "Urocultura com Antibiograma",
+            "codigo_tuss": "40310540",
+            "sinonimos": [
+                "UROCULTURA",
+                "CULTURA URINA",
+                "CULTURA DE URINA"
+            ],
+            "variacoes": [
+                "UROCULTURA + ANTIBIOGRAMA"
+            ],
+            "erros_ocr_comuns": [
+                "UROCULT",
+                "UROCU1TURA"
+            ],
+            "categoria": "URINA"
+        },
+        {
+            "id": "epf",
+            "nome_oficial": "Parasitológico de Fezes (EPF)",
+            "codigo_tuss": "40307646",
+            "sinonimos": [
+                "EPF",
+                "PROTOPARASITOLOGICO",
+                "PPF",
+                "PARASITOLOGICO"
+            ],
+            "variacoes": [
+                "EXAME PARASITOLOGICO FEZES",
+                "FEZES PARASITAS"
+            ],
+            "erros_ocr_comuns": [
+                "EPE",
+                "PARAS1TOLOGICO"
+            ],
+            "categoria": "FEZES"
+        },
+        {
+            "id": "fsh",
+            "nome_oficial": "FSH",
+            "codigo_tuss": "40316220",
+            "sinonimos": [
+                "FOLICULO ESTIMULANTE",
+                "HORMONIO FOLICULO ESTIMULANTE"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "F5H",
+                "ESH"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "lh",
+            "nome_oficial": "LH",
+            "codigo_tuss": "40316262",
+            "sinonimos": [
+                "LUTEINIZANTE",
+                "HORMONIO LUTEINIZANTE"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "1H"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "estradiol",
+            "nome_oficial": "Estradiol",
+            "codigo_tuss": "40316181",
+            "sinonimos": [
+                "E2",
+                "17 BETA ESTRADIOL"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "ESTRAD10L"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "progesterona",
+            "nome_oficial": "Progesterona",
+            "codigo_tuss": "40316378",
+            "sinonimos": [],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "PROGEST",
+                "PROGESTEROMA"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "testosterona",
+            "nome_oficial": "Testosterona Total",
+            "codigo_tuss": "40316459",
+            "sinonimos": [
+                "TESTOSTERONA"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "TESTOST",
+                "TESTOSTEROMA"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "prolactina",
+            "nome_oficial": "Prolactina",
+            "codigo_tuss": "40316386",
+            "sinonimos": [
+                "PRL"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "PROLACT",
+                "PROLACTIMA"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "cortisol",
+            "nome_oficial": "Cortisol",
+            "codigo_tuss": "40316114",
+            "sinonimos": [
+                "CORTISOL BASAL",
+                "CORTISOL MANHA"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "CORT1SOL"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "insulina",
+            "nome_oficial": "Insulina",
+            "codigo_tuss": "40316254",
+            "sinonimos": [
+                "INSULINA BASAL",
+                "INSULINA JEJUM"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "INSUL1NA"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "psa_total",
+            "nome_oficial": "PSA Total",
+            "codigo_tuss": "40316394",
+            "sinonimos": [
+                "PSA",
+                "ANTIGENO PROSTATICO"
+            ],
+            "variacoes": [
+                "ANTIGENO PROSTATICO ESPECIFICO"
+            ],
+            "erros_ocr_comuns": [
+                "P5A"
+            ],
+            "categoria": "MARCADORES"
+        },
+        {
+            "id": "psa_livre",
+            "nome_oficial": "PSA Livre",
+            "codigo_tuss": "40316408",
+            "sinonimos": [],
+            "variacoes": [],
+            "erros_ocr_comuns": [],
+            "categoria": "MARCADORES"
+        },
+        {
+            "id": "pcr",
+            "nome_oficial": "PCR (Proteína C Reativa)",
+            "codigo_tuss": "40301770",
+            "sinonimos": [
+                "PCR",
+                "PROTEINA C REATIVA"
+            ],
+            "variacoes": [
+                "PCR ULTRASSENSIVEL"
+            ],
+            "erros_ocr_comuns": [
+                "P CR"
+            ],
+            "nota": "Não confundir com PCR (reação cadeia polimerase)",
+            "categoria": "INFLAMATORIOS"
+        },
+        {
+            "id": "vhs",
+            "nome_oficial": "VHS",
+            "codigo_tuss": "40304523",
+            "sinonimos": [
+                "VELOCIDADE HEMOSSEDIMENTACAO",
+                "HEMOSSEDIMENTACAO"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "VH5"
+            ],
+            "categoria": "INFLAMATORIOS"
+        },
+        {
+            "id": "anti_hiv",
+            "nome_oficial": "Anti-HIV 1 e 2",
+            "codigo_tuss": "40307166",
+            "sinonimos": [
+                "HIV",
+                "SOROLOGIA HIV",
+                "AIDS"
+            ],
+            "variacoes": [
+                "ANTI HIV"
+            ],
+            "erros_ocr_comuns": [
+                "H1V"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "vdrl",
+            "nome_oficial": "VDRL",
+            "codigo_tuss": "40307689",
+            "sinonimos": [
+                "SIFILIS",
+                "SOROLOGIA SIFILIS"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "VORL"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "hbsag",
+            "nome_oficial": "HBsAg (Hepatite B)",
+            "codigo_tuss": "40307379",
+            "sinonimos": [
+                "HBSAG",
+                "HEPATITE B",
+                "HEP B"
+            ],
+            "variacoes": [
+                "ANTIGENO SUPERFICIE HEPATITE B"
+            ],
+            "erros_ocr_comuns": [
+                "HBSAG",
+                "H8SAG"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "anti_hcv",
+            "nome_oficial": "Anti-HCV (Hepatite C)",
+            "codigo_tuss": "40307344",
+            "sinonimos": [
+                "ANTI HCV",
+                "HEPATITE C",
+                "HEP C",
+                "HCV"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "ANT1 HCV"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "beta_hcg",
+            "nome_oficial": "Beta-HCG",
+            "codigo_tuss": "40316092",
+            "sinonimos": [
+                "BHCG",
+                "HCG",
+                "TESTE GRAVIDEZ"
+            ],
+            "variacoes": [
+                "BETA HCG QUANTITATIVO",
+                "GONADOTROFINA CORIONICA"
+            ],
+            "erros_ocr_comuns": [
+                "8HCG",
+                "BETA HC6"
+            ],
+            "categoria": "HORMONIOS"
+        },
+        {
+            "id": "coagulograma",
+            "nome_oficial": "Coagulograma",
+            "codigo_tuss": null,
+            "sinonimos": [
+                "COAGULO",
+                "COAG"
+            ],
+            "variacoes": [
+                "TEMPO PROTROMBINA E TROMBOPLASTINA"
+            ],
+            "erros_ocr_comuns": [
+                "COAGULOG"
+            ],
+            "nota": "Composto por: TP, TTPA, INR",
+            "categoria": "HEMATOLOGIA"
+        },
+        {
+            "id": "tp",
+            "nome_oficial": "Tempo de Protrombina (TP)",
+            "codigo_tuss": "40304370",
+            "sinonimos": [
+                "TP",
+                "TAP",
+                "PROTROMBINA"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [],
+            "categoria": "HEMATOLOGIA"
+        },
+        {
+            "id": "ttpa",
+            "nome_oficial": "TTPA",
+            "codigo_tuss": "40304400",
+            "sinonimos": [
+                "TEMPO TROMBOPLASTINA PARCIAL ATIVADA",
+                "PTT"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "TIPA"
+            ],
+            "categoria": "HEMATOLOGIA"
+        },
+        {
+            "id": "inr",
+            "nome_oficial": "INR",
+            "codigo_tuss": "40304370",
+            "sinonimos": [
+                "RAZAO NORMALIZADA INTERNACIONAL"
+            ],
+            "variacoes": [],
+            "erros_ocr_comuns": [
+                "1NR"
+            ],
+            "categoria": "HEMATOLOGIA"
+        }
+    ]
+}

@@ -119,6 +119,8 @@ class OCRProcessor:
                 except Exception as e:
                     print(f"❌ Erro ao converter PDF: {e}")
                     return {"error": f"SERVER: PDF Conversion Failed: {str(e)}", "status": "error"}
+        except Exception as e:
+             print(f"⚠️ PDF Block Warning: {e}")
 
         try:
             # === CAMADA 1: ROI DETECTION & PRE-PROCESSAMENTO ===
@@ -513,12 +515,21 @@ class OCRProcessor:
     def _load_exams_dictionary(self) -> dict:
         """Carrega o dicionário JSON de exames"""
         try:
-            # Caminho relativo ou absoluto
-            json_path = os.path.join(os.path.dirname(__file__), "data", "exams_dictionary.json")
+            # Garante que o caminho seja relativo ao arquivo ocr_processor.py, não ao CWD
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            json_path = os.path.join(base_dir, "data", "exams_dictionary.json")
+            
+            print(f"📖 Tentando carregar dicionário de: {json_path}")
+            
+            if not os.path.exists(json_path):
+                 print(f"❌ ARQUIVO NÃO ENCONTRADO: {json_path}")
+                 # Fallback: tentar criar diretório e arquivo vazio se não existir
+                 return {"exames": []}
+
             with open(json_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"❌ Erro ao carregar exams_dictionary.json: {e}")
+            print(f"❌ Erro crítico ao carregar exams_dictionary.json: {e}")
             return {"exames": []}
 
     def _flatten_dictionary(self) -> list:

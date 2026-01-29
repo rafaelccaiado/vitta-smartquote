@@ -9,7 +9,9 @@ import shutil
 ocr_processor = None
 bq_client = None
 ValidationService = None
+ValidationService = None
 learning_service = None
+initialization_error = "Unknown Error (Log not captured)"
 
 try:
     from ocr_processor import OCRProcessor
@@ -17,6 +19,8 @@ try:
     from validation_logic import ValidationService
     from services.learning_service import learning_service
 except Exception as e:
+    import traceback
+    traceback.print_exc()
     print(f"⚠️ Erro ao importar dependências: {e}")
 
 app = FastAPI(title="Vittá SmartQuote API")
@@ -30,6 +34,9 @@ try:
         bq_client = BigQueryClient()
     print("✅ Clientes inicializados")
 except Exception as e:
+    import traceback
+    traceback.print_exc()
+    initialization_error = str(e)
     print(f"❌ Erro crítico na inicialização: {e}")
 
 # Configurar CORS
@@ -72,8 +79,10 @@ async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro
         contents = await file.read()
         
         # Processar com OCR real
-        if not ocr_processor:
-             return {"error": "OCR Processor não inicializado no servidor. Verifique logs e chaves GCP."}
+    if not ocr_processor:
+        # Retorna o erro real capturado na inicialização
+        error_msg = f"OCR Processor Init Failed. Details: {initialization_error}"
+        return {"error": error_msg}
              
         result = ocr_processor.process_image(contents)
         
