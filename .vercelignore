@@ -1,17 +1,25 @@
+# Strict Ignore for 250MB Limit
 node_modules
 dist
 venv
+.venv
+backend
 backend/venv
 __pycache__
 *.pyc
 .env
-.env.local
+.env.*
 .vscode
 .idea
 *.log
 backend/*.log
 backend/logs
-backend/temp_tuss
-!api/temp_tuss
 requirements_backup.txt
 api/requirements_backup.txt
+api/tuss_debug.txt
+api/backend_err.log
+# Keep only essential API data
+!api/temp_tuss
+!api/temp_tuss/TUSS
+!api/temp_tuss/TUSS/tabela 22
+!api/temp_tuss/TUSS/tabela 22/tabela_22.json
