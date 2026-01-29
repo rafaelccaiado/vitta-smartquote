@@ -224,9 +224,9 @@ class OCRProcessor:
                 "model_used": "Google Cloud Vision API (Enhanced Pipeline)",
                 "pipeline_info": {
                     "preprocessing_applied": preprocessing_applied,
-                    "llm_correction_applied": llm_correction_data is not None,
+                    "llm_correction_applied": interpretation is not None,
                     "raw_ocr_text": raw_ocr_text,
-                    "llm_corrections": llm_correction_data
+                    "llm_corrections": interpretation
                 },
                 "debug_raw": [{
                     "model": "google-vision-enhanced", 

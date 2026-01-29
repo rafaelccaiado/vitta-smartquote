@@ -238,7 +238,7 @@ export default function UploadImage({ onUpload, selectedUnit, onUnitChange }) {
 
             <div className="text-center mt-4">
                 <span className="text-[10px] text-gray-400 font-mono">
-                    System Version: V70.18 (Resolute Pipeline Active)
+                    System Version: V70.19 (Resolute Flow & Skill Locked)
                 </span>
             </div>
         </div >
