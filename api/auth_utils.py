@@ -12,7 +12,14 @@ def get_gcp_credentials():
     Espera env var: GCP_SA_KEY_BASE64
     """
     encoded_key = os.getenv("GCP_SA_KEY_BASE64")
-    if not encoded_key: raise ValueError("Env Var GCP_SA_KEY_BASE64 Missing!")
+    
+    if not encoded_key:
+        # Vercel/Local Fallback: Procura arquivo gcp_key.json no diretório da API
+        # IMPORTANTE: Apenas se não houver a env var (prioridade para Env Var)
+        key_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gcp_key.json")
+        if os.path.exists(key_path):
+            return service_account.Credentials.from_service_account_file(key_path)
+        raise ValueError("Env Var GCP_SA_KEY_BASE64 Missing and gcp_key.json not found!")
     decoded_bytes = base64.b64decode(encoded_key)
     
     # FINAL SANITIZER V36: Fix PEM Private Key

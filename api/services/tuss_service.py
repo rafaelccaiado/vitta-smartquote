@@ -4,8 +4,14 @@ import os
 import unicodedata
 
 class TussService:
-    def __init__(self, json_path: str = "temp_tuss/TUSS/tabela 22/tabela_22.json"):
-        self.json_path = json_path
+    def __init__(self, json_path: str = None):
+        if json_path is None:
+            # Caminho relativo ao diretório da API
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self.json_path = os.path.join(base_dir, "temp_tuss/TUSS/tabela 22/tabela_22.json")
+        else:
+            self.json_path = json_path
+            
         self.procedures = {} # map code -> full data
         self.synonyms = {}   # map alias -> official name
         self._load_data()
