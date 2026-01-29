@@ -21,16 +21,28 @@ except Exception as e:
 
 app = FastAPI(title="Vittá SmartQuote API")
 
+init_status = {"ocr": "Pending", "bq": "Pending", "errors": []}
+
 # Inicializar clientes
 try:
     print("⏳ Inicializando clientes...")
     if 'OCRProcessor' in globals() and OCRProcessor:
         ocr_processor = OCRProcessor()
+        init_status["ocr"] = "OK"
+    else:
+        init_status["ocr"] = "Failed (Import missing)"
+        
     if 'BigQueryClient' in globals() and BigQueryClient:
         bq_client = BigQueryClient()
+        init_status["bq"] = "OK"
+    else:
+        init_status["bq"] = "Failed (Import missing)"
+        
     print("✅ Clientes inicializados")
 except Exception as e:
-    print(f"❌ Erro crítico na inicialização: {e}")
+    error_msg = f"❌ Erro crítico na inicialização: {e}"
+    print(error_msg)
+    init_status["errors"].append(error_msg)
 
 # Configurar CORS
 app.add_middleware(
@@ -73,7 +85,8 @@ async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro
         
         # Processar com OCR real
         if not ocr_processor:
-             return {"error": "OCR Processor não inicializado no servidor. Verifique logs e chaves GCP."}
+             details = "; ".join(init_status["errors"]) or "Reason unknown"
+             return {"error": f"SERVER: OCR Processor not initialized. Status: {init_status['ocr']}. Error: {details}"}
              
         result = ocr_processor.process_image(contents)
         

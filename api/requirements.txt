@@ -8,4 +8,5 @@ pydantic-settings
 pillow
 rapidfuzz
 python-dotenv
-# CACHE_BUST: V70.13 (Safe-Init-Lite)
+numpy
+# CACHE_BUST: V70.14 (Numpy Fix)
