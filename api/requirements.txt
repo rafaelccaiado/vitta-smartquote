@@ -10,5 +10,6 @@ pydantic-settings
 rapidfuzz
 pillow
 numpy
-# opencv-python-headless
-# CACHE_BUST: V33 (Force Rebuild)
+opencv-python-headless
+pymupdf
+# CACHE_BUST: V70.1 (Correct Requirements)
