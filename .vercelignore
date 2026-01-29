@@ -11,6 +11,7 @@ __pycache__
 *.log
 backend/*.log
 backend/logs
-temp_tuss
+backend/temp_tuss
+!api/temp_tuss
 requirements_backup.txt
 api/requirements_backup.txt
