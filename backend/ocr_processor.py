@@ -191,6 +191,18 @@ class OCRProcessor:
                 else:
                     print(f"⚠️ Match Failed (<60): {candidate}")
 
+            # === FALLBACK SAFETY NET (V81.1) ===
+            # Se o dicionário foi muito rigoroso e removeu tudo, devolve o raw do LLM
+            if not detailed_lines and exam_candidates:
+                print("⚠️ Strict Matching yielded 0 results. Using raw candidates as fallback.")
+                for candidate in exam_candidates:
+                     detailed_lines.append({
+                        "original": candidate,
+                        "corrected": candidate + " [⚠️ Não Verificado]",
+                        "confidence": 0.5,
+                        "method": "llm_fallback"
+                    })
+
             # Final Cleanup
             clean_text = "\n".join([x["corrected"] for x in detailed_lines])
             avg_conf = sum(x["confidence"] for x in detailed_lines)/len(detailed_lines) if detailed_lines else 0
