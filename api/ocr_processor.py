@@ -78,39 +78,36 @@ class OCRProcessor:
 #                        images.append(img)
 #                        print(f"   - Página {i+1} renderizada ({pix.width}x{pix.height})")
 
-                    if not images:
-                        raise ValueError("PDF vazio ou ilegível")
-
-                    # Stitch images vertically
-                    total_width = max(img.width for img in images)
-                    total_height = sum(img.height for img in images)
-                    
-                    # Limit total height to avoid Vision API limits (max 20000 pixels usually ok, but be safe)
-                    MAX_HEIGHT = 15000
-                    scale = 1.0
-                    if total_height > MAX_HEIGHT:
-                        scale = MAX_HEIGHT / total_height
-                        total_width = int(total_width * scale)
-                        total_height = MAX_HEIGHT
-                        print(f"⚠️ Imagem muito longa! Redimensionando para {total_height}px de altura.")
-                        # Resize all images
-                        images = [img.resize((int(img.width * scale), int(img.height * scale)), Image.Resampling.LANCZOS) for img in images]
-
-                    stitched = Image.new('RGB', (total_width, total_height), (255, 255, 255))
-                    current_y = 0
-                    for img in images:
-                        stitched.paste(img, (0, current_y))
-                        current_y += img.height
-                    
-                    # Convert back to bytes
-                    img_byte_arr = io.BytesIO()
-                    stitched.save(img_byte_arr, format='JPEG', quality=95)
-                    image_bytes = img_byte_arr.getvalue()
-                    print(f"✅ Conversão PDF -> Imagem Job completa (Nova size: {len(image_bytes)} bytes)")
-                    
-                except ImportError:
-                    print("❌ PyMuPDF (fitz) não instalado. Falha ao processar PDF.")
-                    return {"error": "SERVER: PDF upload requires pymupdf installed.", "status": "error"}
+#                    if not images:
+#                        raise ValueError("PDF vazio ou ilegível")
+#
+#                    # Stitch images vertically
+#                    total_width = max(img.width for img in images)
+#                    total_height = sum(img.height for img in images)
+#                    
+#                    # Limit total height to avoid Vision API limits (max 20000 pixels usually ok, but be safe)
+#                    MAX_HEIGHT = 15000
+#                    scale = 1.0
+#                    if total_height > MAX_HEIGHT:
+#                        scale = MAX_HEIGHT / total_height
+#                        total_width = int(total_width * scale)
+#                        total_height = MAX_HEIGHT
+#                        print(f"⚠️ Imagem muito longa! Redimensionando para {total_height}px de altura.")
+#                        # Resize all images
+#                        images = [img.resize((int(img.width * scale), int(img.height * scale)), Image.Resampling.LANCZOS) for img in images]
+#
+#                    stitched = Image.new('RGB', (total_width, total_height), (255, 255, 255))
+#                    current_y = 0
+#                    for img in images:
+#                        stitched.paste(img, (0, current_y))
+#                        current_y += img.height
+#                    
+#                    # Convert back to bytes
+#                    img_byte_arr = io.BytesIO()
+#                    stitched.save(img_byte_arr, format='JPEG', quality=95)
+#                    image_bytes = img_byte_arr.getvalue()
+#                    print(f"✅ Conversão PDF -> Imagem Job completa (Nova size: {len(image_bytes)} bytes)")
+                    pass
                 except Exception as e:
                     print(f"❌ Erro ao converter PDF: {e}")
                     return {"error": f"SERVER: PDF Conversion Failed: {str(e)}", "status": "error"}

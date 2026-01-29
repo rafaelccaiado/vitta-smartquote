@@ -25,10 +25,10 @@ class LLMOCRCorrector:
             return
         
         try:
-            genai.configure(api_key=api_key)
-            
-            # Usar Gemini Flash (mais rápido e barato)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+#            genai.configure(api_key=api_key)
+#            
+#            # Usar Gemini Flash (mais rápido e barato)
+#            self.model = None#genai.GenerativeModel('gemini-1.5-flash')
             
             # Cache de correções comuns (para economizar chamadas)
             self.correction_cache = {}

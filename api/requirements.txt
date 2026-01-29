@@ -8,4 +8,4 @@ pydantic-settings
 pillow
 rapidfuzz
 python-dotenv
-# CACHE_BUST: V70.12 (Ultra-Lite-Force)
+# CACHE_BUST: V70.13 (Safe-Init-Lite)
