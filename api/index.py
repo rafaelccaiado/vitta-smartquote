@@ -37,23 +37,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize Clients
-ocr_processor = None
-bq_client = None
+# Initialize Clients (LAZY V70.2)
+_ocr_processor_instance = None
+_bq_client_instance = None
 
-if OCRProcessor:
-    try:
-        ocr_processor = OCRProcessor()
-        print("✅ OCR Init Success")
-    except Exception as e:
-        print(f"❌ OCR Init Fail: {e}")
+def get_ocr_processor():
+    global _ocr_processor_instance
+    if _ocr_processor_instance is None and OCRProcessor:
+        try:
+            _ocr_processor_instance = OCRProcessor()
+            print("✅ OCR Init Success")
+        except Exception as e:
+            print(f"❌ OCR Init Fail: {e}")
+    return _ocr_processor_instance
 
-if BigQueryClient:
-    try:
-        bq_client = BigQueryClient()
-        print("✅ BigQuery Init Success")
-    except Exception as e:
-        print(f"❌ BigQuery Init Fail: {e}")
+def get_bq_client():
+    global _bq_client_instance
+    if _bq_client_instance is None and BigQueryClient:
+        try:
+            _bq_client_instance = BigQueryClient()
+            print("✅ BigQuery Init Success")
+        except Exception as e:
+            print(f"❌ BigQuery Init Fail: {e}")
+    return _bq_client_instance
 
 
 @app.get("/api/health")
@@ -68,11 +74,14 @@ def health_check():
         except:
             key_status = "INVALID_B64"
 
+    ocr_p = get_ocr_processor()
+    bq_c = get_bq_client()
+    
     return {
         "status": "online",
-        "mode": "Vercel Monolith V40 (Full Backend)",
-        "ocr_ready": ocr_processor is not None,
-        "bq_ready": bq_client is not None,
+        "mode": "Vercel Monolith V70.2 (Lazy Init)",
+        "ocr_ready": ocr_p is not None,
+        "bq_ready": bq_c is not None,
         "env_check": {
             "GCP_SA_KEY_BASE64": key_status,
         }
@@ -80,20 +89,21 @@ def health_check():
 
 @app.post("/api/ocr")
 async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
-    if not ocr_processor:
+    ocr_p = get_ocr_processor()
+    if not ocr_p:
         return {"error": "OCR Processor not initialized"}
     contents = await file.read()
-    return ocr_processor.process_image(contents)
+    return ocr_p.process_image(contents)
 
 @app.get("/api/units")
 async def get_units():
     try:
-        if not bq_client:
-             # Fallback temporarily if BQ is down, but user complained about these.
-             # Ideally BQ works.
+        bq_c = get_bq_client()
+        if not bq_c:
+             # Fallback temporarily if BQ is down
              return {"units": ["Goiânia Centro", "Anápolis", "Trindade"]}
         
-        units = bq_client.get_units()
+        units = bq_c.get_units()
         return {"units": units}
     except Exception as e:
         print(f"Erro get-units: {e}")
@@ -102,16 +112,16 @@ async def get_units():
 
 @app.post("/api/validate-list")
 async def validate_list(data: dict):
-    # Recebe { "terms": ["hemograma", ...], "unit": "..." }
     try:
-        if not bq_client:
+        bq_c = get_bq_client()
+        if not bq_c:
              raise Exception("BigQuery Client not initialized")
              
         terms = data.get("terms", [])
         unit = data.get("unit", "Goiânia Centro")
         
         # ValidationService agora está na pasta local
-        result = ValidationService.validate_batch(terms, unit, bq_client)
+        result = ValidationService.validate_batch(terms, unit, bq_c)
         return result
     except Exception as e:
         print(f"Erro validate-list: {e}")
@@ -120,7 +130,8 @@ async def validate_list(data: dict):
 @app.post("/api/search-exams")
 async def search_exams_endpoint(data: dict):
     try:
-        if not bq_client:
+        bq_c = get_bq_client()
+        if not bq_c:
              raise Exception("BigQuery Client not initialized")
 
         term = data.get("term", "")
@@ -129,7 +140,7 @@ async def search_exams_endpoint(data: dict):
         if not term:
             return {"exams": []}
             
-        exams = bq_client.search_exams(term, unit)
+        exams = bq_c.search_exams(term, unit)
         return {"exams": exams, "count": len(exams)}
     except Exception as e:
         print(f"Erro search-exams: {e}")

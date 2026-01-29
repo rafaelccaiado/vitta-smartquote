@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+requests
+python-dotenv
+google-cloud-bigquery
+google-cloud-vision
+google-generativeai
+pydantic-settings
+rapidfuzz
+pillow
+numpy
+opencv-python-headless
+pymupdf
+# CACHE_BUST: V70.1 (Correct Requirements)
