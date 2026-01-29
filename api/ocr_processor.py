@@ -286,8 +286,9 @@ class OCRProcessor:
             return {
                 "text": "",
                 "confidence": 0.0, 
-                "error": str(e),
-                "model_used": "Google Cloud Vision (Error)"
+                "error": f"CRITICAL SERVER ERROR: {str(e)}",
+                "backend_version": "V70.1-VercelFix",
+                "model_used": "Error Handler"
             }
 
     def _smart_parse(self, text: str) -> str:
