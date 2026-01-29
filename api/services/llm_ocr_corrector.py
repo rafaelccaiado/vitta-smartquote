@@ -96,67 +96,46 @@ class LLMOCRCorrector:
     def _build_correction_prompt(self, ocr_text: str) -> str:
         """Constrói prompt otimizado para correção de exames médicos"""
         
-        return f"""Você é um especialista em pedidos médicos laboratoriais brasileiros.
+        return f"""Você é um especialista em extração de EXAMES LABORATORIAIS de pedidos médicos.
+Sua função é identificar APENAS nomes de exames e corrigir erros de digitação (OCR).
 
-O OCR extraiu este texto de um pedido manuscrito:
-
+O OCR extraiu este texto bruto:
 ```
-{ocr_text}
+{{ocr_text}}
 ```
 
-TAREFA:
-1. Identifique termos que parecem ser nomes de exames laboratoriais
-2. Ignore termos que NÃO são exames, como:
-    - Diagnósticos (CID, HDS, HD)
-    - Números aleatórios ou códigos internos
-    - Logotipos ("Hosp", "Denmar", "Unimed")
+REGRAS CRÍTICAS (ANTI-ALUCINAÇÃO):
+1. IGNORE TUDO que não for nome de exame.
+   - Nomes de pacientes, Médicos (Dr.), CRM, Datas, Idades (35a, 2m), Gênero (Masculino/Feminino).
+   - Cabeçalhos (Solicitação, Pedido, Laboratório).
+   - Especialidades médicas (Urologia, Cardiologia, Ginecologia) -> NÃO CONVERTA 'Urologia' em 'Ureia'.
+   - Endereços e telefones.
+   
+2. NÃO INVENTE EXAMES.
+   - Se o OCR leu "Estradiol", mantenha "Estradiol". NÃO troque por "Colesterol" ou "Lipidograma".
+   - Se o texto é "Urologia", IGNORE.
+   - Se o texto é "35a 9m", IGNORE.
 
-3.  **SEPARE EXAMES AGRUPADOS**:
-    - Se uma linha tiver múltiplos exames, quebre em itens separados.
-    - Ex: "Ureia, Creatinina" -> ["Ureia", "Creatinina"]
-    - Ex: "Complemento C3, C4" -> ["Complemento C3", "Complemento C4"]
-    - Ex: "TGO / TGP" -> ["TGO", "TGP"]
+3. CORRIJA ERROS REAIS DE OCR:
+   - "Hemoglama" -> "Hemograma"
+   - "Gicose" -> "Glicose"
+   - "T4 Lvre" -> "T4 Livre"
 
-4.  **EXPANDA ANTICORPOS (IgG/IgM/IgA)**:
-    - Se houver múltiplos anticorpos na mesma linha, crie exames separados PRESERVANDO o nome base.
-    - Ex: "Anti Beta 2 Glicoproteina IgM IgG" -> ["Anti Beta 2 Glicoproteina IgM", "Anti Beta 2 Glicoproteina IgG"]
-    - Ex: "Sorologia Dengue IgG e IgM" -> ["Dengue IgG", "Dengue IgM"]
-
-5.  **IDENTIFIQUE** os exames laboratoriais válidos.
-    - Inclua **Autoanticorpos**: FAN, Anti-DNA, Anti-SM, Anti-RO, Anti-LA, Anti-RNP, ANCA.
-
-6.  **CORRIJA** erros de OCR nos exames identificados:
-    - Contexto médico brasileiro (ex: "Hemograma", "TSH", "EAS")
-    - Corrija siglas e erros de digitação (ex: "Homograma" -> "Hemograma")
-
-7. Para cada termo identificado e corrigido, retorne:
-   - O texto original do OCR
-   - A correção sugerida
-   - Nível de confiança (0.0 a 1.0)
-
-EXAMES COMUNS NO BRASIL:
-- Hemograma, Lipidograma, Colesterol (total/HDL/LDL)
-- TSH, T3, T4 Livre, FSH, LH
-- Glicemia, Glicose, Hemoglobina Glicada
-- Ureia, Creatinina, Ácido Úrico
-- TGO, TGP, Gama GT
-- EAS (Urina Tipo I), Parasitológico de Fezes
-- PSA, Beta HCG
-- Vitamina D, Vitamina B12, Ferritina
-
-FORMATO DE SAÍDA (JSON):
+SAÍDA OBRIGATÓRIA (JSON):
 {{
   "exames": [
-    {{"ocr": "texto_original", "corrected": "texto_corrigido", "confidence": 0.95}},
+    {{"ocr": "texto_original_do_ocr", "corrected": "nome_do_exame_corrigido", "confidence": 0.95}},
     ...
   ]
 }}
 
-IMPORTANTE:
-- Retorne APENAS o JSON, sem texto adicional
-- Se não tiver certeza, mantenha o texto original
-- Ignore linhas que não parecem exames (nomes, datas, etc)
-- Confiança alta (>0.9) apenas para correções óbvias
+EXEMPLOS DE FILTRAGEM:
+Entrada: "Dr. Joao Silva" -> SAÍDA: Ignorar
+Entrada: "35 anos" -> SAÍDA: Ignorar
+Entrada: "Urologia" -> SAÍDA: Ignorar
+Entrada: "Hemograma Completo" -> SAÍDA: {{"ocr": "Hemograma Completo", "corrected": "Hemograma Completo", "confidence": 1.0}}
+
+IMPORTANTE: Retorne APENAS o JSON válido. Se não houver exames, retorne {{"exames": []}}.
 """
     
     def _parse_llm_response(self, response_text: str, original_text: str) -> Dict:

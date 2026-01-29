@@ -96,50 +96,46 @@ class LLMOCRCorrector:
     def _build_correction_prompt(self, ocr_text: str) -> str:
         """Constrói prompt otimizado para correção de exames médicos"""
         
-        return f"""Você é um especialista em pedidos médicos laboratoriais brasileiros.
+        return f"""Você é um especialista em extração de EXAMES LABORATORIAIS de pedidos médicos.
+Sua função é identificar APENAS nomes de exames e corrigir erros de digitação (OCR).
 
-O OCR extraiu este texto de um pedido manuscrito:
-
+O OCR extraiu este texto bruto:
 ```
-{ocr_text}
+{{ocr_text}}
 ```
 
-TAREFA:
-1. Identifique termos que parecem ser nomes de exames laboratoriais
-2. Corrija erros óbvios de OCR considerando:
-   - Erros comuns: letras trocadas (m↔n, l↔i, o↔a)
-   - Números confundidos com letras (4↔A, 5↔S, 1↔I, 0↔O)
-   - Palavras parciais ou mal escritas
-   - Contexto médico brasileiro
+REGRAS CRÍTICAS (ANTI-ALUCINAÇÃO):
+1. IGNORE TUDO que não for nome de exame.
+   - Nomes de pacientes, Médicos (Dr.), CRM, Datas, Idades (35a, 2m), Gênero (Masculino/Feminino).
+   - Cabeçalhos (Solicitação, Pedido, Laboratório).
+   - Especialidades médicas (Urologia, Cardiologia, Ginecologia) -> NÃO CONVERTA 'Urologia' em 'Ureia'.
+   - Endereços e telefones.
+   
+2. NÃO INVENTE EXAMES.
+   - Se o OCR leu "Estradiol", mantenha "Estradiol". NÃO troque por "Colesterol" ou "Lipidograma".
+   - Se o texto é "Urologia", IGNORE.
+   - Se o texto é "35a 9m", IGNORE.
 
-3. Para cada termo identificado, retorne:
-   - O texto original do OCR
-   - A correção sugerida
-   - Nível de confiança (0.0 a 1.0)
+3. CORRIJA ERROS REAIS DE OCR:
+   - "Hemoglama" -> "Hemograma"
+   - "Gicose" -> "Glicose"
+   - "T4 Lvre" -> "T4 Livre"
 
-EXAMES COMUNS NO BRASIL:
-- Hemograma, Lipidograma, Colesterol (total/HDL/LDL)
-- TSH, T3, T4 Livre, FSH, LH
-- Glicemia, Glicose, Hemoglobina Glicada
-- Ureia, Creatinina, Ácido Úrico
-- TGO, TGP, Gama GT
-- EAS (Urina Tipo I), Parasitológico de Fezes
-- PSA, Beta HCG
-- Vitamina D, Vitamina B12, Ferritina
-
-FORMATO DE SAÍDA (JSON):
+SAÍDA OBRIGATÓRIA (JSON):
 {{
   "exames": [
-    {{"ocr": "texto_original", "corrected": "texto_corrigido", "confidence": 0.95}},
+    {{"ocr": "texto_original_do_ocr", "corrected": "nome_do_exame_corrigido", "confidence": 0.95}},
     ...
   ]
 }}
 
-IMPORTANTE:
-- Retorne APENAS o JSON, sem texto adicional
-- Se não tiver certeza, mantenha o texto original
-- Ignore linhas que não parecem exames (nomes, datas, etc)
-- Confiança alta (>0.9) apenas para correções óbvias
+EXEMPLOS DE FILTRAGEM:
+Entrada: "Dr. Joao Silva" -> SAÍDA: Ignorar
+Entrada: "35 anos" -> SAÍDA: Ignorar
+Entrada: "Urologia" -> SAÍDA: Ignorar
+Entrada: "Hemograma Completo" -> SAÍDA: {{"ocr": "Hemograma Completo", "corrected": "Hemograma Completo", "confidence": 1.0}}
+
+IMPORTANTE: Retorne APENAS o JSON válido. Se não houver exames, retorne {{"exames": []}}.
 """
     
     def _parse_llm_response(self, response_text: str, original_text: str) -> Dict:

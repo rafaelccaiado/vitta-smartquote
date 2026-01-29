@@ -246,10 +246,15 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
 
                     {/* Semantic Status Badge - V67 */}
                     {exams.length > 0 && (
-                        <div className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase
-                           ${exams[0]?._meta?.semantic_active ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-500'}`}>
-                            {exams[0]?._meta?.semantic_active ? '🔮 AI On' : '❌ AI Off'}
-                        </div>
+                        <>
+                            <div className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase
+                            ${exams[0]?._meta?.semantic_active ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-500'}`}>
+                                {exams[0]?._meta?.semantic_active ? '🔮 AI On' : '❌ AI Off'}
+                            </div>
+                            <div className="absolute bottom-1 right-2 text-[9px] text-gray-400">
+                                {exams[0]?._meta?.backend_version || "Ver: ?"}
+                            </div>
+                        </>
                     )}
                 </div>
             </div>

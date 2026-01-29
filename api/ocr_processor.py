@@ -60,6 +60,61 @@ class OCRProcessor:
             }
 
         try:
+            # === CAMADA 0: CONVERSÃO PDF -> IMAGEM ===
+            # Verificação relaxada: procura assinatura PDF nos primeiros 1024 bytes
+            if b'%PDF' in image_bytes[:1024]:
+                print("📄 Detectado arquivo PDF. Convertendo para imagem...")
+                try:
+                    import fitz  # PyMuPDF
+                    doc = fitz.open(stream=image_bytes, filetype="pdf")
+                    images = []
+                    
+                    print(f"📄 PDF tem {len(doc)} páginas.")
+                    
+                    for i, page in enumerate(doc):
+                        # Renderiza com zoom 2x para melhor qualidade OCR
+                        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+                        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                        images.append(img)
+                        print(f"   - Página {i+1} renderizada ({pix.width}x{pix.height})")
+
+                    if not images:
+                        raise ValueError("PDF vazio ou ilegível")
+
+                    # Stitch images vertically
+                    total_width = max(img.width for img in images)
+                    total_height = sum(img.height for img in images)
+                    
+                    # Limit total height to avoid Vision API limits (max 20000 pixels usually ok, but be safe)
+                    MAX_HEIGHT = 15000
+                    scale = 1.0
+                    if total_height > MAX_HEIGHT:
+                        scale = MAX_HEIGHT / total_height
+                        total_width = int(total_width * scale)
+                        total_height = MAX_HEIGHT
+                        print(f"⚠️ Imagem muito longa! Redimensionando para {total_height}px de altura.")
+                        # Resize all images
+                        images = [img.resize((int(img.width * scale), int(img.height * scale)), Image.Resampling.LANCZOS) for img in images]
+
+                    stitched = Image.new('RGB', (total_width, total_height), (255, 255, 255))
+                    current_y = 0
+                    for img in images:
+                        stitched.paste(img, (0, current_y))
+                        current_y += img.height
+                    
+                    # Convert back to bytes
+                    img_byte_arr = io.BytesIO()
+                    stitched.save(img_byte_arr, format='JPEG', quality=95)
+                    image_bytes = img_byte_arr.getvalue()
+                    print(f"✅ Conversão PDF -> Imagem Job completa (Nova size: {len(image_bytes)} bytes)")
+                    
+                except ImportError:
+                    print("❌ PyMuPDF (fitz) não instalado. Falha ao processar PDF.")
+                    return {"error": "SERVER: PDF upload requires pymupdf installed.", "status": "error"}
+                except Exception as e:
+                    print(f"❌ Erro ao converter PDF: {e}")
+                    return {"error": f"SERVER: PDF Conversion Failed: {str(e)}", "status": "error"}
+
             # === CAMADA 1: PRÉ-PROCESSAMENTO ===
             processed_image_bytes = image_bytes
             preprocessing_applied = False
@@ -149,10 +204,10 @@ class OCRProcessor:
             # 2. Contains comma (potential multi-exam line like "C3, C4")
             # 3. Contains "IgG", "IgM", "IgA" (antibody lists)
             # 4. Very short list (might be noise)
-            needs_llm = any(re.search(r'^\d{3,6}$', l) for l in current_text_lines) or \
-                        any(',' in l for l in current_text_lines) or \
-                        any(x in clean_text for x in ["IgG", "IgM", "IgA", "IGG", "IGM", "IGA"]) or \
-                        len(current_text_lines) < 2
+            # 4. Very short list (might be noise)
+            # V70 Update: ALWAYS VALIDATE WITH LLM to ensure filtering of noise (Dr, Address, Date) works.
+            # Use heuristic only if you wanted to save cost, but for accuracy we need it always.
+            needs_llm = True
             
             if self.use_llm_correction and clean_text and needs_llm:
                 try:
@@ -211,6 +266,7 @@ class OCRProcessor:
                 "lines": detailed_lines, # NOVO: Retorna estrutura detalhada
                 "confidence": round(avg_confidence, 2),
                 "stats": stats,
+                "backend_version": "V70.1-StrictFilter",
                 "model_used": "Google Cloud Vision API (Enhanced Pipeline)",
                 "pipeline_info": {
                     "preprocessing_applied": preprocessing_applied,

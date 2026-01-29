@@ -328,9 +328,10 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                     </div>
                 </div>
             )}
-            {/* Debug Tag */}
-            <div className="text-[8px] text-gray-300 text-right mt-4 uppercase text-pink-600 font-bold">
-                Build: 2026-01-28-V69 (AI Fix Bypass)
+
+            {/* Debug Tag - Now Real from Backend */}
+            <div className="text-[8px] text-gray-400 text-right mt-4 uppercase font-bold">
+                Backend: {results?.backend_version || "Waiting..."} (CC)
             </div>
         </div>
     )

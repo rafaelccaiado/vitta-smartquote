@@ -17,11 +17,14 @@ class OCRProcessor:
         try:
             creds = get_gcp_credentials()
             if creds:
+                 print("🔑 Credenciais carregadas com sucesso via auth_utils!")
                  self.client = vision.ImageAnnotatorClient(credentials=creds)
             else:
+                 print("⚠️ Credenciais retornaram None, tentando ADC padrão...")
                  self.client = vision.ImageAnnotatorClient()
                  
             print("Client Google Vision inicializado!")
+            self.init_error = None
             
             # Novos componentes do pipeline
             self.use_preprocessing = True  # Flag para ativar/desativar pré-processamento
@@ -29,6 +32,7 @@ class OCRProcessor:
             
         except Exception as e:
             print(f"Erro ao inicializar Google Vision Client: {e}")
+            self.init_error = str(e)
             self.client = None
 
     def process_image(self, image_bytes: bytes) -> Dict[str, Any]:
@@ -40,9 +44,77 @@ class OCRProcessor:
         4. Smart parsing
         """
         if not self.client:
-            return {"error": "Serviço de OCR indisponível (Cliente não inicializado)", "confidence": 0.0}
+            # Diagnóstico detalhado para o frontend
+            import os
+            key_preview = "NOT_SET"
+            env_val = os.getenv("GCP_SA_KEY_BASE64")
+            if env_val:
+                key_preview = f"{env_val[:5]}...{env_val[-5:]} (len={len(env_val)})"
+            
+            error_details = self.init_error if hasattr(self, 'init_error') and self.init_error else "Unknown Init Error"
+            
+            return {
+                "error": f"CONFIG ERROR: GCP Creds Failed. Key: {key_preview}. Detail: {error_details}",
+                "confidence": 0.0,
+                "status": "config_error"
+            }
 
         try:
+            # === CAMADA 0: CONVERSÃO PDF -> IMAGEM ===
+            # Verificação relaxada: procura assinatura PDF nos primeiros 1024 bytes
+            if b'%PDF' in image_bytes[:1024]:
+                print("📄 Detectado arquivo PDF. Convertendo para imagem...")
+                try:
+                    import fitz  # PyMuPDF
+                    doc = fitz.open(stream=image_bytes, filetype="pdf")
+                    images = []
+                    
+                    print(f"📄 PDF tem {len(doc)} páginas.")
+                    
+                    for i, page in enumerate(doc):
+                        # Renderiza com zoom 2x para melhor qualidade OCR
+                        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+                        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                        images.append(img)
+                        print(f"   - Página {i+1} renderizada ({pix.width}x{pix.height})")
+
+                    if not images:
+                        raise ValueError("PDF vazio ou ilegível")
+
+                    # Stitch images vertically
+                    total_width = max(img.width for img in images)
+                    total_height = sum(img.height for img in images)
+                    
+                    # Limit total height to avoid Vision API limits (max 20000 pixels usually ok, but be safe)
+                    MAX_HEIGHT = 15000
+                    scale = 1.0
+                    if total_height > MAX_HEIGHT:
+                        scale = MAX_HEIGHT / total_height
+                        total_width = int(total_width * scale)
+                        total_height = MAX_HEIGHT
+                        print(f"⚠️ Imagem muito longa! Redimensionando para {total_height}px de altura.")
+                        # Resize all images
+                        images = [img.resize((int(img.width * scale), int(img.height * scale)), Image.Resampling.LANCZOS) for img in images]
+
+                    stitched = Image.new('RGB', (total_width, total_height), (255, 255, 255))
+                    current_y = 0
+                    for img in images:
+                        stitched.paste(img, (0, current_y))
+                        current_y += img.height
+                    
+                    # Convert back to bytes
+                    img_byte_arr = io.BytesIO()
+                    stitched.save(img_byte_arr, format='JPEG', quality=95)
+                    image_bytes = img_byte_arr.getvalue()
+                    print(f"✅ Conversão PDF -> Imagem Job completa (Nova size: {len(image_bytes)} bytes)")
+                    
+                except ImportError:
+                    print("❌ PyMuPDF (fitz) não instalado. Falha ao processar PDF.")
+                    return {"error": "SERVER: PDF upload requires pymupdf installed.", "status": "error"}
+                except Exception as e:
+                    print(f"❌ Erro ao converter PDF: {e}")
+                    return {"error": f"SERVER: PDF Conversion Failed: {str(e)}", "status": "error"}
+
             # === CAMADA 1: PRÉ-PROCESSAMENTO ===
             processed_image_bytes = image_bytes
             preprocessing_applied = False
@@ -127,7 +199,15 @@ class OCRProcessor:
 
             # === CAMADA 3.2: CORREÇÃO COM LLM (SOMENTE SE NECESSÁRIO) ===
             llm_correction_data = None
-            needs_llm = any(re.search(r'^\d{3,6}$', l) for l in current_text_lines) or len(current_text_lines) < 1
+            # Trigger LLM if: 
+            # 1. Contains numbers (codes/results mixing)
+            # 2. Contains comma (potential multi-exam line like "C3, C4")
+            # 3. Contains "IgG", "IgM", "IgA" (antibody lists)
+            # 4. Very short list (might be noise)
+            # 4. Very short list (might be noise)
+            # V70 Update: ALWAYS VALIDATE WITH LLM to ensure filtering of noise (Dr, Address, Date) works.
+            # Use heuristic only if you wanted to save cost, but for accuracy we need it always.
+            needs_llm = True
             
             if self.use_llm_correction and clean_text and needs_llm:
                 try:
@@ -136,29 +216,22 @@ class OCRProcessor:
                     llm_correction_data = llm_result
                     
                     if llm_result.get("corrected_terms"):
-                        corrected_terms = llm_result["corrected_terms"]
-                        # Tenta mapear correções de volta para as linhas
-                        # Isso é heurístico, assumindo ordem. 
-                        # Idealmente o LLM retornaria indices, mas vamos simplificar.
+                        # V50: FULL REPLACEMENT STRATEGY
+                        # Instead of trying to map 1-to-1 (which breaks on splits),
+                        # we rebuild the detailed_lines entirely from the LLM output.
+                        # This enables true splitting (1 line -> 3 items) and filtering (removing noise).
                         
                         new_detailed_lines = []
-                        llm_iter = iter(corrected_terms)
+                        for term_data in llm_result["corrected_terms"]:
+                            new_detailed_lines.append({
+                                "original": term_data.get("ocr", "LLM Generated"),
+                                "corrected": term_data.get("corrected", ""),
+                                "confidence": term_data.get("confidence", 0.95),
+                                "method": "llm_split" if "," in term_data.get("ocr", "") else "llm_correction"
+                            })
                         
-                        try:
-                            for i, line_item in enumerate(detailed_lines):
-                                # Se a linha estava confusa (method=ocr) e temos correcao
-                                if line_item["method"] == "ocr":
-                                    # Pega proxima correcao disponivel
-                                    term_data = next(llm_iter, None)
-                                    if term_data:
-                                        # Atualiza
-                                        line_item["corrected"] = term_data["corrected"]
-                                        line_item["method"] = "llm_correction"
-                                        line_item["confidence"] = term_data.get("confidence", 0.9)
-                        except StopIteration:
-                            pass
-                            
-                        print(f"✅ LLM aplicou correções")
+                        detailed_lines = new_detailed_lines
+                        print(f"✅ V50: Reconstruído {len(detailed_lines)} linhas via LLM (Split/Filter Ativo)")
                 except Exception as e:
                     print(f"⚠️ Erro na correção LLM: {e}")
 
@@ -193,6 +266,7 @@ class OCRProcessor:
                 "lines": detailed_lines, # NOVO: Retorna estrutura detalhada
                 "confidence": round(avg_confidence, 2),
                 "stats": stats,
+                "backend_version": "V70.1-StrictFilter",
                 "model_used": "Google Cloud Vision API (Enhanced Pipeline)",
                 "pipeline_info": {
                     "preprocessing_applied": preprocessing_applied,
@@ -226,12 +300,18 @@ class OCRProcessor:
             r"rua\s.*", r"av\.?\s.*", r"avenida\s.*", r"alameda\s.*", r"bairro\s.*",
             r"cep[:\s].*", r"crm[:\s].*", r"crm-?go.*", r"crv[:\s].*", r"crv-?go.*", r"dra?\.?\s.*", 
             r"paciente[:\s].*", r"convênio[:\s].*", r"unimed.*", r"data[:\s].*",
-            r"ass\..*", r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
+            r"ass\..*", r"assinatura.*", r"carimbo.*", r"receitu[áa]rio.*", r"médic[oa].*",
+            r"goi[âa]nia.*", r"aparecida.*", r"bras[íi]lia.*", # Cidades comuns
+            r"^cid.*", r"cid[:\-\s].*", r"cid-?10.*", r"h\.?d\.?.*", r"hds[:\s].*", # Diagnósticos (CID START)
+            r"hosp.*", r"denmar.*", r"instituto.*", r"laborat[óo]rio.*", # Logos
+            r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
             r"^id[:\s]\d+", r"^unidade:.*", r"^exames$", r"^solicito$", 
             r"^pedido de exame$", r"^indicação clínica.*", r"^código.*", 
             r"^sexo:.*", r"^nascimento:.*", r"^idade:.*", 
             r"^documento gerado.*", r"^assinado digitalmente.*", r"^amorsaúde.*",
-            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$" # Remove números sozinhos grandes ou linhas só com chars especiais
+            r"^impresso em.*", r"^data da impressão.*", r"^usuário.*",
+            r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$",
+            r"^sust.*", r"^sus$" # Noise specific
         ]
         
         regexes = [re.compile(p, re.IGNORECASE) for p in patterns]
@@ -243,9 +323,35 @@ class OCRProcessor:
         extracted = []
         found_anchor = False
         
+        latest_context = None # V57: Track parent exam context
+        
         for line in lines:
             line = line.strip()
             if not line: continue
+            
+            # --- FASE 0: Context Reconnection (V58 Improved) ---
+            # Broaden orphan check: matches "IgM", "- IgM", "IgM.", "IgM "
+            # Must strictly match the Ig pattern with optional non-word chars around
+            is_orphan = re.search(r'^\W*(Ig[GAM]|IG[GAM])\W*$', line, re.IGNORECASE)
+            
+            if is_orphan and latest_context:
+                # Extract the actual Ig part
+                ig_part = is_orphan.group(0).strip(" -.,")
+                print(f"🔗 Reconnecting Orphan: '{line}' -> '{latest_context} {ig_part}'")
+                line = f"{latest_context} {ig_part}"
+            
+            # Update Context if this line is a valid "Parent"
+            # Must start with medical term AND be long enough
+            line_upper = line.upper()
+            # V59: Added COMPLEMENTO to context triggers (For "Complemento C3, C4")
+            if line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "IMUNO", "COMPLEMENTO")):
+                 # Remove the specific Ig from the context so we get a clean base
+                 # Ex: "Dosagens.. IgA" -> "Dosagens.."
+                 clean_context = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', line, flags=re.IGNORECASE).strip()
+                 # Remove trailing punctuation like " e", ","
+                 clean_context = re.sub(r'[\s,e.-]+$', '', clean_context, flags=re.IGNORECASE)
+                 if len(clean_context) > 5:
+                     latest_context = clean_context
             
             # --- FASE 1: Detecção de Âncora ---
             line_lower = line.lower()
@@ -266,19 +372,29 @@ class OCRProcessor:
 
             # --- FASE 2: Filtros Universais (Blacklist) ---
             if any(r.search(line) for r in regexes): continue
-            if len(line) < 3: continue
+            
+            # V52: Allow short lines if they are known exam parts (C3, C4, T3, T4, CK, Pta)
+            # Normal < 3 rule kills "C4".
+            # V57 Fix: Use strip() to ensure " C4 " matches "C4"
+            is_valid_short = line.strip().upper() in ["C3", "C4", "T3", "T4", "CK", "PTA", "K+", "NA+", "CA", "P", "MG", "FE", "LI", "ZN", "CU"]
+            if len(line) < 3 and not is_valid_short: continue
             
             # --- FASE 3: Heurística de Nomes (Assinaturas/Médicos) ---
             # Remove linhas que parecem nomes de pessoas (ex: "Aniele N. de Siqueira")
-            # Critério: Maioria das palavras começa com maiúscula OU contem conectores de nome
+            
+            # V54 SAFEGUARD: Don't treat exams starting with these as names
+            line_upper = line.upper()
+            # V55: Added DOSAGENS (Plural), IMUNO, ANTICORPO
+            is_medical_term = line_upper.startswith(("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "VDRL", "HIV", "HTLV", "IG", "HEMO", "CULTURA", "ELETRO", "IMUNO", "ANTICORPO"))
+            
             words = line.split()
-            if len(words) > 1 and not any(char.isdigit() for char in line):
+            if not is_medical_term and len(words) > 1 and not any(char.isdigit() for char in line):
                  capitalized_count = sum(1 for w in words if w[0].isupper())
                  connectors = ['de', 'da', 'do', 'dos', 'das', 'e']
                  has_connector = any(w.lower() in connectors for w in words)
                  
                  # Se > 70% das palavras são Capitalized, é provavelmente um nome/assinatura
-                 # OU se tem conectores de nome e pelo menos uma maiúscula (para pegar 'quele A. de Siqueira')
+                 # OU se tem conectores de nome e pelo menos uma maiúscula
                  is_name_structure = (capitalized_count / len(words) > 0.6) or (has_connector and capitalized_count >= 1)
                  
                  if is_name_structure:
@@ -305,19 +421,92 @@ class OCRProcessor:
             line_processed = re.sub(r'\s*\+\s*', '<SPLIT>', line_processed)
             # 3. " e " (isolado)
             line_processed = re.sub(r'\s+e\s+', '<SPLIT>', line_processed, flags=re.IGNORECASE)
+            # 4. Vígula (,) - V51 Fix
+            line_processed = re.sub(r'\s*,\s*', '<SPLIT>', line_processed)
             
             if '<SPLIT>' in line_processed:
                 parts = line_processed.split('<SPLIT>')
-                for part in parts:
+                
+                # V60: Intelligent Context Propagation in Splitter
+                # Determine context from the first part (Local) or use Global `latest_context`
+                first_part = parts[0].strip()
+                first_part_upper = first_part.upper()
+                
+                local_context = None
+                parent_triggers = ("ANTI", "FAN", "SOROLOGIA", "PESQUISA", "DOSAGEM", "DOSAGENS", "IMUNO", "COMPLEMENTO")
+                
+                # Check if first part defines a new context (e.g., "Complemento C3...")
+                if first_part_upper.startswith(parent_triggers):
+                    clean = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', first_part, flags=re.IGNORECASE).strip()
+                    clean = re.sub(r'[\s,e.-]+$', '', clean, flags=re.IGNORECASE)
+                    clean = re.sub(r'\b[A-Z0-9]{1,3}\b$', '', clean).strip() # Remove short trailing codes like "C3"
+                    if len(clean) > 3:
+                        local_context = clean
+                
+                # Decide which context to use for siblings
+                active_context = local_context if local_context else latest_context
+                
+                for i, part in enumerate(parts):
                     part = part.strip()
-                    if part and len(part) > 2: # Evita sujeira vazia
-                        extracted.append(part)
-                print(f"✂️ Linha dividida: '{line}' -> {parts}")
-                continue # Já adicionou as partes, pula o append do original
+                    if not part: continue
+                    
+                    # V59 Clean whitelist check
+                    is_valid_short = part.strip().upper() in ["C3", "C4", "T3", "T4", "CK", "PTA", "K+", "NA+", "CA", "P", "MG", "FE", "LI", "ZN", "CU", "LDH"]
+                    
+                    # Logic: 
+                    # If i==0: It works as is context is normally embedded. 
+                    # If i>0 (Siblings): We MUST prepend context if it's missing.
+                    
+                    final_part = part
+                    if i > 0 and active_context:
+                        # Don't double paste if somehow already present (rare in split parts)
+                        if not part.upper().startswith(active_context.upper()[:5]): 
+                            final_part = f"{active_context} {part}"
+                    
+                    # Also handle the edge case where Part 0 needs global context (e.g. Line 1: Header, Line 2: "C3, C4")
+                    if i == 0 and not local_context and latest_context:
+                         if not part.upper().startswith(latest_context.upper()[:5]):
+                             final_part = f"{latest_context} {part}"
+
+                    if len(part) > 2 or is_valid_short: 
+                        extracted.append(final_part)
+                        
+                print(f"✂️ Linha dividida context: '{line}' -> {[active_context] + parts}")
+                continue # Já adicionou as partes
 
             extracted.append(line)
                 
-        return "\n".join(extracted)
+        # V55: Python-side Antibody Expansion (Force Split)
+        # Post-process extracted lines to split merged antibodies (IgG IgM)
+        final_extracted = []
+        for item in extracted:
+            expanded = self._expand_antibody_line(item)
+            final_extracted.extend(expanded)
+        
+        return "\n".join(final_extracted)
+
+    def _expand_antibody_line(self, text: str) -> List[str]:
+        """
+        V55: Deterministically splits lines with multiple antibodies.
+        Ex: "Dengue IgG IgM" -> ["Dengue IgG", "Dengue IgM"]
+        """
+        # Encontra todas as ocorrências de IgA, IgG, IgM
+        igs = re.findall(r'\b(Ig[GAM]|IG[GAM])\b', text, re.IGNORECASE)
+        
+        # Se tiver mais de uma imunoglobulina DIFERENTE na mesma linha
+        if len(set(x.upper() for x in igs)) >= 2:
+            base_text = re.sub(r'\b(Ig[GAM]|IG[GAM])\b', '', text, flags=re.IGNORECASE).strip()
+            # Remove conectores soltos no final (ex: "Dengue e")
+            base_text = re.sub(r'\s+e\s*$', '', base_text, flags=re.IGNORECASE)
+            
+            expanded = []
+            for ig in igs:
+                # Reconstrói: "Nome Base + IgG"
+                expanded.append(f"{base_text} {ig.upper()}")
+            print(f"🧬 Antibody Split: '{text}' -> {expanded}")
+            return expanded
+            
+        return [text]
 
     def _apply_deterministic_rules(self, text: str) -> str:
         """Aplica regras fixas para siglas médicas comuns que o OCR costuma errar"""

@@ -28,7 +28,13 @@ class ValidationService:
     def validate_batch(terms: List[str], unit: str, bq_client: Any) -> Dict[str, Any]:
         results = {
             "items": [],
-            "stats": {"confirmed": 0, "pending": 0, "not_found": 0, "total": 0}
+            "stats": {
+                "confirmed": 0, 
+                "pending": 0, 
+                "not_found": 0, 
+                "total": 0,
+                "backend_version": "V70-AntiHallucination"
+            }
         }
         
         # 1. Carregar catálogo completo (Cache Local) - O(1) Query
