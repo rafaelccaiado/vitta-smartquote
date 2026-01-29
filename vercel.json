@@ -6,16 +6,8 @@
             "destination": "/api/ocr"
         },
         {
-            "source": "/api/ocr/(.*)",
-            "destination": "/api/ocr"
-        },
-        {
             "source": "/api/(.*)",
             "destination": "/api/index.py"
-        },
-        {
-            "source": "/(.*)",
-            "destination": "/$1"
         }
     ]
 }
