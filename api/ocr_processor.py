@@ -191,6 +191,18 @@ class OCRProcessor:
                 else:
                     print(f"⚠️ Match Failed (<60): {candidate}")
 
+            # === FALLBACK SAFETY NET (V81.1) ===
+            # Se o dicionário foi muito rigoroso e removeu tudo, devolve o raw do LLM
+            if not detailed_lines and exam_candidates:
+                print("⚠️ Strict Matching yielded 0 results. Using raw candidates as fallback.")
+                for candidate in exam_candidates:
+                     detailed_lines.append({
+                        "original": candidate,
+                        "corrected": candidate + " [⚠️ Não Verificado]",
+                        "confidence": 0.5,
+                        "method": "llm_fallback"
+                    })
+
             # Final Cleanup
             clean_text = "\n".join([x["corrected"] for x in detailed_lines])
             avg_conf = sum(x["confidence"] for x in detailed_lines)/len(detailed_lines) if detailed_lines else 0
@@ -204,9 +216,15 @@ class OCRProcessor:
                     "classified_exams": len(exam_candidates),
                     "valid_matches": len(detailed_lines)
                 },
-                "backend_version": "V81.0-ClassifiedPipeline",
+                "backend_version": "V81.1-Fallback-System",
                 "model_used": "Vision -> Gemini Flash -> Dictionary",
-                "debug_raw": classified_lines
+                "debug_raw": classified_lines,
+                "debug_meta": {
+                    "dictionary_loaded": bool(self.exams_flat_list),
+                    "dictionary_size": len(self.exams_flat_list),
+                    "raw_ocr_lines": len(ocr_lines),
+                    "llm_candidates": len(exam_candidates)
+                }
             }
 
         except Exception as e:
