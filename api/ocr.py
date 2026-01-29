@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 import os
 import sys
 import traceback
+import time
 
 # 1. SETUP DE PATH
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -42,14 +43,14 @@ def get_processor():
                 return None
     return _processor_instance
 
-# 4. HEADERS E RESPONSE HELPERS (ASSINATURA DE PRODUÇÃO)
+# 4. HEADERS E RESPONSE HELPERS
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
     "Expires": "0",
     "X-Backend-Version": "V81.1-Fallback-System",
     "X-OCR-Entrypoint": "api/ocr.py",
-    "X-OCR-Commit": "PROD-PROOF-v81.1"
+    "X-OCR-Commit": "PROD-TELEMETRY-v81.1"
 }
 
 def make_response(content: dict, status_code: int = 200):
@@ -59,20 +60,22 @@ def make_response(content: dict, status_code: int = 200):
         "confidence": 0.0,
         "stats": {"total_ocr_lines": 0, "classified_exams": 0, "valid_matches": 0},
         "debug_meta": {},
-        "backend_version": "V81.1-Fallback-System"
+        "backend_version": "V81.1-Fallback-System",
+        "error": None
     }
     base.update(content)
     
-    # Injeção forçada de metadados de prova
+    # Garantir debug_meta básico
     if "debug_meta" not in base:
         base["debug_meta"] = {}
         
     base["debug_meta"]["entrypoint"] = "api/ocr.py"
-    base["debug_meta"]["commit"] = "PROD-PROOF-v81.1"
+    base["debug_meta"]["commit"] = "PROD-TELEMETRY-v81.1"
     
-    return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
+    # 200 OK sempre para Vercel não mostrar erro HTML
+    return JSONResponse(content=base, status_code=200, headers=CACHE_HEADERS)
 
-# 5. HANDLERS LÓGICOS
+# 5. SHARED LOGIC
 
 async def shared_health_check(request: Request, route_name: str):
     processor = get_processor()
@@ -82,7 +85,7 @@ async def shared_health_check(request: Request, route_name: str):
         
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint (Signed & Double Routed)",
+        "description": "Vercel OCR Endpoint (Telemetry Enabled)",
         "debug_meta": {
             "route_hit": route_name,
             "request_path": str(request.url.path),
@@ -94,70 +97,104 @@ async def shared_health_check(request: Request, route_name: str):
     })
 
 async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str):
+    t_start = time.time()
+    
     meta = {
         "route_hit": route_name,
         "request_path": str(request.url.path),
+        "request_content_type": request.headers.get("content-type"),
+        "file_filename": file.filename,
+        "file_content_type": file.content_type,
+        "file_size_bytes": 0,
+        "read_bytes_ok": False,
+        "decode_image_ok": False,
+        "vision_called": False,
+        "raw_ocr_lines_count": 0,
         "dictionary_loaded": False,
         "dictionary_size": 0,
-        "raw_ocr_lines": 0,
         "fallback_used": False,
         "pipeline_status": PIPELINE_STATUS,
-        "error": None
+        "elapsed_ms_total": 0,
+        "step_timings": {}
     }
 
-    # A) Pipeline Check
+    # 1. Pipeline Check
     if PIPELINE_STATUS != "READY":
-        meta["error"] = f"Pipeline Error: {PIPELINE_STATUS} - {IMPORT_ERROR}"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
+        meta["elapsed_ms_total"] = (time.time() - t_start) * 1000
+        return make_response({"error": f"Pipeline Error: {PIPELINE_STATUS} - {IMPORT_ERROR}", "debug_meta": meta})
 
     processor = get_processor()
     if not processor:
-        meta["error"] = "OCR Processor Init Failed"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
+        meta["elapsed_ms_total"] = (time.time() - t_start) * 1000
+        return make_response({"error": "OCR Processor Init Failed", "debug_meta": meta})
 
-    # Dictionary Stats
+    # Stats do Dicionário
     try:
+        t_dic = time.time()
         if hasattr(processor, "exams_flat_list") and processor.exams_flat_list:
             meta["dictionary_loaded"] = True
             meta["dictionary_size"] = len(processor.exams_flat_list)
+        meta["step_timings"]["dictionary_check"] = (time.time() - t_dic) * 1000
     except:
         pass
 
-    # B) Read File
+    # 2. Read File
     try:
+        t_read = time.time()
         contents = await file.read()
-    except Exception as e:
-        meta["error"] = f"Upload Error: {e}"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
+        file_size = len(contents)
+        meta["file_size_bytes"] = file_size
+        meta["read_bytes_ok"] = True
+        meta["step_timings"]["read_file"] = (time.time() - t_read) * 1000
 
-    # C) Execute
+        if file_size == 0:
+            meta["elapsed_ms_total"] = (time.time() - t_start) * 1000
+            return make_response({"error": "Empty file upload", "debug_meta": meta})
+            
+    except Exception as e:
+        meta["elapsed_ms_total"] = (time.time() - t_start) * 1000
+        return make_response({"error": f"Upload Read Error: {str(e)}", "debug_meta": meta})
+
+    # 3. Execute Pipeline
     try:
+        t_exec = time.time()
+        # Aqui assumimos que o processor lida com o decode interno
+        # Mas podemos tentar validar decode antes se o processor falhar muito
         result = processor.process_image(contents)
-    except Exception as e:
-        meta["error"] = f"Execution Error: {e}"
-        traceback.print_exc()
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
+        meta["step_timings"]["pipeline_total"] = (time.time() - t_exec) * 1000
+        
+        # Merge de metadados internos do processador, se houver
+        if "debug_meta" in result:
+             # Copiar chaves relevantes se existirem (ex: vision timings)
+             pass 
 
-    # D) Validating & Fallback
+        meta["vision_called"] = True # Assumimos chamado se não deu except
+        
+    except Exception as e:
+        meta["elapsed_ms_total"] = (time.time() - t_start) * 1000
+        traceback.print_exc()
+        return make_response({"error": f"Pipeline Execution Error: {str(e)}", "debug_meta": meta})
+
+    # 4. Validar Resultado e Fallback
     stats = result.get("stats", {})
     if stats:
-        meta["raw_ocr_lines"] = stats.get("total_ocr_lines", 0)
-        meta["classified_exams"] = stats.get("classified_exams", 0)
-        meta["valid_matches"] = stats.get("valid_matches", 0)
-    elif "debug_meta" in result and "raw_ocr_lines" in result["debug_meta"]:
-         meta["raw_ocr_lines"] = result["debug_meta"]["raw_ocr_lines"]
+        meta["raw_ocr_lines_count"] = stats.get("total_ocr_lines", 0)
+        
+    # Verificar redundância se debug_meta interno trouxer info
+    if "debug_meta" in result and "raw_ocr_lines" in result["debug_meta"]:
+         meta["raw_ocr_lines_count"] = result["debug_meta"]["raw_ocr_lines"]
 
-    vision_saw_text = meta["raw_ocr_lines"] > 0
+    vision_saw_text = meta["raw_ocr_lines_count"] > 0
     result_lines = result.get("lines", [])
     result_is_empty = len(result_lines) == 0
 
     if vision_saw_text and result_is_empty:
         meta["fallback_used"] = True
-        candidates = result.get("debug_raw", [])
+        input_candidates = result.get("debug_raw", [])
         fallback_lines = []
         
-        if candidates:
-            for text in candidates:
+        if input_candidates:
+            for text in input_candidates:
                 fallback_lines.append({
                     "original": text,
                     "corrected": f"[⚠️ Não Verificado] {text}",
@@ -185,14 +222,16 @@ async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str
         result["text"] = "\n".join([l["corrected"] for l in fallback_lines])
         result["backend_version"] += " (Emergency)"
 
-    # E) Merge Meta
+    meta["elapsed_ms_total"] = (time.time() - t_start) * 1000
+    
+    # Merge Final
     if "debug_meta" not in result:
         result["debug_meta"] = {}
     result["debug_meta"].update(meta)
 
-    return make_response(result, status_code=200)
+    return make_response(result)
 
-# 6. ROTAS DUPLAS (DOUBLE ROUTING)
+# 6. ROTAS DUPLAS
 
 @app.get("/")
 async def root_health(request: Request):
