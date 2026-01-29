@@ -12,6 +12,6 @@ torch
 pillow
 sentencepiece
 easyocr
-opencv-python
+opencv-python-headless
 rapidfuzz
 pymupdf
