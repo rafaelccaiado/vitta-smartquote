@@ -238,7 +238,7 @@ export default function UploadImage({ onUpload, selectedUnit, onUnitChange }) {
 
             <div className="text-center mt-4">
                 <span className="text-[10px] text-gray-400 font-mono">
-                    System Version: V70.15 (Noise Filter Skill)
+                    System Version: V70.16 (Extreme Filter-Active)
                 </span>
             </div>
         </div >

@@ -305,10 +305,12 @@ class OCRProcessor:
             r"^\d{2}/\d{2}/\d{2,4}.*", r"página\s\d.*", r"folha\s\d.*",
             r"^id[:\s]\d+", r"^unidade:.*", r"^exames$", r"^solicito$", 
             r"^pedido de exame$", r"^indicação clínica.*", r"^código.*", 
-            r"^sexo:.*", r"^nascimento:.*", r"^idade:.*", 
             r"^documento gerado.*", r"^assinado digitalmente.*", r"^amorsaúde.*",
             r"^impresso em.*", r"^data da impressão.*", r"^usuário.*",
-            r"ricardo eletro.*", r"gastroenter.*", r"^\s*we\.\s*$", r"^\s*dar é\s*$", # New noise from Screenshots
+            r"ricardo eletro.*", r"gastroenter.*", r"^\s*we\.\s*$", r"^\s*dar é\s*$", 
+            r"^especialidade:.*", r"^unidade:.*", r"^médico:.*", r"^paciente:.*",
+            r"taguatinga.*", r"valparaiso.*", r"ocidental.*", r"gleba.*", r"lote\s?\d+.*", 
+            r"quadra\s?\d+.*", r"etapa\s?.*", r"br-040.*", r"trecho.*",
             r"^\d{5,}.*", r"^[\d\.\-\/\s]+$", r"^[a-zA-Z]{1,2}$",
             r"^sust.*", r"^sus$" # Noise specific
         ]
@@ -468,11 +470,15 @@ class OCRProcessor:
                              final_part = f"{latest_context} {part}"
 
                     if len(part) > 2 or is_valid_short: 
-                        extracted.append(final_part)
+                        final_part = self._clean_suffix_noise(final_part)
+                        if final_part:
+                            extracted.append(final_part)
                         
                 print(f"✂️ Linha dividida context: '{line}' -> {[active_context] + parts}")
                 continue # Já adicionou as partes
 
+            line = self._clean_suffix_noise(line)
+            if not line: continue
             extracted.append(line)
                 
         # V55: Python-side Antibody Expansion (Force Split)
@@ -506,6 +512,26 @@ class OCRProcessor:
             return expanded
             
         return [text]
+
+    def _clean_suffix_noise(self, text: str) -> str:
+        """
+        Removes known clinic locations or address fragments from the end of a line.
+        Ex: "ANTI GLIADINA Valparaiso" -> "ANTI GLIADINA"
+        """
+        # Patterns that are usually suffixes in clinic addresses
+        noise_suffixes = [
+            r"taguatinga.*", r"valparaiso.*", r"ocidental.*", r"gleba.*", 
+            r"lote\s?\d+.*", r"quadra\s?\d+.*", r"etapa\s?.*", r"br-040.*", r"trecho.*",
+            r"unidade.*", r"goi[âa]nia.*", r"aparecida.*", r"bras[íi]lia.*",
+            r"exames\slaboratoriais.*", r"gastroenter.*"
+        ]
+        
+        cleaned = text
+        for noise in noise_suffixes:
+            # Match the noise pattern preceded by a space, hyphen or slash
+            cleaned = re.sub(r'[\s\-\/\•\·]+\b' + noise, '', cleaned, flags=re.IGNORECASE).strip()
+            
+        return cleaned
 
     def _apply_deterministic_rules(self, text: str) -> str:
         """Aplica regras fixas para siglas médicas comuns que o OCR costuma errar"""
