@@ -3,7 +3,11 @@
     "rewrites": [
         {
             "source": "/api/ocr",
-            "destination": "/api/ocr.py"
+            "destination": "/api/ocr"
+        },
+        {
+            "source": "/api/ocr/(.*)",
+            "destination": "/api/ocr"
         },
         {
             "source": "/api/(.*)",
