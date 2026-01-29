@@ -41,13 +41,16 @@ app.add_middleware(
 _ocr_processor_instance = None
 _bq_client_instance = None
 
+_init_error = None
+
 def get_ocr_processor():
-    global _ocr_processor_instance
+    global _ocr_processor_instance, _init_error
     if _ocr_processor_instance is None and OCRProcessor:
         try:
             _ocr_processor_instance = OCRProcessor()
             print("✅ OCR Init Success")
         except Exception as e:
+            _init_error = str(e)
             print(f"❌ OCR Init Fail: {e}")
     return _ocr_processor_instance
 
@@ -87,11 +90,19 @@ def health_check():
         }
     }
 
+from fastapi import Response
+
 @app.post("/api/ocr")
-async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
+async def process_ocr(response: Response, file: UploadFile = File(...), unit: str = "Goiânia Centro"):
+    # Anti-Cache Headers (V81.1)
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+
     ocr_p = get_ocr_processor()
     if not ocr_p:
-        return {"error": "OCR Processor not initialized"}
+        global _init_error
+        return {"error": f"OCR Processor Init Failed (Vercel). Details: {_init_error}"}
+    
     contents = await file.read()
     return ocr_p.process_image(contents)
 
