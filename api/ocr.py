@@ -1,19 +1,16 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.responses import JSONResponse
 import os
 import sys
 import traceback
 
 # 1. SETUP DE PATH
-# Adiciona o diretório atual ao path para garantir que imports funcionem no ambiente serverless
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 2. APP FACTORY
-# App simples, sem root_path e sem middlewares de roteamento.
 app = FastAPI()
 
-# 3. IMPORT PIPELINE
-# Mantém a robustez do carregamento do pipeline de OCR
+# 3. IMPORT PIPELINE (Robust Import)
 OCRProcessor = None
 PIPELINE_STATUS = "UNKNOWN"
 IMPORT_ERROR = None
@@ -24,7 +21,6 @@ try:
 except ImportError as e:
     PIPELINE_STATUS = "IMPORT_ERROR"
     IMPORT_ERROR = str(e)
-    # Log crítico para o Vercel
     print(f"❌ Critical Import Error: {e}")
     traceback.print_exc()
 except Exception as e:
@@ -47,7 +43,6 @@ def get_processor():
     return _processor_instance
 
 # 4. HEADERS E RESPONSE HELPERS
-# Headers obrigatórios para evitar cache em respostas de API
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
@@ -56,7 +51,10 @@ CACHE_HEADERS = {
 }
 
 def make_response(content: dict, status_code: int = 200):
-    # Garante estrutura de resposta consistente para o frontend
+    """
+    Função helper para garantir contrato de resposta consistente.
+    Sempre retorna JSON, headers anti-cache e estrutura esperada pelo frontend.
+    """
     base = {
         "text": "",
         "lines": [],
@@ -68,17 +66,10 @@ def make_response(content: dict, status_code: int = 200):
     base.update(content)
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 5. ROTAS EXPLÍCITAS (/api/ocr)
-# POR QUE ISSO FUNCIONA NO VERCEL:
-# Quando o vercel.json faz rewrite de "/api/ocr" para "/api/ocr",
-# o runtime Python recebe a requisição com o PATH_INFO original "/api/ocr".
-# Se usarmos @app.post("/"), o FastAPI tenta casar "/api/ocr" com "/" e falha (404).
-# Ao definir explicitamente @app.post("/api/ocr"), garantimos o match exato
-# sem depender de root_path ou manipulação de scope.
+# 5. LÓGICA COMPARTILHADA
+# Separamos a lógica das rotas para permitir múltiplos entrypoints
 
-@app.get("/api/ocr")
-async def health_check():
-    """Health Check com rota explícita."""
+async def shared_health_check(request: Request, route_name: str):
     processor = get_processor()
     dic_size = 0
     if processor and hasattr(processor, "exams_flat_list"):
@@ -86,8 +77,10 @@ async def health_check():
         
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint (Explicit Routing)",
+        "description": "Vercel OCR Endpoint (Double Route)",
         "debug_meta": {
+            "route_hit": route_name,
+            "request_path": str(request.url.path),
             "pipeline_status": PIPELINE_STATUS,
             "dictionary_loaded": dic_size > 0,
             "dictionary_size": dic_size,
@@ -95,12 +88,11 @@ async def health_check():
         }
     })
 
-@app.post("/api/ocr")
-async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
-    """Handler Principal de OCR com rota explícita."""
-    
+async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str):
     meta = {
         "backend_version": "V81.1-Fallback-System",
+        "route_hit": route_name,
+        "request_path": str(request.url.path),
         "dictionary_loaded": False,
         "dictionary_size": 0,
         "raw_ocr_lines": 0,
@@ -109,17 +101,17 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         "error": None
     }
 
-    # Validação do Pipeline
+    # A) Pipeline Check
     if PIPELINE_STATUS != "READY":
         meta["error"] = f"Pipeline Error: {PIPELINE_STATUS} - {IMPORT_ERROR}"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=503)
+        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200) # 200 gracefully
 
     processor = get_processor()
     if not processor:
         meta["error"] = "OCR Processor Init Failed"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=503)
+        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
 
-    # Coleta stats do dicionário
+    # Dictionary Stats
     try:
         if hasattr(processor, "exams_flat_list") and processor.exams_flat_list:
             meta["dictionary_loaded"] = True
@@ -127,22 +119,22 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
     except:
         pass
 
-    # Leitura
+    # B) Read File
     try:
         contents = await file.read()
     except Exception as e:
         meta["error"] = f"Upload Error: {e}"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=400)
+        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
 
-    # Processamento
+    # C) Execute
     try:
         result = processor.process_image(contents)
     except Exception as e:
         meta["error"] = f"Execution Error: {e}"
         traceback.print_exc()
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=500)
+        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
 
-    # Validação e Fallback
+    # D) Validating & Fallback
     stats = result.get("stats", {})
     if stats:
         meta["raw_ocr_lines"] = stats.get("total_ocr_lines", 0)
@@ -189,9 +181,29 @@ async def ocr_handler(file: UploadFile = File(...), unit: str = "Goiânia Centro
         result["text"] = "\n".join([l["corrected"] for l in fallback_lines])
         result["backend_version"] += " (Emergency)"
 
-    # Merge Final
+    # E) Merge Meta
     if "debug_meta" not in result:
         result["debug_meta"] = {}
     result["debug_meta"].update(meta)
 
     return make_response(result, status_code=200)
+
+# 6. ROTAS DUPLAS (COMPATIBILIDADE TOTAL)
+# Garante funcionamento se o Vercel remover o prefixo (rota "/")
+# Garante funcionamento se o Vercel mantiver o prefixo (rota "/api/ocr")
+
+@app.get("/")
+async def root_health(request: Request):
+    return await shared_health_check(request, "GET /")
+
+@app.get("/api/ocr")
+async def explicit_health(request: Request):
+    return await shared_health_check(request, "GET /api/ocr")
+
+@app.post("/")
+async def root_ocr(request: Request, file: UploadFile = File(...)):
+    return await shared_ocr_handler(file, request, "POST /")
+
+@app.post("/api/ocr")
+async def explicit_ocr(request: Request, file: UploadFile = File(...)):
+    return await shared_ocr_handler(file, request, "POST /api/ocr")
