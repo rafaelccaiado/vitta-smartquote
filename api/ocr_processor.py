@@ -9,8 +9,10 @@ from auth_utils import get_gcp_credentials
 # Novo pipeline de OCR
 from services.image_preprocessor import image_preprocessor
 from services.llm_interpreter import llm_interpreter
-from services.fuzzy_matcher import fuzzy_matcher
-from services.sanitizer_service import SanitizerService
+import json
+import unicodedata
+from rapidfuzz import fuzz, process
+import os
 
 class OCRProcessor:
     def __init__(self):
@@ -28,8 +30,13 @@ class OCRProcessor:
             self.init_error = None
             
             # Novos componentes do pipeline
-            self.use_preprocessing = True  # Flag para ativar/desativar pré-processamento
-            self.use_llm_correction = True  # Flag para ativar/desativar correção LLM
+            self.use_preprocessing = True
+            self.use_llm_correction = True
+            
+            # Carregar Dicionário de Exames (V80.0)
+            self.exams_dict = self._load_exams_dictionary()
+            self.exams_flat_list = self._flatten_dictionary()
+            print(f"📖 Dicionário Médico Carregado: {len(self.exams_flat_list)} termos indexados.")
             
         except Exception as e:
             print(f"Erro ao inicializar Google Vision Client: {e}")
@@ -113,133 +120,91 @@ class OCRProcessor:
                     print(f"❌ Erro ao converter PDF: {e}")
                     return {"error": f"SERVER: PDF Conversion Failed: {str(e)}", "status": "error"}
 
-            # === CAMADA 1: PRÉ-PROCESSAMENTO ===
+        try:
+            # === CAMADA 1: ROI DETECTION & PRE-PROCESSAMENTO ===
             processed_image_bytes = image_bytes
-            preprocessing_applied = False
             
             if self.use_preprocessing:
                 try:
-                    print("🔧 Aplicando pré-processamento de imagem...")
+                    # 1. Pré-processamento visual (CLAHE, Binarização)
                     processed_image_bytes = image_preprocessor.preprocess(image_bytes)
-                    preprocessing_applied = True
-                    print("✅ Pré-processamento concluído")
+                    
+                    # 2. ROI Detection (Recorte Inteligente) V81.0
+                    processed_image_bytes = image_preprocessor.detect_roi(processed_image_bytes)
+                    
+                    print("✅ ROI & Preprocessing Applied")
                 except Exception as e:
-                    print(f"⚠️ Erro no pré-processamento: {e}")
-                    print("Continuando com imagem original...")
-                    processed_image_bytes = image_bytes
+                    print(f"⚠️ Warning: Preprocessing failed, using original: {e}")
 
             # === CAMADA 2: GOOGLE VISION OCR ===
             image = vision.Image(content=processed_image_bytes)
-            print("Enviando imagem para Google Cloud (Document Mode)... 🚀")
+            print("🚀 Sending to Google Vision...")
             
-            # CRÍTICO: usar document_text_detection com language hints
             response = self.client.document_text_detection(
                 image=image,
-                image_context=vision.ImageContext(
-                    language_hints=["pt", "pt-BR"]
-                )
+                image_context=vision.ImageContext(language_hints=["pt", "pt-BR"])
             )
 
             if response.error.message:
-                error_msg = f"Erro da API Vision: {response.error.message}"
-                print(error_msg)
-                return {
-                    "text": "", 
-                    "confidence": 0.0, 
-                    "error": error_msg,
-                    "model_used": "Google Cloud Vision (Error)"
-                }
+                return {"error": response.error.message, "status": "error"}
 
-            # Extração do texto completo
-            raw_ocr_text = response.full_text_annotation.text
-            print(f"📄 OCR extraiu: {len(raw_ocr_text)} caracteres")
-            
-            # extrair linhas de forma estruturada (conforme sugerido pelo usuário)
+            # Extração Bruta das Linhas
             ocr_lines = self._extrair_linhas(response)
-            ocr_full_text = "\n".join(ocr_lines)
-
-            # === CAMADA 3: INTERPRETAÇÃO COM LLM (O SEGREDO!) ===
-            # Em vez de regex frágeis, usamos a inteligência do LLM para extrair os exames
-            print("🤖 LLM Interpretando e Extraindo exames...")
-            interpretation = llm_interpreter.extract_exams(ocr_full_text)
+            print(f"📄 OCR Raw Lines: {len(ocr_lines)}")
             
+            # === CAMADA 3: CLASSIFICAÇÃO COM LLM (V81.0) ===
+            # Em vez de tentar extrair, ele CLASSIFICA o que já veio do OCR
+            print("🤖 LLM Classifying Lines...")
+            classified_lines = llm_interpreter.classify_lines(ocr_lines)
+            
+            # === CAMADA 4: FILTRAGEM DE EXAMES ===
+            exam_candidates = []
+            for item in classified_lines:
+                # Só passa se for EXAME e tiver confiança razoável
+                if item.get("categoria") == "EXAME" and item.get("confianca", 0) > 0.6:
+                    exam_candidates.append(item["linha"])
+                else:
+                    print(f"🗑️ Dropped: {item.get('linha')} due to [{item.get('categoria')}]")
+            
+            print(f"🔍 Candidates for Matching: {len(exam_candidates)}")
+
+            # === CAMADA 5: MATCHING & VALIDAÇÃO (DICTIONARY) ===
             detailed_lines = []
-            
-            if interpretation.get("exames"):
-                for data in interpretation["exames"]:
-                    original = data.get("texto_original", "")
-                    identified = data.get("exame_identificado", "")
-                    
-                    # === NOISE FIREWALL V80.0 (Orchestrated Shield) ===
-                    # Usa o serviço centralizado de sanitização.
-                    # Se não passar no firewall, descartamos imediatamente.
-                    if not SanitizerService.is_valid_exam(identified):
-                         print(f"🔥 Firewall Killed: '{identified}'")
-                         continue
+            for candidate in exam_candidates:
+                # Noise Firewall V81 (Regex Safety Net)
+                if self._is_garbage(candidate): 
+                    continue
 
-                    # Tenta Fuzzy Match para validar contra o BigQuery se possível
-                    fuzzy_corrected, fuzzy_conf = self._apply_fuzzy_correction(identified)
-                    
+                # Dictionary Matching
+                corrected, score, is_valid = self._apply_dictionary_validaton(candidate)
+                
+                # Só aceita se tiver score de match decente (LOINC-like logic)
+                if score >= 60:
                     detailed_lines.append({
-                        "original": original,
-                        "corrected": fuzzy_corrected if fuzzy_corrected else identified,
-                        "confidence": data.get("confianca", 0.90),
-                        "method": "llm_resolute"
+                        "original": candidate,
+                        "corrected": corrected,
+                        "confidence": score / 100.0,
+                        "method": "v81_pipeline"
                     })
-                print(f"✅ Resolute: Extraídos {len(detailed_lines)} exames via LLM")
-            else:
-                print("⚠️ LLM não retornou exames. Verifique texto original.")
-                # Fallback: se o LLM falhar, usamos o split por linhas simples
-                for line in ocr_lines:
-                    if len(line) > 3:
-                        detailed_lines.append({
-                            "original": line,
-                            "corrected": line,
-                            "confidence": 0.5,
-                            "method": "ocr_fallback"
-                        })
+                else:
+                    print(f"⚠️ Match Failed (<60): {candidate}")
 
-            # === CAMADA 4: DICIONÁRIO CONTEXTUAL (Refinamento Final) ===
-            final_terms_list = [item["corrected"] for item in detailed_lines]
-            final_terms, context_stats = self._apply_context_rules(final_terms_list)
-            
-            # Atualiza detailed_lines com contexto
-            for i, term in enumerate(final_terms):
-                if i < len(detailed_lines):
-                    if detailed_lines[i]["corrected"] != term:
-                        detailed_lines[i]["corrected"] = term
-                        detailed_lines[i]["method"] = "context_rule"
-                        detailed_lines[i]["confidence"] = 0.98
-
-            clean_text = "\n".join(final_terms)
-
-            # Calcular confiança media
-            avg_confidence = sum(item["confidence"] for item in detailed_lines) / len(detailed_lines) if detailed_lines else 0.0
-
-            # Calcular estatísticas reais para a UI
-            stats = {
-                "auto_confirmed": len(detailed_lines),
-                "context_corrected": context_stats.get("corrections", 0),
-                "llm_applied": True
-            }
+            # Final Cleanup
+            clean_text = "\n".join([x["corrected"] for x in detailed_lines])
+            avg_conf = sum(x["confidence"] for x in detailed_lines)/len(detailed_lines) if detailed_lines else 0
 
             return {
                 "text": clean_text,
-                "lines": detailed_lines, # NOVO: Retorna estrutura detalhada
-                "confidence": round(avg_confidence, 2),
-                "stats": stats,
-                "backend_version": "V70.1-StrictFilter",
-                "model_used": "Google Cloud Vision API (Enhanced Pipeline)",
-                "pipeline_info": {
-                    "preprocessing_applied": preprocessing_applied,
-                    "llm_correction_applied": interpretation is not None,
-                    "raw_ocr_text": raw_ocr_text,
-                    "llm_corrections": interpretation
+                "lines": detailed_lines,
+                "confidence": round(avg_conf, 2),
+                "stats": {
+                    "total_ocr_lines": len(ocr_lines),
+                    "classified_exams": len(exam_candidates),
+                    "valid_matches": len(detailed_lines)
                 },
-                "debug_raw": [{
-                    "model": "google-vision-enhanced", 
-                    "text_preview": clean_text[:100]
-                }]
+                "backend_version": "V81.0-ClassifiedPipeline",
+                "model_used": "Vision -> Gemini Flash -> Dictionary",
+                "debug_raw": classified_lines
             }
 
         except Exception as e:
@@ -523,40 +488,6 @@ class OCRProcessor:
                 return replacement
         return text
 
-    def _apply_fuzzy_correction(self, text: str) -> Tuple[str, float]:
-        """
-        Aplica correção fuzzy agressiva baseada na lista de exames comuns.
-        Retorna (texto_corrigido, confiança)
-        """
-        COMMON_EXAMS = [
-            "HEMOGRAMA", "LIPIDOGRAMA", "COLESTEROL", "TSH", "FSH", 
-            "T4 LIVRE", "T3", "GLICEMIA", "UREIA", "CREATININA",
-            "TGO", "TGP", "EAS", "PARASITOLOGICO"
-        ]
-        
-        from rapidfuzz import fuzz
-        
-        best_match = None
-        best_score = 0
-        
-        text_upper = text.upper()
-        
-        for exam in COMMON_EXAMS:
-            # Ratio simples costuma ser melhor para erros de OCR (substituição/falta de chars)
-            score = fuzz.ratio(text_upper, exam)
-            
-            if score > best_score:
-                best_score = score
-                best_match = exam
-        
-        # Threshold de 60% conforme solicitado
-        if best_score >= 60:
-            # Se for muito alto (>90), confiança alta, senão média
-            confidence = 0.95 if best_score > 90 else 0.80
-            return best_match, confidence
-            
-        return text, 0.0
-
     def _apply_context_rules(self, terms: List[str]) -> Tuple[List[str], Dict[str, Any]]:
         """Aplica lógica de contexto: se tiver X, prioriza Y no mesmo grupo"""
         context_groups = {
@@ -574,12 +505,113 @@ class OCRProcessor:
             if any(k in term_upper for k in ['COLESTEROL', 'LIPID', 'TRIGLI']): detected_contexts.add('lipidico')
             if any(k in term_upper for k in ['GLICEMA', 'GLICADA']): detected_contexts.add('glicemia')
         
-        # Otimização: se o contexto for detectado, podemos expandir termos curtos
-        # ou ambíguos baseados no grupo. Por enquanto, apenas logamos.
         if detected_contexts:
             print(f"🧠 Contextos médicos detectados: {detected_contexts}")
             
         return terms, stats
+
+    def _load_exams_dictionary(self) -> dict:
+        """Carrega o dicionário JSON de exames"""
+        try:
+            # Caminho relativo ou absoluto
+            json_path = os.path.join(os.path.dirname(__file__), "data", "exams_dictionary.json")
+            with open(json_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"❌ Erro ao carregar exams_dictionary.json: {e}")
+            return {"exames": []}
+
+    def _flatten_dictionary(self) -> list:
+        """Cria lista plana para fuzzy matching: [(termo, nome_oficial)]"""
+        flat_list = []
+        if not self.exams_dict: return []
+        
+        for item in self.exams_dict.get("exames", []):
+            official = item["nome_oficial"]
+            # Adiciona o próprio nome oficial
+            flat_list.append((official, official))
+            # Adiciona sinônimos
+            for syn in item.get("sinonimos", []):
+                flat_list.append((syn, official))
+            # Adiciona variações
+            for var in item.get("variacoes", []):
+                flat_list.append((var, official))
+            # Adiciona erros comuns (mapeando para o oficial)
+            for err in item.get("erros_ocr_comuns", []):
+                flat_list.append((err, official))
+        return flat_list
+
+    def _apply_dictionary_validaton(self, text: str) -> Tuple[str, float, bool]:
+        """
+        Valida e corrige termos usando o dicionário oficial.
+        Retorna: (termo_corrigido, score, is_valid_match)
+        """
+        if not self.exams_flat_list:
+            return text, 0.0, False
+
+        text_norm = self._normalizar_texto(text)
+        
+        # Fuzzy Match
+        best_match = None
+        best_score = 0
+        
+        # Otimização: process.extractOne do rapidfuzz é muito rápido
+        choices = [x[0] for x in self.exams_flat_list]
+        match = process.extractOne(text_norm, choices, scorer=fuzz.ratio)
+        
+        if match:
+            matched_term, score, index = match
+            official_name = self.exams_flat_list[index][1]
+            
+            # Bonus para match exato
+            if text_norm == self._normalizar_texto(matched_term):
+                score = 100
+                
+            if score >= 75:
+                return official_name, score, True
+            elif score >= 60:
+                # Provável, mas retorna o oficial
+                return official_name, score, False # False flag indicates "check me"
+            
+        return text, score if match else 0, False
+
+    def _normalizar_texto(self, texto: str) -> str:
+        """Normaliza para matching (Upper, sem acentos, sem caracters especiais)"""
+        if not texto: return ""
+        texto = texto.upper()
+        texto = unicodedata.normalize('NFKD', texto)
+        texto = "".join([c for c in texto if not unicodedata.combining(c)])
+        texto = re.sub(r'[^A-Z0-9\s]', '', texto)
+        return texto.strip()
+
+    def _is_garbage(self, text: str) -> bool:
+        """
+        Identifica se a linha é lixo (endereço, médico, etc) usando regex robusto.
+        Baseado no SKILL 29.01.26.md
+        """
+        padroes_lixo = [
+            r'^(DRA?|DR)\.?\s',           # Nomes de médicos
+            r'CRM[\s\-]?[A-Z]{2}',         # CRM
+            r'CRO[\s\-]?[A-Z]{2}',
+            r'COREN',
+            r'^(RUA|AV|AVENIDA|ALAMEDA|TRAVESSA|PRACA|QSA|QUADRA|QD|LOTE|LT|SETOR|BLOCO)\s',
+            r'^\d{5}[\-]?\d{3}$',          # CEP
+            r'N[°º]?\s*\d+',               # Número de endereço
+            r'(GOIANIA|BRASILIA|ANAPOLIS|APARECIDA|VALPARAISO|LUZIANIA)',
+            r'^\s*(\/\s*)?(GO|DF|SP|RJ|MG|BA|PR|RS|SC|MT|MS|TO|PA|AM|CE|PE|MA|PI|RN|PB|SE|AL|ES|RO|AC|AP|RR)\s*$',
+            r'BR[\s\-]?\d{3}',             # Rodovias
+            r'GO[\s\-]?\d{3}',
+            r'(EM FRENTE|AO LADO|PROXIMO|ATRAS|ENTRE)',
+            r'^(SOLICITO|SOLICITACAO|DATA|ASSINATURA|ESPECIALIDADE|CONVENIO|PACIENTE)[\s:]*$',
+            r'^\(?\d{2}\)?\s*\d{4,5}[\-\s]?\d{4}$', # Telefone
+            r'^\d+$',                       # Só números
+            r'^.{1,2}$',                    # Muito curto
+        ]
+        
+        for padrao in padroes_lixo:
+            if re.search(padrao, text, re.IGNORECASE):
+                return True
+        return False
     def _extrair_linhas(self, response) -> List[str]:
         """
         Extrai linha por linha para não perder nada (conforme sugerido pelo usuário).

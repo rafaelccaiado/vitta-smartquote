@@ -80,7 +80,45 @@ Responda APENAS o JSON. Se não houver exames, retorne {{"exames": []}}."""
             
         except Exception as e:
             print(f"❌ Erro no LLM Interpreter: {e}")
-            return {"exames": [], "error": str(e)}
+    def classify_lines(self, lines: List[str]) -> List[Dict[str, any]]:
+        """
+        Classifica cada linha em categorias (EXAME, MEDICO, etc)
+        """
+        if not self.api_key:
+            return []
+
+        prompt = f"""Classifique cada linha em UMA categoria:
+
+CATEGORIAS:
+- EXAME: nome de exame laboratorial
+- MEDICO: nome/CRM de médico
+- ENDERECO: rua, cidade, CEP, referência
+- PACIENTE: nome, CPF, convênio do paciente
+- METADATA: data, assinatura, carimbo
+- LIXO: texto ilegível ou irrelevante
+
+LINHAS PARA CLASSIFICAR:
+{json.dumps(lines, indent=2, ensure_ascii=False)}
+
+RESPONDA APENAS JSON neste formato:
+[
+  {{"linha": "texto original", "categoria": "CATEGORIA", "confianca": 0.0 a 1.0}}
+]"""
+
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"response_mime_type": "application/json"}
+        }
+        
+        try:
+            response = requests.post(self.url, json=payload, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            content = data['candidates'][0]['content']['parts'][0]['text']
+            return json.loads(content)
+        except Exception as e:
+            print(f"❌ Erro na classificação LLM: {e}")
+            return []
 
 # Singleton
 llm_interpreter = LLMInterpreter()

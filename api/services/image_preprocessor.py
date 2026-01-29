@@ -171,6 +171,57 @@ class ImagePreprocessor:
         h = min(img.shape[0] - y, h + 2 * margin)
         
         return img[y:y+h, x:x+w]
+
+    def detect_roi(self, image_bytes: bytes) -> bytes:
+        """
+        Detecta a 'Zona de Exames' de forma heurística (OpenCV).
+        Tenta encontrar a área central de texto denso.
+        """
+        if not OPENCV_AVAILABLE: return image_bytes
+        
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(gray, (5,5), 0)
+        _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        
+        # Dilatar para conectar palavras em blocos de texto
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (20,10))
+        dilate = cv2.dilate(thresh, kernel, iterations=1)
+        
+        contours, _ = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        if not contours: return image_bytes
+
+        # Assumir que o maior bloco de texto no centro é a lista
+        max_area = 0
+        best_rect = (0,0, img.shape[1], img.shape[0])
+        
+        img_center_y = img.shape[0] // 2
+        
+        for cnt in contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            area = w * h
+            
+            # Filtro de tamanho mínimo
+            if area < 5000: continue
+            
+            # Priorizar blocos que cruzam o centro vertical e não são rodapé/cabeçalho extremo
+            if y < img.shape[0] * 0.1 or (y + h) > img.shape[0] * 0.9:
+                continue # Ignora headers/footers extremos
+                
+            if area > max_area:
+                max_area = area
+                best_rect = (x, y, w, h)
+                
+        x, y, w, h = best_rect
+        roi = img[y:y+h, x:x+w]
+        
+        print(f"✂️ ROI Detectado: {w}x{h} (Area: {max_area})")
+        
+        success, encoded = cv2.imencode('.png', roi)
+        return encoded.tobytes() if success else image_bytes
     
     def get_debug_images(self, image_bytes: bytes) -> dict:
         """

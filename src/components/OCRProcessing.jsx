@@ -331,7 +331,7 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
 
             {/* Debug Tag - Now Real from Backend */}
             <div className="text-[8px] text-gray-400 text-right mt-4 uppercase font-bold">
-                Backend: {extractedText ? "V80.0 (Sanitizer-Svc)" : "Initializing..."} (CC)
+                Backend: {extractedText ? "V81.0 (Strict Classifier)" : "Initializing..."} (CC)
             </div>
         </div>
     )

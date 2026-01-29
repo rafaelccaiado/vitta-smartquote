@@ -9,4 +9,4 @@ pillow
 rapidfuzz
 python-dotenv
 numpy
-# CACHE_BUST: V80.0 (Orchestrator-Init)
+# CACHE_BUST: V81.0 (ROI-Classifier)
