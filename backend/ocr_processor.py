@@ -216,9 +216,15 @@ class OCRProcessor:
                     "classified_exams": len(exam_candidates),
                     "valid_matches": len(detailed_lines)
                 },
-                "backend_version": "V81.0-ClassifiedPipeline",
+                "backend_version": "V81.1-Fallback-System",
                 "model_used": "Vision -> Gemini Flash -> Dictionary",
-                "debug_raw": classified_lines
+                "debug_raw": classified_lines,
+                "debug_meta": {
+                    "dictionary_loaded": bool(self.exams_flat_list),
+                    "dictionary_size": len(self.exams_flat_list),
+                    "raw_ocr_lines": len(ocr_lines),
+                    "llm_candidates": len(exam_candidates)
+                }
             }
 
         except Exception as e:

@@ -72,8 +72,14 @@ async def get_units():
         # Fallback se der erro no BQ para não travar o front
         return {"units": ["Goiânia Centro", "Anápolis", "Trindade"]}
 
+from fastapi import Response
+
 @app.post("/api/ocr")
-async def process_ocr(file: UploadFile = File(...), unit: str = "Goiânia Centro"):
+async def process_ocr(response: Response, file: UploadFile = File(...), unit: str = "Goiânia Centro"):
+    # Anti-Cache Headers (V81.1)
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    
     try:
         # Ler arquivo enviado
         contents = await file.read()
