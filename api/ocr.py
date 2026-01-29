@@ -43,16 +43,14 @@ def get_processor():
     return _processor_instance
 
 # 4. HEADERS E RESPONSE HELPERS (ASSINATURA DE PRODUÇÃO)
-# Identificação inequívoca de que este arquivo foi executado
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
     "Expires": "0",
     "X-Backend-Version": "V81.1-Fallback-System",
-    "X-OCR-Entrypoint": "api/ocr.py"  # <--- PROVA DE VIDA
+    "X-OCR-Entrypoint": "api/ocr.py",
+    "X-OCR-Commit": "PROD-PROOF-v81.1"
 }
-
-COMMIT_MARKER = "PROD-VERIFICATION-BUILD"
 
 def make_response(content: dict, status_code: int = 200):
     base = {
@@ -70,11 +68,11 @@ def make_response(content: dict, status_code: int = 200):
         base["debug_meta"] = {}
         
     base["debug_meta"]["entrypoint"] = "api/ocr.py"
-    base["debug_meta"]["commit"] = COMMIT_MARKER
+    base["debug_meta"]["commit"] = "PROD-PROOF-v81.1"
     
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 5. LÓGICA COMPARTILHADA (Double Routing)
+# 5. HANDLERS LÓGICOS
 
 async def shared_health_check(request: Request, route_name: str):
     processor = get_processor()
@@ -194,7 +192,7 @@ async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str
 
     return make_response(result, status_code=200)
 
-# 6. ROTAS DUPLAS (COMPATIBILIDADE E PROVA DE VIDA)
+# 6. ROTAS DUPLAS (DOUBLE ROUTING)
 
 @app.get("/")
 async def root_health(request: Request):
