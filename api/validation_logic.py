@@ -346,8 +346,18 @@ class ValidationService:
         candidates = []
         candidate_indices = []
         
+        candidates = []
+        candidate_indices = []
+        
         for idx, item in enumerate(results["items"]):
-             if item["status"] == "not_found" and len(item["term"]) > 3:
+             # V69: Include "manual_fallback" items (which are status='multiple') so AI can try to fix them too.
+             # V67 only checked "not_found".
+             is_candidate = (
+                 (item["status"] == "not_found" and len(item["term"]) > 3) or 
+                 (item.get("match_strategy") == "manual_fallback")
+             )
+             
+             if is_candidate:
                  candidates.append(item["term"])
                  candidate_indices.append(idx)
         
