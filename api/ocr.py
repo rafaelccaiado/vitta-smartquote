@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # 2. APP FACTORY
 app = FastAPI()
 
-# 3. IMPORT PIPELINE (Robust Import)
+# 3. IMPORT PIPELINE
 OCRProcessor = None
 PIPELINE_STATUS = "UNKNOWN"
 IMPORT_ERROR = None
@@ -42,19 +42,19 @@ def get_processor():
                 return None
     return _processor_instance
 
-# 4. HEADERS E RESPONSE HELPERS
+# 4. HEADERS E RESPONSE HELPERS (ASSINATURA DE PRODUÇÃO)
+# Identificação inequívoca de que este arquivo foi executado
 CACHE_HEADERS = {
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "Pragma": "no-cache",
     "Expires": "0",
-    "X-Backend-Version": "V81.1-Fallback-System"
+    "X-Backend-Version": "V81.1-Fallback-System",
+    "X-OCR-Entrypoint": "api/ocr.py"  # <--- PROVA DE VIDA
 }
 
+COMMIT_MARKER = "PROD-VERIFICATION-BUILD"
+
 def make_response(content: dict, status_code: int = 200):
-    """
-    Função helper para garantir contrato de resposta consistente.
-    Sempre retorna JSON, headers anti-cache e estrutura esperada pelo frontend.
-    """
     base = {
         "text": "",
         "lines": [],
@@ -64,10 +64,17 @@ def make_response(content: dict, status_code: int = 200):
         "backend_version": "V81.1-Fallback-System"
     }
     base.update(content)
+    
+    # Injeção forçada de metadados de prova
+    if "debug_meta" not in base:
+        base["debug_meta"] = {}
+        
+    base["debug_meta"]["entrypoint"] = "api/ocr.py"
+    base["debug_meta"]["commit"] = COMMIT_MARKER
+    
     return JSONResponse(content=base, status_code=status_code, headers=CACHE_HEADERS)
 
-# 5. LÓGICA COMPARTILHADA
-# Separamos a lógica das rotas para permitir múltiplos entrypoints
+# 5. LÓGICA COMPARTILHADA (Double Routing)
 
 async def shared_health_check(request: Request, route_name: str):
     processor = get_processor()
@@ -77,7 +84,7 @@ async def shared_health_check(request: Request, route_name: str):
         
     return make_response({
         "status": "online",
-        "description": "Vercel OCR Endpoint (Double Route)",
+        "description": "Vercel OCR Endpoint (Signed & Double Routed)",
         "debug_meta": {
             "route_hit": route_name,
             "request_path": str(request.url.path),
@@ -90,7 +97,6 @@ async def shared_health_check(request: Request, route_name: str):
 
 async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str):
     meta = {
-        "backend_version": "V81.1-Fallback-System",
         "route_hit": route_name,
         "request_path": str(request.url.path),
         "dictionary_loaded": False,
@@ -104,7 +110,7 @@ async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str
     # A) Pipeline Check
     if PIPELINE_STATUS != "READY":
         meta["error"] = f"Pipeline Error: {PIPELINE_STATUS} - {IMPORT_ERROR}"
-        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200) # 200 gracefully
+        return make_response({"error": meta["error"], "debug_meta": meta}, status_code=200)
 
     processor = get_processor()
     if not processor:
@@ -188,9 +194,7 @@ async def shared_ocr_handler(file: UploadFile, request: Request, route_name: str
 
     return make_response(result, status_code=200)
 
-# 6. ROTAS DUPLAS (COMPATIBILIDADE TOTAL)
-# Garante funcionamento se o Vercel remover o prefixo (rota "/")
-# Garante funcionamento se o Vercel mantiver o prefixo (rota "/api/ocr")
+# 6. ROTAS DUPLAS (COMPATIBILIDADE E PROVA DE VIDA)
 
 @app.get("/")
 async def root_health(request: Request):
