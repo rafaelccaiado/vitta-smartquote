@@ -92,6 +92,16 @@ class TussService:
             self.synonyms["tgp"] = "alanina aminotransferase (alt)"
             self.synonyms["alt"] = "alanina aminotransferase (alt)"
             self.synonyms["alanina aminotransferase"] = "alanina aminotransferase (alt)"
+
+            # Hemoglobina Glicada
+            self.synonyms["hemoglobina glicada"] = "hemoglobina glicada (a1c), dosagem"
+            self.synonyms["glicada"] = "hemoglobina glicada (a1c), dosagem"
+            self.synonyms["hba1c"] = "hemoglobina glicada (a1c), dosagem"
+
+            # Vitamina B12
+            self.synonyms["vitamina b12"] = "vitamina b12 - pesquisa e/ou dosagem"
+            self.synonyms["vit b12"] = "vitamina b12 - pesquisa e/ou dosagem"
+            self.synonyms["b12"] = "vitamina b12 - pesquisa e/ou dosagem"
             
             # TODO: Idealmente, carregar chaves do BQ na inicialização para validar cruzamento
             

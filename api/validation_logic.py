@@ -88,6 +88,15 @@ class ValidationService:
             "acido urico": ["dosagem de acido urico", "acido urico"],
             "beta hcg": ["beta hcg qualitativo", "beta hcg quantitativo"],
             "grupo sanguineo": ["tipagem sanguinea", "grupo sanguineo fator rh"],
+            "vitamina b12": ["dosagem de vitamina b12", "cianocobalamina", "vitamina b-12"],
+            "vit b12": ["dosagem de vitamina b12", "vitamina b12"],
+            "hemoglobina glicada": ["hemoglobina glicada (a1c)", "dosagem de hemoglobina glicada"],
+            "glicada": ["hemoglobina glicada (a1c)"],
+            "vitamina d": ["25 hidroxivitamina d", "dosagem de vitamina d"],
+            "vit d": ["25 hidroxivitamina d"],
+            "tsh ultra": ["hormonio tireoestimulante", "tsh"],
+            "urocultura": ["cultura de urina (urocultura)", "pesquisa de bacterias na urina"],
+            "antibioticograma": ["teste de sensibilidade a antibioticos (antibiograma)"],
             # V61 Synonyms
             "complemento c3": ["c3", "complemento c3"],
             "complemento c4": ["c4", "complemento c4"],
@@ -287,7 +296,10 @@ class ValidationService:
                     0 if any(bk in ValidationService.normalize_text(x['item_name']) for bk in boost_keywords) else 1, # Material match boost
                     0 if term_norm == ValidationService.normalize_text(x['search_name']) else 1, # Exato
                     0 if term_norm in ValidationService.normalize_text(x['search_name']) else 1, # Contido
-                    len(x['search_name']),
+                    # V83 Fix: Penalize length mismatch instead of preferring shortest.
+                    # We want the length of the match to be as close as possible to the term length.
+                    abs(len(x['search_name']) - len(term_norm)),
+                    len(x['search_name']), # If still tied, shortest wins (sub-tiebreaker)
                     x['search_name']
                 ))
 

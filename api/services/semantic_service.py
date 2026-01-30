@@ -11,10 +11,10 @@ class SemanticService:
         self.api_key = os.getenv("GEMINI_API_KEY")
         if self.api_key:
             try:
-#                genai.configure(api_key=self.api_key)
-#                self.model = genai.GenerativeModel('gemini-1.5-flash')
-                self.model = None
-                print("✅ SemanticService: Model Mocked (Lite)")
+                import google.generativeai as genai
+                genai.configure(api_key=self.api_key)
+                self.model = genai.GenerativeModel('gemini-1.5-flash')
+                print("✅ SemanticService: Model Initialized (Gemini 1.5 Flash)")
             except Exception as e:
                  print(f"⚠️ SemanticService Init Error: {e}")
                  self.model = None
