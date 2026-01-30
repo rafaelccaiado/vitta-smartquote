@@ -236,6 +236,10 @@ class ImagePreprocessor:
         Retorna imagens intermediárias para debug/visualização.
         Útil para entender o que cada etapa faz.
         """
+        if not OPENCV_AVAILABLE:
+            print("⚠️ Debug Images indisponível (OpenCV/Numpy missing)")
+            return {}
+
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         

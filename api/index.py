@@ -89,7 +89,14 @@ def health_check():
         "mode": "Vercel Monolith V70.2 (Lazy Init)",
         "ocr_ready": ocr_p is not None,
         "bq_ready": bq_c is not None,
-        "init_error": _init_error, # Expose the error!
+        "init_error": _init_error, 
+        "debug_probe": {
+            "OCRProcessor_Type": str(type(OCRProcessor)),
+            "OCRProcessor_Val": str(OCRProcessor),
+            "Instance_Type": str(type(_ocr_processor_instance)),
+            "Init_Error_Val": str(_init_error),
+            "Modules_Loaded": "ocr_processor" in sys.modules
+        },
         "env_check": {
             "GCP_SA_KEY_BASE64": key_status,
         }
