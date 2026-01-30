@@ -66,5 +66,13 @@ class SemanticService:
         except Exception as e:
             print(f"❌ SemanticService Error: {e}")
             return {}
-            
+
+    def normalize_term(self, term: str) -> str:
+        """Helper to normalize a single term"""
+        res = self.normalize_batch([term])
+        if res and isinstance(res, dict):
+            # Try to get by term or first value
+            return res.get(term, list(res.values())[0])
+        return term
+
 semantic_service = SemanticService()
