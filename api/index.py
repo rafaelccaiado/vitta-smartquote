@@ -93,6 +93,14 @@ async def ocr_endpoint_no_prefix(file: UploadFile = File(...)):
 async def qa_proof_endpoint():
     return {"status": "ok", "diagnostics": "V81.0 Backend Ok"}
 
+@app.get("/api")
+async def root_api():
+    return {"status": "ok", "message": "Vitta SmartQuote API V84.0 REACHABLE"}
+
+@app.get("/")
+async def root():
+    return await root_api()
+
 # Fallback to handle any mapping issues
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE"])
 async def catch_all(request: Request, path_name: str):
@@ -101,5 +109,6 @@ async def catch_all(request: Request, path_name: str):
         "requested_path": path_name,
         "full_path": str(request.url.path),
         "method": request.method,
-        "suggestion": "Check if route includes /api prefix"
+        "suggestion": "Check if route includes /api prefix",
+        "version": "V84.0"
     }
