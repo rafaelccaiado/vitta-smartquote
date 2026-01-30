@@ -48,14 +48,39 @@ _bq_client_instance = None
 _init_error = None
 
 def get_ocr_processor():
-    global _ocr_processor_instance, _init_error
+    global _ocr_processor_instance, _init_error, OCRProcessor
+    
+    # 1. Tentar importar se não estiver carregado (Active Lazy Load)
+    if OCRProcessor is None:
+        try:
+            import importlib
+            # Tenta limpar o cache do módulo se existir (reload forçado)
+            if "ocr_processor" in sys.modules:
+                importlib.reload(sys.modules["ocr_processor"])
+            else:
+                import ocr_processor
+            
+            # Pega classe
+            if hasattr(sys.modules.get("ocr_processor"), "OCRProcessor"):
+                OCRProcessor = sys.modules["ocr_processor"].OCRProcessor
+            else:
+                _init_error = "Module loaded but OCRProcessor class missing"
+                return None
+                
+        except Exception as import_err:
+            _init_error = f"Lazy Import Failed: {import_err}"
+            print(f"❌ Lazy Import Error: {import_err}")
+            return None
+
+    # 2. Instanciar se necessário
     if _ocr_processor_instance is None and OCRProcessor:
         try:
             _ocr_processor_instance = OCRProcessor()
-            print("✅ OCR Init Success")
+            print("✅ OCR Init Success (Lazy)")
         except Exception as e:
-            _init_error = str(e)
+            _init_error = f"Instantiation Error: {e}"
             print(f"❌ OCR Init Fail: {e}")
+            
     return _ocr_processor_instance
 
 def get_bq_client():
