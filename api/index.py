@@ -85,6 +85,10 @@ async def ocr_endpoint(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Process Error: {str(e)}\n{traceback.format_exc()}")
 
+@app.post("/ocr")
+async def ocr_endpoint_no_prefix(file: UploadFile = File(...)):
+    return await ocr_endpoint(file)
+
 @app.get("/api/qa-proof")
 async def qa_proof_endpoint():
     return {"status": "ok", "diagnostics": "V81.0 Backend Ok"}
