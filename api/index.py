@@ -161,25 +161,45 @@ async def get_units():
 @app.post("/api/validate-list")
 async def validate_list(data: dict):
     try:
+        print(f"🕵️ BATCH DEBUG START")
         bq_c = get_bq_client()
-        if not bq_c:
-             raise Exception("BigQuery Client not initialized")
-             
+        print(f" - BigQuery Client Type: {type(bq_c)}")
+        print(f" - ValidationService Type: {type(ValidationService)}")
+        
+        if bq_c is None:
+            raise Exception("ERROR: BigQuery Client (bq_c) is None")
+        
+        if ValidationService is None:
+            error_details = _init_error or "Unknown Init Error"
+            raise Exception(f"ERROR: ValidationService is None. Details: {error_details}")
+            
         terms = data.get("terms", [])
         unit = data.get("unit", "Goiânia Centro")
         
-        print(f"DEBUG: Validando {len(terms)} termos para unidade '{unit}'")
+        print(f" - Received Terms: {len(terms)} items")
+        print(f" - Unit: '{unit}'")
         
         # ValidationService agora está na pasta local
-        result = ValidationService.validate_batch(terms, unit, bq_c)
+        try:
+            result = ValidationService.validate_batch(terms, unit, bq_c)
+            print(" ✅ call to ValidationService.validate_batch completed")
+        except Exception as inner_e:
+            print(f" ❌ CRASH inside validate_batch: {inner_e}")
+            import traceback
+            print(traceback.format_exc())
+            raise inner_e
         
         # Add debug info to response
         result["debug"] = {
             "input_count": len(terms),
             "unit_requested": unit,
-            "terms_received": terms[:5], # Primeiro 5 para não estourar
-            "catalog_count": len(bq_c.get_all_exams(unit)) # Ver se o catálogo está vindo
+            "catalog_count": 0
         }
+        try:
+            cat = bq_c.get_all_exams(unit)
+            result["debug"]["catalog_count"] = len(cat)
+        except Exception as cat_e:
+             print(f" ⚠️ Failed to get catalog count for debug: {cat_e}")
         return result
     except Exception as e:
         import traceback
