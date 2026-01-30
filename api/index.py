@@ -2,34 +2,34 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import sys
+import traceback
 
 # Standardize python path for Vercel
 base_dir = os.path.dirname(os.path.abspath(__file__))
 if base_dir not in sys.path:
     sys.path.append(base_dir)
 
-# Decoupled Imports (V75.0 - Full Restoration)
-_init_error = None 
+# Deep Diagnostics V78.0
+_init_error = None
+_traceback = None
+_ocr_p = None
+_bq_c = None
 
+# Delayed/Safe Imports
 try:
+    print("🚀 V78.0: Starting Deep Import Diagnostics...")
     from core.ocr_processor import OCRProcessor
     from core.bigquery_client import BigQueryClient
     from core.validation_logic import ValidationService
     from services.learning_service import learning_service
-except Exception as e:
-    import traceback
-    print(f"⚠️ Critical Backend Import Error: {e}")
-    print(traceback.format_exc())
-    _init_error = f"Backend Import Error: {str(e)}"
-
-# PDCA Service
-try:
     from services.pdca_service import pdca_service
+    print("✅ V78.0: Core imports successful.")
 except Exception as e:
-    print(f"⚠️ PDCA Service Import Error: {e}")
-    pdca_service = None
+    _init_error = f"Import Error: {str(e)}"
+    _traceback = traceback.format_exc()
+    print(f"❌ V78.0 Import Fail: {_traceback}")
 
-app = FastAPI(title="Vitta SmartQuote API (V75.0)")
+app = FastAPI(title="Vitta SmartQuote API (V78.0 - Deep Diagnostics)")
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,67 +39,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_ocr_p = None
-_bq_c = None
-
 def get_services():
-    global _ocr_p, _bq_c, _init_error
+    global _ocr_p, _bq_c, _init_error, _traceback
+    if _init_error:
+        return None, None
+    
     try:
         if _ocr_p is None:
             _ocr_p = OCRProcessor()
         if _bq_c is None:
             _bq_c = BigQueryClient()
+        return _ocr_p, _bq_c
     except Exception as e:
-        print(f"❌ Error initializing services: {e}")
-        if not _init_error: _init_error = str(e)
-    return _ocr_p, _bq_c
+        _init_error = f"Init Error: {str(e)}"
+        _traceback = traceback.format_exc()
+        print(f"❌ V78.0 Init Fail: {_traceback}")
+        return None, None
 
 @app.get("/api/health")
 async def health_check():
     ocr_p, bq_c = get_services()
     return {
         "status": "online",
-        "mode": "Vercel Full Restoration V75.0",
+        "version": "V78.0",
         "ocr_ready": ocr_p is not None,
         "bq_ready": bq_c is not None,
-        "init_error": _init_error
+        "error": _init_error,
+        "traceback": _traceback
     }
-
-@app.post("/api/validate-list")
-async def validate_list(data: dict):
-    _, bq_c = get_services()
-    if bq_c is None:
-        raise HTTPException(status_code=500, detail=f"BigQuery Client not ready: {_init_error}")
-    
-    terms = data.get("terms", [])
-    unit = data.get("unit", "Goiânia Centro")
-    return ValidationService.validate_batch(terms, unit, bq_c)
-
-@app.post("/api/search-exams")
-async def search_exams_endpoint(data: dict):
-    _, bq_c = get_services()
-    if not bq_c: raise HTTPException(status_code=500, detail="BQ Fail")
-    term = data.get("term", "")
-    unit = data.get("unit", "Goiânia Centro")
-    return bq_c.search_exams(term, unit)
 
 @app.post("/api/ocr")
 async def ocr_endpoint(file: UploadFile = File(...)):
     ocr_p, _ = get_services()
-    if not ocr_p: raise HTTPException(status_code=500, detail="OCR Fail")
-    image_bytes = await file.read()
-    return ocr_p.process_image(image_bytes)
-
-@app.get("/api/pdca/logs")
-async def get_pdca_logs():
-    if pdca_service:
-        return {"logs": pdca_service.logs}
-    return {"logs": [], "error": "PDCA service unavailable"}
+    if not ocr_p:
+        raise HTTPException(status_code=500, detail={
+            "error": "OCR Fail",
+            "message": _init_error,
+            "traceback": _traceback
+        })
+    try:
+        image_bytes = await file.read()
+        return ocr_p.process_image(image_bytes)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Process Error: {str(e)}\n{traceback.format_exc()}")
 
 @app.get("/api/qa-proof")
 async def qa_proof_endpoint():
-    return {
-        "build_id": "PROD-FULL-RESTORATION-V75.0",
-        "status": "ok",
-        "monolith": True
-    }
+    return {"status": "ok", "diagnostics": "V78.0 Active"}
