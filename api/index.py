@@ -205,7 +205,8 @@ async def validate_list(data: dict):
         import traceback
         error_msg = traceback.format_exc()
         print(f"❌ Erro validate-list FULL TRACE:\n{error_msg}")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Retornamos o traceback completo no detalhe para ver no frontend
+        raise HTTPException(status_code=500, detail=f"Traceback: {error_msg}")
 
 @app.post("/api/search-exams")
 async def search_exams_endpoint(data: dict):
@@ -223,8 +224,10 @@ async def search_exams_endpoint(data: dict):
         exams = bq_c.search_exams(term, unit)
         return {"exams": exams, "count": len(exams)}
     except Exception as e:
+        import traceback
+        error_msg = traceback.format_exc()
         print(f"Erro search-exams: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Traceback: {error_msg}")
 
 @app.post("/api/learn-correction")
 async def learn_correction(data: dict):
