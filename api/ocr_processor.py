@@ -12,7 +12,7 @@ from services.image_preprocessor import image_preprocessor
 from services.llm_interpreter import llm_interpreter
 import json
 import unicodedata
-from rapidfuzz import fuzz, process
+
 import os
 
 class OCRProcessor:
@@ -236,54 +236,57 @@ class OCRProcessor:
         """
         Implementa Matching em 2 Fases:
         Fase A: Alta Precisão (Normalização + Exact/Contains)
-        Fase B: Alta Cobertura (Fuzzy Rapidfuzz)
+        Fase B: Alta Cobertura (Fuzzy Difflib - Pure Python)
         """
         text_norm = self._normalizar_texto(text)
         if not text_norm: return None
 
-        # --- FASE A: Match Exato (O(1)) ---
-        # Busca direta no set de nomes normalizados
-        # Note: Para ser perfeito precisariamos de um dict {norm -> official}.
-        # Como otimização rápida, vamos iterar se falhar o set, ou melhorar a estrutura.
-        # Dado o tamanho do dicionário (~500 termos), iteração linear em filtro é ok, mas fuzzy é melhor.
-        
-        # Tentativa 1: Exact Match com sinônimos conhecidos
-        # (Idealmente self.exams_flat_list teria dict para lookup rápido, mas fuzzy resolve bem)
-        # Vamos confiar no Fuzzy com score 100 para "quase exato" se a normalização bater
-        
-        # --- FASE B: Fuzzy Matching (Rapidfuzz) ---
-        # RapidFuzz já lida bem com exato (score 100).
-        
-        choices = [x[0] for x in self.exams_flat_list]
-        match = process.extractOne(text_norm, choices, scorer=fuzz.ratio)
-        
-        if match:
-            matched_term, score, index = match
-            official_name = self.exams_flat_list[index][1]
-            
-            # === REGRAS DE CALIBRAÇÃO ===
-            
-            # Regra CRÍTICA para Siglas Curtas (2-4 chars)
-            # Evita que "DA" vire "C4", "EM" vire "FE", etc.
-            if len(text_norm) <= 4:
-                # Exige match muito alto para curtos
-                if score >= 95:
-                    return official_name, score, "short_token_high_precision"
-                return None
+        # --- FASE B: Fuzzy Matching (Difflib) ---
+        best_ratio = 0.0
+        best_official = None
+        best_norm_term = ""
 
-            # 1. Phase A: Match Alta Precisão (Quase Exato)
-            # Aceita pequenos erros de OCR (1 char errado em palavra longa)
-            if score >= 92:
-                return official_name, score, "phase_a_high_precision"
+        # Otimização: Se houver match exato, retorna imediatamente
+        for norm_term, official_name in self.exams_flat_list:
+            if text_norm == norm_term:
+                return official_name, 100.0, "exact_match"
             
-            # 2. Phase B: Match Alta Cobertura (Fuzzy)
-            # Aceita variações maiores, mas seguro para textos longos (>4 chars)
-            if score >= 85:
-                return official_name, score, "phase_b_high_coverage"
+        from difflib import SequenceMatcher
+        
+        for norm_term, official_name in self.exams_flat_list:
+            # SequenceMatcher.ratio() returns [0.0, 1.0] -> *100
+            sm = SequenceMatcher(None, text_norm, norm_term)
+            ratio = sm.ratio() * 100.0
+            
+            if ratio > best_ratio:
+                best_ratio = ratio
+                best_official = official_name
+                best_norm_term = norm_term
 
-            # Se o termo matched (ex: HEMOGRAMA) está contido totalmente no input
-            if len(matched_term) > 4 and matched_term in text_norm:
-                return official_name, 80.0, "contains_fallback"
+        score = best_ratio
+        
+        if not best_official:
+            return None
+            
+        # === REGRAS DE CALIBRAÇÃO ===
+        
+        # Regra CRÍTICA para Siglas Curtas (2-4 chars)
+        if len(text_norm) <= 4:
+            if score >= 95:
+                return best_official, score, "short_token_high_precision"
+            return None
+
+        # 1. Phase A: Match Alta Precisão
+        if score >= 92:
+            return best_official, score, "phase_a_high_precision"
+        
+        # 2. Phase B: Match Alta Cobertura
+        if score >= 85:
+            return best_official, score, "phase_b_high_coverage"
+
+        # Se o termo matched está contido totalmente no input
+        if len(best_norm_term) > 4 and best_norm_term in text_norm:
+             return best_official, 80.0, "contains_fallback"
 
         return None
 

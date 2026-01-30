@@ -5,7 +5,6 @@ google-auth
 requests
 pydantic-settings
 pillow
-rapidfuzz
 python-dotenv
 
 # CACHE_BUST: V81.0 (ROI-Classifier)
