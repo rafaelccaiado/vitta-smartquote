@@ -1,12 +1,9 @@
 fastapi
-uvicorn
 python-multipart
 google-auth
 google-generativeai
 requests
-pydantic-settings
 pillow
 python-dotenv
-rapidfuzz
 
-# CACHE_BUST: V70.5 (Consolidated)
+# CACHE_BUST: V70.7 (Core Isolation - Super Slim)

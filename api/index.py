@@ -3,35 +3,30 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import sys
 
-# Add directory and core to path
+# Standardize python path for Vercel
+# Vercel deploys the contents of 'api/' as functions. 
+# We add the root of the repo (parent of api) to path if needed, 
+# but usually 'api' is already in path as the root of the lambda.
 base_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(base_dir)
-sys.path.append(os.path.join(base_dir, "core"))
+if base_dir not in sys.path:
+    sys.path.append(base_dir)
 
-# Decoupled Imports (V70.6 - Core Path)
-OCRProcessor = None
+# Decoupled Imports (V70.7 - Core Isolation)
 _init_error = None 
 
 try:
+    # Use relative-like absolute imports within the api/ root
     from core.ocr_processor import OCRProcessor
-except Exception as e:
-    print(f"❌ Critical OCR Import Error: {e}")
-    _init_error = f"Import Error: {str(e)}"
-
-BigQueryClient = None
-ValidationService = None
-learning_service = None
-
-try:
     from core.bigquery_client import BigQueryClient
     from core.validation_logic import ValidationService
     from services.learning_service import learning_service
 except Exception as e:
     import traceback
-    print(f"⚠️ Validation/Backend Import Error: {e}")
+    print(f"⚠️ Critical Backend Import Error: {e}")
     print(traceback.format_exc())
-    if not _init_error: _init_error = f"Backend Import Error: {str(e)}"
+    _init_error = f"Backend Import Error: {str(e)}"
 
+# PDCA Service (Optional)
 try:
     from services.pdca_service import pdca_service
 except Exception as e:
@@ -48,73 +43,62 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_ocr_processor_instance = None
-_bq_client_instance = None
+# Global instances for reuse
+_ocr_p = None
+_bq_c = None
 
-def get_ocr_processor():
-    global _ocr_processor_instance, _init_error, OCRProcessor
-    if OCRProcessor is None:
-        try:
-            from core.ocr_processor import OCRProcessor as DynamicOCR
-            OCRProcessor = DynamicOCR
-        except Exception as import_err:
-            _init_error = f"Lazy Import Failed: {import_err}"
-            return None
-
-    if _ocr_processor_instance is None and OCRProcessor:
-        try:
-            _ocr_processor_instance = OCRProcessor()
-        except Exception as e:
-            _init_error = f"Instantiation Error: {e}"
-    return _ocr_processor_instance
-
-def get_bq_client():
-    global _bq_client_instance
-    if _bq_client_instance is None and BigQueryClient:
-        try:
-            _bq_client_instance = BigQueryClient()
-        except Exception as e:
-            print(f"❌ BQ Init Fail: {e}")
-    return _bq_client_instance
+def get_services():
+    global _ocr_p, _bq_c, _init_error
+    try:
+        if _ocr_p is None:
+            # Import again if needed or use pre-imported
+            from core.ocr_processor import OCRProcessor as Proc
+            _ocr_p = Proc()
+        if _bq_c is None:
+            from core.bigquery_client import BigQueryClient as BQ
+            _bq_c = BQ()
+    except Exception as e:
+        print(f"❌ Error initializing services: {e}")
+        if not _init_error: _init_error = str(e)
+    return _ocr_p, _bq_c
 
 @app.get("/api/health")
 async def health_check():
-    ocr_p = get_ocr_processor()
-    bq_c = get_bq_client()
+    ocr_p, bq_c = get_services()
     return {
         "status": "online",
-        "mode": "Vercel Core Isolation V70.6",
+        "mode": "Vercel Core Isolation V70.7",
         "ocr_ready": ocr_p is not None,
         "bq_ready": bq_c is not None,
-        "init_error": _init_error,
-        "python_path": sys.path[-3:]
+        "init_error": _init_error
     }
 
 @app.post("/api/validate-list")
 async def validate_list(data: dict):
-    try:
-        bq_c = get_bq_client()
-        if bq_c is None or ValidationService is None:
-            raise HTTPException(status_code=500, detail=f"Services not initialized: {_init_error}")
-            
-        terms = data.get("terms", [])
-        unit = data.get("unit", "Goiânia Centro")
-        result = ValidationService.validate_batch(terms, unit, bq_c)
-        return result
-    except Exception as e:
-        import traceback
-        return HTTPException(status_code=500, detail=str(e))
+    ocr_p, bq_c = get_services()
+    if bq_c is None:
+        raise HTTPException(status_code=500, detail=f"BigQuery Client not ready: {_init_error}")
+    
+    terms = data.get("terms", [])
+    unit = data.get("unit", "Goiânia Centro")
+    
+    from core.validation_logic import ValidationService
+    return ValidationService.validate_batch(terms, unit, bq_c)
 
 @app.post("/api/search-exams")
 async def search_exams_endpoint(data: dict):
-    try:
-        bq_c = get_bq_client()
-        if not bq_c: raise Exception("BQ Fail")
-        term = data.get("term", "")
-        unit = data.get("unit", "Goiânia Centro")
-        return bq_c.search_exams(term, unit)
-    except Exception as e:
-        return {"error": str(e)}
+    _, bq_c = get_services()
+    if not bq_c: raise HTTPException(status_code=500, detail="BQ Fail")
+    term = data.get("term", "")
+    unit = data.get("unit", "Goiânia Centro")
+    return bq_c.search_exams(term, unit)
+
+@app.post("/api/ocr")
+async def ocr_endpoint(file: UploadFile = File(...)):
+    ocr_p, _ = get_services()
+    if not ocr_p: raise HTTPException(status_code=500, detail="OCR Fail")
+    image_bytes = await file.read()
+    return ocr_p.process_image(image_bytes)
 
 @app.get("/api/pdca/logs")
 async def get_pdca_logs():
@@ -125,7 +109,7 @@ async def get_pdca_logs():
 @app.get("/api/qa-proof")
 async def qa_proof_endpoint():
     return {
-        "build_id": "PROD-CORE-ISOLATION-V70.6",
+        "build_id": "PROD-CORE-ISOLATION-V70.7",
         "status": "ok",
         "monolith": True
     }
