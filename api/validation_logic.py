@@ -1,8 +1,8 @@
 from typing import List, Dict, Any
-from difflib import get_close_matches
 from services.tuss_service import tuss_service
 from services.missing_terms_logger import missing_terms_logger
 from services.pdca_service import pdca_service
+from services.resolute_orchestrator import resolute_orchestrator
 from services.fuzzy_matcher import fuzzy_matcher
 
 class ValidationService:
@@ -145,29 +145,36 @@ class ValidationService:
             
         results["stats"]["total"] = len(valid_terms)
         
-        # 0. Instancia Learning Service
-        from services.learning_service import learning_service
+        # V85: Vitta Resolute AI Pipeline - Standardize BEFORE search
+        try:
+            resolute_items = resolute_orchestrator.standardize_batch(valid_terms)
+        except Exception as e:
+            print(f"⚠️ Resolute Pipeline Error: {e}")
+            resolute_items = [{"original": t, "resolved": t, "source": "fallback"} for t in valid_terms]
 
-        for term in valid_terms:
-            item = {"term": term, "status": "not_found", "matches": [], "original_term": term}
+        for res_item in resolute_items:
+            original_term = res_item["original"]
+            resolved_term = res_item["resolved"]
+            
+            item = {"term": original_term, "resolved_term": resolved_term, "status": "not_found", "matches": [], "original_term": original_term}
             
             # Normaliza o termo de busca (sem acentos, lower)
-            term_norm = ValidationService.normalize_text(term)
+            term_norm = ValidationService.normalize_text(resolved_term)
             
             # --- PRIORIDADE 0: Mapeamento Aprendido (Knowledge Base) ---
             learned_target = learning_service.get_learned_match(term_norm)
             if learned_target:
-                print(f"🧠 Aplicando conhecimento aprendido: '{term}' -> '{learned_target}'")
+                print(f"🧠 Aplicando conhecimento aprendido: '{original_term}' -> '{learned_target}'")
                 target_key = ValidationService.normalize_text(learned_target)
                 
                 if target_key in exam_map:
                     results["items"].append({
-                        "term": term, 
+                        "term": original_term, 
                         "status": "confirmed", 
                         "matches": exam_map[target_key]
                     })
                     results["stats"]["confirmed"] += 1
-                    seen_terms.add(term)
+                    seen_terms.add(original_term)
                     continue
 
             # 1. Checar duplicidade na lista atual
@@ -182,7 +189,10 @@ class ValidationService:
             strategy = "none"
 
             # 2a. TUSS Lookup
-            tuss_name = tuss_service.search(term)
+            tuss_name = tuss_service.search(original_term)
+            if not tuss_name:
+                tuss_name = tuss_service.search(resolved_term)
+                
             if tuss_name:
                 tuss_key = ValidationService.normalize_text(tuss_name)
                 if tuss_key in exam_map:
@@ -309,14 +319,20 @@ class ValidationService:
                     if kw in term_norm:
                         boost_keywords.append(target)
                 
+                # V86: Improved sorting with token-overlap boost
+                def get_overlap(candidate_name):
+                    c_norm = ValidationService.normalize_text(candidate_name)
+                    t_tokens = set(term_norm.split())
+                    c_tokens = set(c_norm.split())
+                    return len(t_tokens.intersection(c_tokens))
+
                 matches_list.sort(key=lambda x: (
+                    -get_overlap(x['item_name']), # High overlap is better
                     0 if any(bk in ValidationService.normalize_text(x['item_name']) for bk in boost_keywords) else 1, # Material match boost
                     0 if term_norm == ValidationService.normalize_text(x['search_name']) else 1, # Exato
                     0 if term_norm in ValidationService.normalize_text(x['search_name']) else 1, # Contido
-                    # V83 Fix: Penalize length mismatch instead of preferring shortest.
-                    # We want the length of the match to be as close as possible to the term length.
                     abs(len(x['search_name']) - len(term_norm)),
-                    len(x['search_name']), # If still tied, shortest wins (sub-tiebreaker)
+                    len(x['search_name']), 
                     x['search_name']
                 ))
 
@@ -334,7 +350,7 @@ class ValidationService:
                 
                 if strategy in ["fuzzy", "substring", "fuzzy_synonym"]:
                     missing_terms_logger.log_fuzzy_match(
-                        term=term,
+                        term=original_term,
                         matched_exam=matches_list[0]['search_name'],
                         strategy=strategy,
                         unit=unit
@@ -342,8 +358,8 @@ class ValidationService:
                 
                 item["match_strategy"] = strategy
             else:
-                pdca_service.log_fca(term, unit, "not_found", matches=[])
-                missing_terms_logger.log_not_found(term=term, unit=unit)
+                pdca_service.log_fca(original_term, unit, "not_found", matches=[])
+                missing_terms_logger.log_not_found(term=original_term, unit=unit)
                 results["stats"]["not_found"] += 1
                 
                 # V62/V63: Last Resort - Create Generic Match from Simplified Term

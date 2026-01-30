@@ -10,6 +10,7 @@ from auth_utils import get_gcp_credentials
 # Novo pipeline de OCR
 from services.image_preprocessor import image_preprocessor
 from services.llm_interpreter import llm_interpreter
+from services.ocr_resolute_auditor import ocr_resolute_auditor
 import json
 import unicodedata
 
@@ -188,11 +189,18 @@ class OCRProcessor:
             
             stats["unverified_count"] = unverified_count
             
+            # === CAMADA 6: VITTA RESOLUTE AUDIT & QUALITY SCORE ===
             metrics = {
                 "coverage": (len(raw_lines) > 0 and total_returned > 0),
                 "verified_ratio": round(verified_count / max(1, total_returned), 2),
                 "fallback_rate_flag": (unverified_count > 0)
             }
+            
+            audit_result = {}
+            try:
+                audit_result = ocr_resolute_auditor.audit(raw_lines, matched_exams)
+            except Exception as audit_e:
+                print(f"⚠️ Resolute Audit fail: {audit_e}")
 
             # Montagem da Resposta
             clean_text = "\n".join([x["corrected"] for x in matched_exams])
@@ -221,7 +229,8 @@ class OCRProcessor:
                     "dictionary_loaded": bool(self.exams_flat_list),
                     "dictionary_size": len(self.exams_flat_list),
                     "fallback_used": fallback_used,
-                    "qa_metrics": metrics # New QA Section
+                    "qa_metrics": metrics,
+                    "resolute_audit": audit_result
                 }
             }
 

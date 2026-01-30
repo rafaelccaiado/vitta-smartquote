@@ -83,39 +83,48 @@ class TussService:
             self.synonyms["fsh"] = "hormonio foliculo estimulante (fsh)"
             self.synonyms["hormonio foliculo estimulante"] = "hormonio foliculo estimulante (fsh)"
 
-            # TGO / AST
-            self.synonyms["tgo"] = "aspartato aminotransferase (ast)"
-            self.synonyms["ast"] = "aspartato aminotransferase (ast)"
-            self.synonyms["aspartato aminotransferase"] = "aspartato aminotransferase (ast)"
-            
-            # TGP / ALT
-            self.synonyms["tgp"] = "alanina aminotransferase (alt)"
-            self.synonyms["alt"] = "alanina aminotransferase (alt)"
-            self.synonyms["alanina aminotransferase"] = "alanina aminotransferase (alt)"
-
             # Hemoglobina Glicada
-            self.synonyms["hemoglobina glicada"] = "hemoglobina glicada (a1c), dosagem"
-            self.synonyms["glicada"] = "hemoglobina glicada (a1c), dosagem"
-            self.synonyms["hba1c"] = "hemoglobina glicada (a1c), dosagem"
+            self.synonyms["hemoglobina glicada"] = "hemoglobina glicada (a1c)"
+            self.synonyms["glicada"] = "hemoglobina glicada (a1c)"
+            self.synonyms["hba1c"] = "hemoglobina glicada (a1c)"
 
             # Vitamina B12
-            self.synonyms["vitamina b12"] = "vitamina b12 - pesquisa e/ou dosagem"
-            self.synonyms["vit b12"] = "vitamina b12 - pesquisa e/ou dosagem"
-            self.synonyms["b12"] = "vitamina b12 - pesquisa e/ou dosagem"
+            self.synonyms["vitamina b12"] = "vitamina b12"
+            self.synonyms["vit b12"] = "vitamina b12"
+            self.synonyms["b12"] = "vitamina b12"
 
             # Vitamina D
             self.synonyms["vitamina d"] = "25 hidroxivitamina d (25-oh)"
             self.synonyms["vit d"] = "25 hidroxivitamina d (25-oh)"
             self.synonyms["25-oh"] = "25 hidroxivitamina d (25-oh)"
+            self.synonyms["25 oh vitamina d"] = "25 hidroxivitamina d (25-oh)"
+            self.synonyms["vitamina d (25-oh)"] = "25 hidroxivitamina d (25-oh)"
+            self.synonyms["vitamina d 25 oh"] = "25 hidroxivitamina d (25-oh)"
+            self.synonyms["vitamina d3"] = "25 hidroxivitamina d (25-oh)"
 
-            # TGO / TGP
+            # TGO / AST
             self.synonyms["tgo"] = "tgo (ast) transaminase oxalacetica"
             self.synonyms["ast"] = "tgo (ast) transaminase oxalacetica"
+            self.synonyms["aspartato aminotransferase"] = "tgo (ast) transaminase oxalacetica"
+            
+            # TGP / ALT
             self.synonyms["tgp"] = "tgp (alt) transaminase piruvica"
             self.synonyms["alt"] = "tgp (alt) transaminase piruvica"
+            self.synonyms["alanina aminotransferase"] = "tgp (alt) transaminase piruvica"
 
             # VHS
             self.synonyms["vhs"] = "vhs - velocidade de hemossedimentacao"
+            self.synonyms["vhs velocidade de hemossedimentacao"] = "vhs - velocidade de hemossedimentacao"
+            
+            # Gordura nas Fezes
+            self.synonyms["gordura nas fezes"] = "gordura fecal"
+            self.synonyms["gordura nas fezes (sudan iii)"] = "gordura fecal"
+            self.synonyms["sudan iii"] = "gordura fecal"
+            self.synonyms["gordura fecal"] = "gordura fecal"
+            
+            # Ferritina
+            self.synonyms["ferritina"] = "ferritina"
+            self.synonyms["dosagem de ferritina"] = "ferritina"
             
             # TODO: Idealmente, carregar chaves do BQ na inicialização para validar cruzamento
             

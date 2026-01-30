@@ -48,7 +48,6 @@ class PDCAService:
         # Heuristic classification of cause
         from services.fuzzy_matcher import fuzzy_matcher
         best_match = fuzzy_matcher.find_best_match(term, min_score=60)
-
         if not matches or len(matches) == 0:
             if best_match:
                 cause = f"Sinônimo Faltante: Fuzzy encontrou '{best_match['match']}' com score {best_match['score']}"

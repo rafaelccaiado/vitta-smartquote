@@ -2,9 +2,11 @@
 import os
 import json
 import re
-from dotenv import load_dotenv
-
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 class SemanticService:
     def __init__(self):
@@ -36,29 +38,21 @@ class SemanticService:
             return {}
 
         prompt = f"""
-        You are a medical billing expert specialized in Brazilian TUSS/CBHPM coding.
+        Você é um especialista em codificação médica brasileira (TUSS, LOINC).
+        Converta o termo de exame abaixo para o nome oficial e completo mais provável encontrado em catálogos de laboratórios (Ex: Sabin, Fleury, Hermes Pardini).
         
-        Task: Normalize these raw text strings (from OCR/Handwriting) into the exact standard TUSS/CBHPM exam name.
-        
-        Examples:
-        - Input: "Ac. Anti-TPO" -> Output: "Anti-Tireoperoxidase"
-        - Input: "TGO / TGP" -> Output: "TGO" (Split items should be handled by caller, but if stuck, map to first main exam)
-        - Input: "EAS" -> Output: "Urina Tipo I"
-        - Input: "H. Pylori" -> Output: "Pesquisa de Helicobacter Pylori"
-        - Input: "Vit D" -> Output: "25 Hidroxivitamina D"
-        - Input: "TSH Ultra" -> Output: "Hormonio Tireoestimulante"
-        - Input: "Glicemia Jejum" -> Output: "Glicose"
-        
-        Rules:
-        1. Return ONLY valid JSON format {{ "original": "standard_name" }}.
-        2. IF the term refers to a specific antibody (IgG/IgM), INCLUDE it in the name.
-        3. Correct typos (e.g., "Hemagroma" -> "Hemograma").
-        4. Expand abbreviations.
-        
-        Input Terms:
+        REGRAS CRÍTICAS:
+        1. Retorne APENAS um JSON plano: {{ "original": "Nome Completo do Exame" }}.
+        2. Priorize nomes que incluam a metodologia se implícito (Ex: "Glicada" -> "Hemoglobina Glicada (A1C)").
+        3. Se for uma sigla comum, retorne o nome por extenso + sigla (Ex: "TGO" -> "TGO (AST) - Transaminase Oxalacetica").
+        4. Se o termo parecer um código numérico TUSS (ex: 40301230), mapeie para o nome do exame correspondente.
+        5. Remova ruídos de OCR (datas, CRM, nomes de médicos, "solicito", "exames").
+        6. Se houver múltiplos exames (ex: "TGO/TGP"), retorne apenas o primeiro no valor, pois o orquestrador tratará a divisão.
+
+        Termos de Entrada:
         {json.dumps(valid_terms, ensure_ascii=False)}
 
-        JSON Output:
+        Resposta JSON:
         """
 
         try:
