@@ -5,6 +5,7 @@ from services.missing_terms_logger import missing_terms_logger
 from services.pdca_service import pdca_service
 from services.resolute_orchestrator import resolute_orchestrator
 from services.fuzzy_matcher import fuzzy_matcher
+from services.learning_service import learning_service
 
 class ValidationService:
     @staticmethod
@@ -441,7 +442,7 @@ class ValidationService:
                              results["stats"]["not_found"] -= 1
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
                              # V86 Fix: Use direct 'unit' variable
-                             pdca_service.log_fca(original_term, unit, "ai_semantic_exact", matches)
+                             pdca_service.log_fca(original_term, unit, "ai_semantic_exact", "ai_semantic_exact", matches)
                              continue
 
                         # 2. Fuzzy Check
@@ -456,7 +457,7 @@ class ValidationService:
                              results["stats"]["not_found"] -= 1
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
                              # V86 Fix: Use direct 'unit' variable
-                             pdca_service.log_fca(original_term, unit, "ai_semantic_fuzzy", matches)
+                             pdca_service.log_fca(original_term, unit, "ai_semantic_fuzzy", "ai_semantic_fuzzy", matches)
             except Exception as e:
                 print(f"❌ Erro Semantic Service: {e}")
         
