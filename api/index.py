@@ -8,10 +8,13 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Decoupled Imports for Robustness (V42)
 OCRProcessor = None
+_init_error = None # Initialize global error
+
 try:
     from ocr_processor import OCRProcessor
 except Exception as e:
     print(f"❌ Critical OCR Import Error: {e}")
+    _init_error = f"Import Error: {str(e)}"
 
 BigQueryClient = None
 ValidationService = None
@@ -23,6 +26,7 @@ try:
     from services.learning_service import learning_service
 except Exception as e:
     print(f"⚠️ Validation/Backend Import Error: {e}")
+    if not _init_error: _init_error = f"Backend Import Error: {str(e)}"
     # We continue without validation features if this fails, but OCR should survive
 
 
