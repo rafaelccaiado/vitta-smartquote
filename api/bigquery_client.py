@@ -14,7 +14,7 @@ class BigQueryClient:
             creds = get_gcp_credentials()
             # Escopo necessário para Query
             if creds.requires_scopes:
-                creds = creds.with_scopes(["https://www.googleapis.com/auth/bigquery"])
+                creds = creds.with_scopes(["https://www.googleapis.com/auth/cloud-platform"])
             
             self.session = AuthorizedSession(creds)
             self.base_url = f"https://bigquery.googleapis.com/bigquery/v2/projects/{self.project_id}/queries"

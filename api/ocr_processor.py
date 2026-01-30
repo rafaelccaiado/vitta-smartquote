@@ -20,8 +20,11 @@ class OCRProcessor:
         print("Inicializando OCRProcessor com Google Cloud Vision API ☁️")
         try:
             self.creds = get_gcp_credentials()
+            if self.creds and self.creds.requires_scopes:
+                self.creds = self.creds.with_scopes(['https://www.googleapis.com/auth/cloud-platform'])
+                
             if self.creds:
-                 print("🔑 Credenciais carregadas com sucesso via auth_utils!")
+                 print("🔑 Credenciais carregadas e escopadas (Cloud Platform)!")
             else:
                  print("⚠️ Credenciais retornaram None. OCP irá falhar.")
                  
