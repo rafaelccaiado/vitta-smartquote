@@ -5,7 +5,7 @@ import io
 import traceback
 from PIL import Image
 import re
-from auth_utils import get_gcp_credentials
+from core.auth_utils import get_gcp_credentials
 
 # Novo pipeline de OCR
 from services.image_preprocessor import image_preprocessor
@@ -387,8 +387,10 @@ class OCRProcessor:
 
     def _load_exams_dictionary(self) -> dict:
         try:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            json_path = os.path.join(base_dir, "data", "exams_dictionary.json")
+            # base_dir is api/core, dictionary is in api/data
+            core_dir = os.path.dirname(os.path.abspath(__file__))
+            api_dir = os.path.dirname(core_dir)
+            json_path = os.path.join(api_dir, "data", "exams_dictionary.json")
             if not os.path.exists(json_path):
                  return {"exames": []}
             with open(json_path, "r", encoding="utf-8") as f:
