@@ -1,9 +1,1 @@
 fastapi
-python-multipart
-google-auth
-google-generativeai
-requests
-pillow
-python-dotenv
-
-# CACHE_BUST: V72.0 (Restored - Slim)
