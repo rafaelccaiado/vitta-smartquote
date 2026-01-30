@@ -182,7 +182,9 @@ async def validate_list(data: dict):
         }
         return result
     except Exception as e:
-        print(f"Erro validate-list: {e}")
+        import traceback
+        error_msg = traceback.format_exc()
+        print(f"❌ Erro validate-list FULL TRACE:\n{error_msg}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/search-exams")
