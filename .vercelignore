@@ -18,8 +18,5 @@ requirements_backup.txt
 api/requirements_backup.txt
 api/tuss_debug.txt
 api/backend_err.log
-api/core
-api/services
-api/data
-api/__pycache__
 # Keep only essential API data
+api/__pycache__

@@ -1,1 +1,7 @@
 fastapi
+python-multipart
+google-auth
+google-generativeai
+requests
+pillow
+python-dotenv
