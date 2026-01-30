@@ -95,11 +95,20 @@ async def qa_proof_endpoint():
 
 @app.get("/api")
 async def root_api():
-    return {"status": "ok", "message": "Vitta SmartQuote API V84.0 REACHABLE"}
+    return {"status": "ok", "message": "Vitta SmartQuote API V85.0 REACHABLE"}
+
+@app.post("/api")
+async def root_api_post(file: UploadFile = File(...)):
+    # This handles the rewrite /api/(.*) -> /api which strips the subpath
+    return await ocr_endpoint(file)
 
 @app.get("/")
 async def root():
     return await root_api()
+
+@app.post("/")
+async def root_post(file: UploadFile = File(...)):
+    return await root_api_post(file)
 
 # Fallback to handle any mapping issues
 @app.api_route("/{path_name:path}", methods=["GET", "POST", "PUT", "DELETE"])
