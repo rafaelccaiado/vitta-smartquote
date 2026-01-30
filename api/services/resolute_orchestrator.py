@@ -1,9 +1,4 @@
-import os
-import sys
 from typing import List, Dict, Any
-
-# Add parent directory to path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from services.semantic_service import semantic_service
 from services.tuss_service import tuss_service
