@@ -1,13 +1,18 @@
 {
-    "version": 2,
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
     "rewrites": [
         {
-            "source": "/api/ocr",
-            "destination": "/api/ocr"
+            "source": "/qa.html",
+            "destination": "/qa.html"
         },
         {
             "source": "/api/(.*)",
-            "destination": "/api/index"
+            "destination": "/api/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }

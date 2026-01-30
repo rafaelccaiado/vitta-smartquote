@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Vittá SmartQuote – QA Runner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+    <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-2xl font-bold mb-2">QA Runner – OCR V81.2</h1>
+        <p class="text-sm text-gray-500 mb-4">
+            Build ID: <strong>PROD-QA-RUNNER-20260129-2255</strong>
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div>
+                <label class="font-semibold">Grupo A (Impresso)</label>
+                <input id="fileA" type="file" class="mt-1 block w-full" />
+            </div>
+            <div>
+                <label class="font-semibold">Grupo B (Manuscrito Bom)</label>
+                <input id="fileB" type="file" class="mt-1 block w-full" />
+            </div>
+            <div>
+                <label class="font-semibold">Grupo C (Manuscrito Ruim)</label>
+                <input id="fileC" type="file" class="mt-1 block w-full" />
+            </div>
+        </div>
+
+        <button onclick="runQA()" class="bg-blue-600 text-white px-4 py-2 rounded mb-4">
+            Rodar QA Pack
+        </button>
+
+        <pre id="result" class="bg-gray-900 text-green-300 p-4 text-xs overflow-auto h-80"></pre>
+
+        <div class="flex gap-4 mt-4">
+            <button onclick="copyMetrics()" class="bg-green-600 text-white px-4 py-2 rounded">
+                Copy Metrics
+            </button>
+            <button onclick="copyFull()" class="bg-gray-600 text-white px-4 py-2 rounded">
+                Copy Full JSON
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let fullResult = null;
+
+        async function send(file) {
+            const fd = new FormData();
+            fd.append("file", file);
+            const res = await fetch("/api/ocr", { method: "POST", body: fd });
+            return await res.json();
+        }
+
+        function evaluate(group, data) {
+            const q = data.debug_meta.qa_metrics;
+            let go = false;
+
+            if (group === "A") {
+                go = q.coverage >= 0.95 && q.verified_ratio >= 0.95;
+            } else if (group === "B") {
+                go = q.coverage >= 0.8 && q.fallback_rate <= 0.2;
+            } else if (group === "C") {
+                go = q.coverage >= 0.6 && q.fallback_rate <= 0.4;
+            }
+
+            return { ...q, decision: go ? "GO" : "NO-GO" };
+        }
+
+        async function runQA() {
+            const fa = fileA.files[0];
+            const fb = fileB.files[0];
+            const fc = fileC.files[0];
+            if (!fa || !fb || !fc) {
+                alert("Selecione os 3 arquivos.");
+                return;
+            }
+
+            const [ra, rb, rc] = await Promise.all([
+                send(fa), send(fb), send(fc)
+            ]);
+
+            const A = evaluate("A", ra);
+            const B = evaluate("B", rb);
+            const C = evaluate("C", rc);
+
+            const finalDecision =
+                A.decision === "GO" &&
+                    B.decision === "GO" &&
+                    C.decision === "GO"
+                    ? "GO"
+                    : "NO-GO";
+
+            fullResult = {
+                build_id: "PROD-QA-RUNNER-20260129-2255",
+                groupA: A,
+                groupB: B,
+                groupC: C,
+                final_decision: finalDecision,
+                raw: { A: ra, B: rb, C: rc }
+            };
+
+            result.textContent = JSON.stringify(fullResult, null, 2);
+        }
+
+        function copyMetrics() {
+            if (!fullResult) return;
+            const compact = {
+                groupA: fullResult.groupA,
+                groupB: fullResult.groupB,
+                groupC: fullResult.groupC,
+                final_decision: fullResult.final_decision
+            };
+            navigator.clipboard.writeText(JSON.stringify(compact, null, 2));
+        }
+
+        function copyFull() {
+            if (!fullResult) return;
+            navigator.clipboard.writeText(JSON.stringify(fullResult, null, 2));
+        }
+    </script>
+</body>
+
+</html>
