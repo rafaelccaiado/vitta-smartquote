@@ -81,13 +81,18 @@ class OCRProcessor:
             # === CAMADA 3: FILTRAGEM & CLASSIFICAÇÃO (CANDIDATES) ===
             candidates = []
             
+            # Thresholds Reais (Hardcoded para consistência com _match_term)
+            THRESH_PHASE_A = 92
+            THRESH_PHASE_B = 85
+            
             # Metadados de execução
             stats = {
                 "total_ocr_lines": len(raw_lines),
                 "candidates_count": 0,
                 "matched_count": 0,
+                "unverified_count": 0, # Fallback items
                 "fuzzy_used": False,
-                "thresholds": {"phase_a": 100, "phase_b": 85} # Thresholds solicitados
+                "thresholds": {"phase_a": THRESH_PHASE_A, "phase_b": THRESH_PHASE_B, "short_token": 95}
             }
             
             for line in raw_lines:
@@ -140,6 +145,19 @@ class OCRProcessor:
                         "confidence": 0.1,
                         "method": "fallback_raw"
                     })
+            
+            # Cálculo de Métricas QA
+            verified_count = sum(1 for x in matched_exams if "fallback" not in x["method"])
+            unverified_count = len(matched_exams) - verified_count
+            total_returned = len(matched_exams)
+            
+            stats["unverified_count"] = unverified_count
+            
+            metrics = {
+                "coverage": (len(raw_lines) > 0 and total_returned > 0),
+                "verified_ratio": round(verified_count / max(1, total_returned), 2),
+                "fallback_rate_flag": (unverified_count > 0)
+            }
 
             # Montagem da Resposta
             clean_text = "\n".join([x["corrected"] for x in matched_exams])
@@ -154,18 +172,21 @@ class OCRProcessor:
                     "classified_exams": len(candidates),
                     "valid_matches": len(matched_exams)
                 },
-                "backend_version": "V81.2-HighRecall",
-                "model_used": "Vision -> 2-Phase Matcher",
-                "debug_raw": candidates, # Retorna os candidatos brutos para debug
+                "backend_version": "V81.2-HighRecall-QA", # Version bump
+                "model_used": "Vision -> 2-Phase Matcher -> QA Metrics",
+                "debug_raw": candidates, 
                 "debug_meta": {
                     "raw_ocr_lines_count": len(raw_lines),
                     "candidates_count": len(candidates),
-                    "matched_count": len(matched_exams),
+                    "matched_count": verified_count, # Use verified only for clear stats
+                    "unverified_count": unverified_count,
+                    "total_returned": total_returned,
                     "fuzzy_used": stats["fuzzy_used"],
                     "thresholds": stats["thresholds"],
                     "dictionary_loaded": bool(self.exams_flat_list),
                     "dictionary_size": len(self.exams_flat_list),
-                    "fallback_used": fallback_used
+                    "fallback_used": fallback_used,
+                    "qa_metrics": metrics # New QA Section
                 }
             }
 
