@@ -119,7 +119,7 @@ def health_check():
     
     return {
         "status": "online",
-        "mode": "Vercel Monolith V70.4 (Lazy Init)",
+        "mode": "Vercel Monolith V70.5 (Consolidated)",
         "ocr_ready": ocr_p is not None,
         "bq_ready": bq_c is not None,
         "init_error": _init_error, 
@@ -273,3 +273,10 @@ async def learn_correction(data: dict):
     except:
         return {"status": "error"}
 
+@app.get("/api/qa-proof")
+async def qa_proof_endpoint():
+    return {
+        "build_id": "PROD-MONOLITH-V70.5",
+        "status": "ok",
+        "monolith": True
+    }

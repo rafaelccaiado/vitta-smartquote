@@ -7,7 +7,6 @@ requests
 pydantic-settings
 pillow
 python-dotenv
-numpy
-opencv-python-headless
+rapidfuzz
 
-# CACHE_BUST: V86.4 (Clean Bundle)
+# CACHE_BUST: V70.5 (Consolidated)
