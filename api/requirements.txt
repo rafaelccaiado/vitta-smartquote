@@ -2,12 +2,10 @@ fastapi
 uvicorn
 python-multipart
 google-auth
-google-cloud-bigquery
-google-cloud-vision
 google-generativeai
 requests
 pydantic-settings
 pillow
 python-dotenv
 
-# CACHE_BUST: V86.1 (Vitta Resolute V2)
+# CACHE_BUST: V86.2 (Deep Clean)
