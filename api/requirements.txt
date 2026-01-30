@@ -6,4 +6,4 @@ requests
 pillow
 python-dotenv
 
-# CACHE_BUST: V70.7 (Core Isolation - Super Slim)
+# CACHE_BUST: V72.0 (Restored - Slim)
