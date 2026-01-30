@@ -324,19 +324,17 @@ class OCRProcessor:
              "DRA.", "DR.", "CRM", "DATA", "ASSINATURA", "PACIENTE", "CONVENIO",
              "RUA", "AV.", "TEL:", "CEP:", "BAIRRO", "CIDADE", "ESTADO",
              "SOLICITO", "PEDIDO", "REQUISICAO", "CNPJ", "CPF", "RG",
-             "LABORATORIO", "CLINICA", "HOSPITAL", "UNIMED", "BRADESCON",
+             # "LABORATORIO", # REMOVIDO: bloqueia "EXAMES LABORATORIAIS"
+             "CLINICA", "HOSPITAL", "UNIMED", "BRADESCON",
              "RESULTADO", "IMPRESSO", "PAGINA", "FOLHA", "OBS:", "OBSERVACAO",
              "ATENCIOSAMENTE", "GRATO", "VISTO", "REMESSA", "PROTOCOLO",
              "SENHA", "HORA", "COLETA", "IDADE", "SEXO", "NASCIMENTO"
         ]
         
-        # Verifica início da linha ou palavra solta
+        # Verifica início da linha
         for term in blacklist_terms:
             if text_upper.startswith(term):
                 return False
-            # Verifica delimitadores comuns para evitar falsos positivos em substrings
-            # Ex: "DATA" não deve dar match em "CANDIDATA" (mas startswith protege)
-            # Mas "Data:" no meio da linha deve ser pego
             if f" {term}" in text_upper:
                  return False
 
@@ -352,9 +350,26 @@ class OCRProcessor:
         """Normalização agressiva para matching: UPPER, Sem Acentos, Sem Pontuação"""
         if not texto: return ""
         texto = texto.upper()
+        
+        # REMOVE RUÍDO COMUM DE LISTA (V82.0)
+        noise = [
+            "EXAMES LABORATORIAIS", 
+            "EXAME LABORATORIAL",
+            "SOLICITACAO DE EXAMES",
+            "E EXAMES",
+            "LABORATORIAIS",
+            "LABORATORIAL"
+        ]
+        for n in noise:
+            texto = texto.replace(n, "")
+
         # Remove acentos
         texto = unicodedata.normalize('NFKD', texto)
         texto = "".join([c for c in texto if not unicodedata.combining(c)])
+        
+        # Especial para Vitamina D (2,5 -> 25)
+        texto = texto.replace("2,5", "25").replace("2.5", "25")
+
         # Mantém apenas letras e números (remove traços, barras, etc)
         texto = re.sub(r'[^A-Z0-9\s]', ' ', texto) 
         # Colapsa espaços

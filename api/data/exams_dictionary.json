@@ -922,6 +922,97 @@
             "categoria": "HEMATOLOGIA"
         },
         {
+            "id": "amilase",
+            "nome_oficial": "Amilase",
+            "codigo_tuss": "40301427",
+            "sinonimos": [
+                "DOSAGEM DE AMILASE"
+            ],
+            "variacoes": [
+                "AMILASE SERICA"
+            ],
+            "erros_ocr_comuns": [
+                "AMILASE"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "lipase",
+            "nome_oficial": "Lipase",
+            "codigo_tuss": "40302202",
+            "sinonimos": [
+                "DOSAGEM DE LIPASE"
+            ],
+            "variacoes": [
+                "LIPASE SERICA"
+            ],
+            "erros_ocr_comuns": [
+                "LIPASE"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "calprotectina_fecal",
+            "nome_oficial": "Calprotectina Fecal",
+            "codigo_tuss": "40313026",
+            "sinonimos": [
+                "CALPROTECTINA"
+            ],
+            "variacoes": [
+                "PESQUISA DE CALPROTECTINA"
+            ],
+            "erros_ocr_comuns": [
+                "CALPROTECTINA FECAL"
+            ],
+            "categoria": "FEZES"
+        },
+        {
+            "id": "coprologico_funcional",
+            "nome_oficial": "Coprológico Funcional",
+            "codigo_tuss": "40307131",
+            "sinonimos": [
+                "COPROLOGICO"
+            ],
+            "variacoes": [
+                "EXAME COPROLOGICO"
+            ],
+            "erros_ocr_comuns": [
+                "COPROLOGICO FUNCIONAL"
+            ],
+            "categoria": "FEZES"
+        },
+        {
+            "id": "gordura_fezes",
+            "nome_oficial": "Gordura nas Fezes (Sudan III)",
+            "codigo_tuss": "40307158",
+            "sinonimos": [
+                "SUDAN III",
+                "GORDURA NAS FEZES"
+            ],
+            "variacoes": [
+                "PESQUISA DE GORDURA NAS FEZES"
+            ],
+            "erros_ocr_comuns": [
+                "GORDURA NAS FEZES SUDAN III"
+            ],
+            "categoria": "FEZES"
+        },
+        {
+            "id": "elastase_fecal",
+            "nome_oficial": "Elastase Pancreática Fecal",
+            "codigo_tuss": "40313034",
+            "sinonimos": [
+                "ELASTASE PANCREATICA"
+            ],
+            "variacoes": [
+                "DOSAGEM DE ELASTASE FECAL"
+            ],
+            "erros_ocr_comuns": [
+                "ELASTASE PANCREATICA FECAL"
+            ],
+            "categoria": "FEZES"
+        },
+        {
             "id": "inr",
             "nome_oficial": "INR",
             "codigo_tuss": "40304370",
