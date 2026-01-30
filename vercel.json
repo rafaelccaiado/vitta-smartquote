@@ -1,18 +1,34 @@
 {
-    "buildCommand": "npm run build",
-    "outputDirectory": "dist",
-    "rewrites": [
+    "version": 2,
+    "builds": [
         {
-            "source": "/qa.html",
-            "destination": "/qa.html"
+            "src": "api/**/*.py",
+            "use": "@vercel/python"
         },
         {
-            "source": "/api/qa-proof",
-            "destination": "/api/qa-proof"
+            "src": "package.json",
+            "use": "@vercel/static-build"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/qa.html",
+            "dest": "/qa.html"
         },
         {
-            "source": "/api/(.*)",
-            "destination": "/api/index"
+            "src": "/api/qa-proof",
+            "dest": "/api/qa_proof.py"
+        },
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/index.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
         }
     ]
 }
