@@ -53,6 +53,14 @@ class BigQueryClient:
                 for i, field in enumerate(schema):
                     field_name = field.get("name")
                     val = values[i].get("v")
+                    
+                    # Type Casting (REST API returns strings)
+                    if field_name == "price" and val is not None:
+                        try:
+                            val = float(val)
+                        except:
+                            val = 0.0
+                            
                     item[field_name] = val
                 results.append(item)
             return results
