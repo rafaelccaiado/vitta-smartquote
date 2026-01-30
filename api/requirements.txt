@@ -9,6 +9,5 @@ pillow
 python-dotenv
 numpy
 opencv-python-headless
-rapidfuzz
 
-# CACHE_BUST: V86.3 (Final Safety Net)
+# CACHE_BUST: V86.4 (Clean Bundle)
