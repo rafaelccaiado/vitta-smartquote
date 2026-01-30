@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 export default function ValidationModal({ ocrResult, selectedUnit, onComplete, onBack }) {
-    const [exams, setExams] = useState([])
+    const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -11,7 +11,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
     const searchExams = async () => {
         try {
             setLoading(true)
-            setLoading(true)
+            setError(null)
             let API_URL = import.meta.env.VITE_API_URL || ''
             // FIX VERCEL: Se estivermos em produção (não localhost) mas VITE_API_URL for localhost, limpar
             if (window.location.hostname !== 'localhost' && API_URL.includes('localhost')) {
@@ -22,25 +22,21 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
             let rawTerms = []
 
             if (ocrResult?.lines && Array.isArray(ocrResult.lines) && ocrResult.lines.length > 0) {
-                // V65: Debug Input
-                console.log("Validation Input Corrected:", ocrResult.lines.map(l => l.corrected))
-
                 // usa as linhas já processadas e possivelmente editadas pelo usuário
-                // V64: Allow short codes (len >= 2) like C4, T4
                 rawTerms = ocrResult.lines.map(l => l.corrected).filter(t => t && t.trim().length >= 2)
-            } else {
+            } else if (ocrResult?.text) {
                 // Fallback para texto bruto
                 const ignoreTerms = ['solicito', 'pedido', 'data', 'assinatura', 'dr', 'crm', 'paciente', ':', 'médico']
-                const rawText = ocrResult?.text || ''
-                rawTerms = rawText
+                rawTerms = ocrResult.text
                     .split(/[\n,]+/)
                     .map(t => t.trim())
-                    .filter(t => t.length >= 2) // V64: Allow len >= 2
+                    .filter(t => t.length >= 2)
                     .filter(t => !ignoreTerms.some(ignored => t.toLowerCase().includes(ignored)))
             }
 
             if (rawTerms.length === 0) {
                 console.warn('Nenhum termo extraído para busca')
+                setError('Nenhum exame foi identificado no texto. Tente reprocessar ou editar as correções.')
                 setLoading(false)
                 return
             }
@@ -53,22 +49,22 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
             })
 
             if (!response.ok) {
-                throw new Error('Erro na validação em lote')
+                const errText = await response.text()
+                throw new Error(`Erro na validação: ${response.status} - ${errText.slice(0, 50)}`)
             }
 
             const data = await response.json()
 
             // 3. Processar resposta do backend
-            // Backend já retorna estrutura: { items: [...], stats: {...} }
             const processedExams = data.items.map((item, index) => ({
                 id: index + 1,
                 term: item.term,
-                status: item.status, // confirmed, multiple, not_found, duplicate
+                status: item.status,
                 matches: item.matches || [],
                 selectedMatch: item.status === 'confirmed' ? 0 : null,
-                match_strategy: item.match_strategy, // V67 Debug
-                normalized_term: item.normalized_term, // V67 UI
-                _meta: data.stats // Hack to access stats in mapping
+                match_strategy: item.match_strategy,
+                normalized_term: item.normalized_term,
+                _meta: data.stats
             }))
 
             setExams(processedExams)
@@ -76,6 +72,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
 
         } catch (error) {
             console.error('Erro geral ao buscar exames:', error)
+            setError(error.message)
             setLoading(false)
         }
     }
@@ -213,10 +210,26 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
 
     if (loading) {
         return (
-            <div className="card max-w-3xl mx-auto text-center py-12">
-                <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-                <p className="text-gray-600">Buscando exames no banco de dados...</p>
-                <p className="text-sm text-gray-500 mt-2">Isso pode levar alguns segundos (conectando ao BigQuery)</p>
+            <div className="card max-w-3xl mx-auto text-center py-12 shadow-xl border-t-4 border-blue-500">
+                <div className="animate-spin w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-6" />
+                <h3 className="text-xl font-bold text-gray-800">Buscando exames...</h3>
+                <p className="text-gray-500 mt-2">Consultando catálogo oficial e preços (BigQuery)</p>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="card max-w-2xl mx-auto text-center py-10 shadow-xl border-t-4 border-red-500">
+                <div className="text-5xl mb-4">⚠️</div>
+                <h3 className="text-2xl font-bold text-red-700 mb-2">Erro na Validação</h3>
+                <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-6 text-sm font-mono border border-red-100 max-w-md mx-auto">
+                    {error}
+                </div>
+                <div className="flex gap-4 max-w-sm mx-auto">
+                    <button onClick={onBack} className="btn-secondary flex-1">← Voltar</button>
+                    <button onClick={searchExams} className="btn-primary flex-1">🔄 Tentar Novamente</button>
+                </div>
             </div>
         )
     }

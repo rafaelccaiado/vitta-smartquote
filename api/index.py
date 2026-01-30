@@ -168,8 +168,18 @@ async def validate_list(data: dict):
         terms = data.get("terms", [])
         unit = data.get("unit", "Goiânia Centro")
         
+        print(f"DEBUG: Validando {len(terms)} termos para unidade '{unit}'")
+        
         # ValidationService agora está na pasta local
         result = ValidationService.validate_batch(terms, unit, bq_c)
+        
+        # Add debug info to response
+        result["debug"] = {
+            "input_count": len(terms),
+            "unit_requested": unit,
+            "terms_received": terms[:5], # Primeiro 5 para não estourar
+            "catalog_count": len(bq_c.get_all_exams(unit)) # Ver se o catálogo está vindo
+        }
         return result
     except Exception as e:
         print(f"Erro validate-list: {e}")
