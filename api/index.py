@@ -25,9 +25,10 @@ try:
     from validation_logic import ValidationService
     from services.learning_service import learning_service
 except Exception as e:
+    import traceback
     print(f"⚠️ Validation/Backend Import Error: {e}")
+    print(traceback.format_exc())
     if not _init_error: _init_error = f"Backend Import Error: {str(e)}"
-    # We continue without validation features if this fails, but OCR should survive
 
 
 app = FastAPI(title="Vitta SmartQuote API (Vercel)")
@@ -45,7 +46,7 @@ app.add_middleware(
 _ocr_processor_instance = None
 _bq_client_instance = None
 
-_init_error = None
+# _init_error = None # REMOVIDO PARA NÃO APAGAR ERRO DE IMPORT ANTERIOR
 
 def get_ocr_processor():
     global _ocr_processor_instance, _init_error, OCRProcessor

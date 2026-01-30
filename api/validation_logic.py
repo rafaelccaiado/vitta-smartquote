@@ -440,12 +440,11 @@ class ValidationService:
                              results["items"][i]["match_strategy"] = "ai_semantic_exact"
                              results["stats"]["not_found"] -= 1
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
-                             # V84: Log PDCA FCA
-                             pdca_service.log_fca(original_term, results["items"][i]["unit"], "ai_semantic_exact", matches)
+                             # V86 Fix: Use direct 'unit' variable
+                             pdca_service.log_fca(original_term, unit, "ai_semantic_exact", matches)
                              continue
 
                         # 2. Fuzzy Check
-                        # V68: Lowered threshold from 80 to 70 because we trust the LLM normalization
                         best_match = fuzzy_matcher.find_best_match(norm_key, min_score=70)
                         if best_match:
                              match_name = best_match["match"]
@@ -456,8 +455,8 @@ class ValidationService:
                              results["items"][i]["normalized_term"] = normalized_term
                              results["stats"]["not_found"] -= 1
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
-                             # V84: Log PDCA FCA
-                             pdca_service.log_fca(original_term, results["items"][i]["unit"], "ai_semantic_fuzzy", matches)
+                             # V86 Fix: Use direct 'unit' variable
+                             pdca_service.log_fca(original_term, unit, "ai_semantic_fuzzy", matches)
             except Exception as e:
                 print(f"❌ Erro Semantic Service: {e}")
         
