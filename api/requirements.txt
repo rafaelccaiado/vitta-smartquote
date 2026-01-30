@@ -8,5 +8,5 @@ pydantic-settings
 pillow
 rapidfuzz
 python-dotenv
-numpy
+
 # CACHE_BUST: V81.0 (ROI-Classifier)
