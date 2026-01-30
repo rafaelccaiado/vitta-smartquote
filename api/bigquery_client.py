@@ -1,9 +1,17 @@
-from google.cloud import bigquery
+try:
+    from google.cloud import bigquery
+except ImportError:
+    bigquery = None
 from typing import List, Dict, Any
 from auth_utils import get_gcp_credentials
 
 class BigQueryClient:
     def __init__(self):
+        if not bigquery:
+            print("⚠️ BigQuery lib not installed. BQ features disabled.")
+            self.client = None
+            return
+
         creds = get_gcp_credentials()
         if creds:
              self.client = bigquery.Client(project="high-nature-319701", credentials=creds)
