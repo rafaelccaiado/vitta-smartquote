@@ -7,8 +7,12 @@
             "destination": "/qa.html"
         },
         {
+            "source": "/api/qa-proof",
+            "destination": "/api/qa-proof"
+        },
+        {
             "source": "/api/(.*)",
-            "destination": "/api/$1"
+            "destination": "/api/index"
         },
         {
             "source": "/(.*)",
