@@ -7,5 +7,8 @@ requests
 pydantic-settings
 pillow
 python-dotenv
+numpy
+opencv-python-headless
+rapidfuzz
 
-# CACHE_BUST: V86.2 (Deep Clean)
+# CACHE_BUST: V86.3 (Final Safety Net)

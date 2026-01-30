@@ -30,6 +30,13 @@ except Exception as e:
     print(traceback.format_exc())
     if not _init_error: _init_error = f"Backend Import Error: {str(e)}"
 
+# PDCA Service (V86.3)
+try:
+    from services.pdca_service import pdca_service
+except Exception as e:
+    print(f"⚠️ PDCA Service Import Error: {e}")
+    pdca_service = None
+
 
 app = FastAPI(title="Vitta SmartQuote API (Vercel)")
 
@@ -149,14 +156,38 @@ async def get_units():
     try:
         bq_c = get_bq_client()
         if not bq_c:
-             # Fallback temporarily if BQ is down
-             return {"units": ["Goiânia Centro", "Anápolis", "Trindade"]}
+            # Fallback temporarily if BQ is down
+            return {"units": ["Goiânia Centro", "Anápolis", "Trindade"]}
         
         units = bq_c.get_units()
         return {"units": units}
     except Exception as e:
         print(f"Erro get-units: {e}")
         return {"units": ["Goiânia Centro (Fallback)"]}
+
+# --- PDCA DEBUG ENDPOINTS (V86.3) ---
+@app.get("/api/pdca/logs")
+async def get_pdca_logs():
+    if not pdca_service:
+        return {"error": "PDCA Service not initialized", "details": _init_error}
+    return pdca_service.get_pending_actions()
+
+@app.post("/api/pdca/approve")
+async def approve_pdca_action(data: dict):
+    if not pdca_service or not learning_service:
+        raise HTTPException(status_code=500, detail="PDCA or Learning Service not ready")
+    
+    term = data.get('term')
+    unit = data.get('unit')
+    target = data.get('target')
+    
+    if not term or not target:
+        raise HTTPException(status_code=400, detail="Missing term or target")
+
+    learning_service.learn(term, target)
+    pdca_service.approve_action(term, unit)
+    
+    return {"status": "success", "message": f"Aprendido: {term} -> {target}"}
 
 
 @app.post("/api/validate-list")
