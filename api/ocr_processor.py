@@ -247,6 +247,8 @@ class OCRProcessor:
             # 2. Phase B: Match Alta Cobertura (Fuzzy)
             # Aceita variações maiores, mas seguro para textos longos (>4 chars)
             if score >= 85:
+                return official_name, score, "phase_b_high_coverage"
+
             # Se o termo matched (ex: HEMOGRAMA) está contido totalmente no input
             if len(matched_term) > 4 and matched_term in text_norm:
                 return official_name, 80.0, "contains_fallback"
