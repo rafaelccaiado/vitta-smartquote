@@ -1,5 +1,6 @@
 from typing import Dict, Any, List, Tuple, Optional
-from google.cloud import vision
+import requests
+from google.auth.transport.requests import Request
 import io
 import traceback
 from PIL import Image
@@ -18,15 +19,13 @@ class OCRProcessor:
     def __init__(self):
         print("Inicializando OCRProcessor com Google Cloud Vision API ☁️")
         try:
-            creds = get_gcp_credentials()
-            if creds:
+            self.creds = get_gcp_credentials()
+            if self.creds:
                  print("🔑 Credenciais carregadas com sucesso via auth_utils!")
-                 self.client = vision.ImageAnnotatorClient(credentials=creds)
             else:
-                 print("⚠️ Credenciais retornaram None, tentando ADC padrão...")
-                 self.client = vision.ImageAnnotatorClient()
+                 print("⚠️ Credenciais retornaram None. OCP irá falhar.")
                  
-            print("Client Google Vision inicializado!")
+            print("OCR Processor (REST Mode) inicializado!")
             self.init_error = None
             
             # Novos componentes do pipeline
@@ -50,8 +49,8 @@ class OCRProcessor:
         """
         Processa imagem com Pipeline 2-Phase Matching & Alta Cobertura.
         """
-        if not self.client:
-            return {"error": f"CONFIG ERROR: GCP Client Failed. {self.init_error}", "status": "config_error"}
+        if not self.creds:
+            return {"error": f"CONFIG ERROR: GCP Credentials Missing. {self.init_error}", "status": "config_error"}
 
         try:
             # === CAMADA 1: ROI DETECTION & PRE-PROCESSAMENTO ===
@@ -65,18 +64,51 @@ class OCRProcessor:
                     print(f"⚠️ Warning: Preprocessing failed, using original: {e}")
 
             # === CAMADA 2: GOOGLE VISION OCR ===
-            image = vision.Image(content=processed_image_bytes)
+            # === CAMADA 2: GOOGLE VISION OCR (VIA REST API) ===
+            # Codificar imagem em base64
+            import base64
+            b64_image = base64.b64encode(processed_image_bytes).decode("utf-8")
             
-            response = self.client.document_text_detection(
-                image=image,
-                image_context=vision.ImageContext(language_hints=["pt", "pt-BR"])
-            )
+            # Refresh token se necessário
+            try:
+                if not self.creds.valid:
+                    auth_req = Request()
+                    self.creds.refresh(auth_req)
+                token = self.creds.token
+            except Exception as e:
+                return {"error": f"AUTH ERROR: Failed to refresh token. {e}", "status": "auth_error"}
 
-            if response.error.message:
-                return {"error": response.error.message, "status": "error"}
+            # Montar payload JSON
+            url = "https://vision.googleapis.com/v1/images:annotate"
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "requests": [
+                    {
+                        "image": {"content": b64_image},
+                        "features": [{"type": "DOCUMENT_TEXT_DETECTION"}],
+                        "imageContext": {"languageHints": ["pt", "pt-BR"]}
+                    }
+                ]
+            }
 
-            # Extração Bruta das Linhas
-            raw_lines = self._extrair_linhas(response)
+            response_obj = requests.post(url, headers=headers, json=payload)
+            
+            if response_obj.status_code != 200:
+                return {"error": f"API ERROR {response_obj.status_code}: {response_obj.text}", "status": "error"}
+            
+            response_json = response_obj.json()
+            # O JSON de resposta tem estrutura {"responses": [...]}
+            # Pegamos o primeiro item da lista responses
+            api_resp = response_json.get("responses", [{}])[0]
+
+            if "error" in api_resp:
+                return {"error": api_resp["error"].get("message"), "status": "error"}
+
+            # Extração Bruta das Linhas (Adaptado para Dict)
+            raw_lines = self._extrair_linhas(api_resp)
             
             # === CAMADA 3: FILTRAGEM & CLASSIFICAÇÃO (CANDIDATES) ===
             candidates = []
@@ -349,16 +381,21 @@ class OCRProcessor:
                 flat_list.append((self._normalizar_texto(err), official))
         return flat_list
 
-    def _extrair_linhas(self, response) -> List[str]:
+    def _extrair_linhas(self, api_resp: dict) -> List[str]:
         linhas = []
-        if not response.full_text_annotation:
+        # No formato REST, acessamos como dict: api_resp.get("fullTextAnnotation")
+        full_text = api_resp.get("fullTextAnnotation")
+        
+        if not full_text:
             return []
-        for page in response.full_text_annotation.pages:
-            for block in page.blocks:
-                for paragraph in block.paragraphs:
+            
+        for page in full_text.get("pages", []):
+            for block in page.get("blocks", []):
+                for paragraph in block.get("paragraphs", []):
                     linha = ""
-                    for word in paragraph.words:
-                        palavra = "".join([s.text for s in word.symbols])
+                    for word in paragraph.get("words", []):
+                        # Symbols também é lista de dicts
+                        palavra = "".join([s.get("text", "") for s in word.get("symbols", [])])
                         linha += palavra + " "
                     if linha.strip():
                         linhas.append(linha.strip())
