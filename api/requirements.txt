@@ -1,11 +1,11 @@
-fastapi==0.109.2
-uvicorn==0.27.1
-python-multipart==0.0.9
-google-auth==2.28.1
-requests==2.31.0
-pydantic-settings==2.2.1
-pillow==10.2.0
-rapidfuzz==3.6.1
-python-dotenv==1.0.1
+fastapi
+uvicorn
+python-multipart
+google-auth
+requests
+pydantic-settings
+pillow
+rapidfuzz
+python-dotenv
 
 # CACHE_BUST: V81.0 (ROI-Classifier)
