@@ -89,6 +89,7 @@ def health_check():
         "mode": "Vercel Monolith V70.2 (Lazy Init)",
         "ocr_ready": ocr_p is not None,
         "bq_ready": bq_c is not None,
+        "init_error": _init_error, # Expose the error!
         "env_check": {
             "GCP_SA_KEY_BASE64": key_status,
         }
