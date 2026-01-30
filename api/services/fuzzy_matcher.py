@@ -1,5 +1,5 @@
+from typing import List, Dict, Tuple, Optional, Any
 from difflib import SequenceMatcher, get_close_matches
-from typing import List, Dict, Tuple, Optional
 
 class FuzzyMatcher:
     """
@@ -141,5 +141,4 @@ class FuzzyMatcher:
         return real_confidence
 
 # Singleton (será inicializado com exames do BigQuery)
-from typing import Any
 fuzzy_matcher = FuzzyMatcher()
