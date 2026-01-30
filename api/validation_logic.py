@@ -2,6 +2,7 @@ from typing import List, Dict, Any
 from difflib import get_close_matches
 from services.tuss_service import tuss_service
 from services.missing_terms_logger import missing_terms_logger
+from services.pdca_service import pdca_service
 from services.fuzzy_matcher import fuzzy_matcher
 
 class ValidationService:
@@ -19,10 +20,18 @@ class ValidationService:
 
     @staticmethod
     def normalize_text(text: str) -> str:
-        """Remove acentos e caracteres especiais para comparação"""
+        """Remove acentos, pontuação e normaliza espaços para comparação robusta"""
         import unicodedata
-        nfkd_form = unicodedata.normalize('NFKD', text)
-        return "".join([c for c in nfkd_form if not unicodedata.combining(c)]).lower()
+        import re
+        if not text: return ""
+        # Remove acentos
+        nfkd_form = unicodedata.normalize('NFKD', str(text))
+        text = "".join([c for c in nfkd_form if not unicodedata.combining(c)]).lower()
+        # Remove pontuação e caracteres especiais, mantendo apenas letras, números e espaços
+        text = re.sub(r'[^a-z0-9\s]', ' ', text)
+        # Normaliza espaços extras
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
 
     @staticmethod
     def validate_batch(terms: List[str], unit: str, bq_client: Any) -> Dict[str, Any]:
@@ -64,10 +73,6 @@ class ValidationService:
             "hemograma completo": ["hemograma"],
             "epf": ["parasitologico de fezes", "protoparasitologico"],
             "parasitologico": ["parasitologico de fezes"],
-            "tgo": ["dosagem de tgo", "transaminase glutamico oxalacetica", "aspartato aminotransferase"],
-            "ast": ["dosagem de tgo", "aspartato aminotransferase"],
-            "tgp": ["dosagem de tgp", "transaminase glutamico piruvica", "alanina aminotransferase"],
-            "alt": ["dosagem de tgp", "alanina aminotransferase"],
             "glicose": ["glicemia", "glicemia de jejum", "dosagem de glicose"],
             "glicemia": ["glicemia", "glicemia de jejum"],
             "colesterol": ["colesterol total", "colesterol total e fracoes"],
@@ -88,16 +93,14 @@ class ValidationService:
             "acido urico": ["dosagem de acido urico", "acido urico"],
             "beta hcg": ["beta hcg qualitativo", "beta hcg quantitativo"],
             "grupo sanguineo": ["tipagem sanguinea", "grupo sanguineo fator rh"],
-            "vitamina b12": ["dosagem de vitamina b12", "cianocobalamina", "vitamina b-12"],
-            "vit b12": ["dosagem de vitamina b12", "vitamina b12"],
-            "hemoglobina glicada": ["hemoglobina glicada (a1c)", "dosagem de hemoglobina glicada"],
-            "glicada": ["hemoglobina glicada (a1c)"],
-            "vitamina d": ["25 hidroxivitamina d", "dosagem de vitamina d", "vitamina d 25 oh", "vit d"],
-            "vitamina d 25-oh": ["25 hidroxivitamina d"],
-            "vit d": ["25 hidroxivitamina d"],
-            "tgo": ["tgo transaminase oxalacetica", "transaminase oxalacetica (tgo)", "ast"],
-            "tgp": ["tgp transaminase piruvica", "transaminase piruvica (tgp)", "alt"],
-            "vhs": ["vhs hemossedimentacao exames laboratoriais", "vhs"],
+            "tgo": ["dosagem de tgo", "tgo transaminase oxalacetica", "transaminase glutamico oxalacetica", "aspartato aminotransferase", "ast"],
+            "ast": ["dosagem de tgo", "aspartato aminotransferase", "tgo"],
+            "tgp": ["dosagem de tgp", "tgp transaminase piruvica", "transaminase glutamico piruvica", "alanina aminotransferase", "alt"],
+            "alt": ["dosagem de tgp", "alanina aminotransferase", "tgp"],
+            "vitamina d": ["25 hidroxivitamina d", "dosagem de vitamina d", "vitamina d 25 oh", "vit d", "25 oh vitamina d"],
+            "vitamina d 25-oh": ["25 hidroxivitamina d", "vitamina d"],
+            "vit d": ["25 hidroxivitamina d", "vitamina d"],
+            "vhs": ["vhs hemossedimentacao", "vhs hemossedimentacao exames laboratoriais", "velocidade de hemossedimentacao"],
             "tsh ultra": ["hormonio tireoestimulante", "tsh"],
             "urocultura": ["cultura de urina (urocultura)", "pesquisa de bacterias na urina"],
             "antibioticograma": ["teste de sensibilidade a antibioticos (antibiograma)"],
@@ -339,6 +342,7 @@ class ValidationService:
                 
                 item["match_strategy"] = strategy
             else:
+                pdca_service.log_fca(term, unit, "not_found", matches=[])
                 missing_terms_logger.log_not_found(term=term, unit=unit)
                 results["stats"]["not_found"] += 1
                 
@@ -419,6 +423,8 @@ class ValidationService:
                              results["items"][i]["match_strategy"] = "ai_semantic_exact"
                              results["stats"]["not_found"] -= 1
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
+                             # V84: Log PDCA FCA
+                             pdca_service.log_fca(original_term, results["items"][i]["unit"], "ai_semantic_exact", matches)
                              continue
 
                         # 2. Fuzzy Check
@@ -433,6 +439,8 @@ class ValidationService:
                              results["items"][i]["normalized_term"] = normalized_term
                              results["stats"]["not_found"] -= 1
                              results["stats"]["confirmed" if len(matches)==1 else "pending"] += 1
+                             # V84: Log PDCA FCA
+                             pdca_service.log_fca(original_term, results["items"][i]["unit"], "ai_semantic_fuzzy", matches)
             except Exception as e:
                 print(f"❌ Erro Semantic Service: {e}")
         

@@ -1,11 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UploadImage from './components/UploadImage'
 import OCRProcessing from './components/OCRProcessing'
 import ValidationModal from './components/ValidationModal'
 import BudgetDisplay from './components/BudgetDisplay'
 import Header from './components/Header'
+import PdcaDashboard from './pages/PdcaDashboard'
 
 function App() {
+  const [isAdmin, setIsAdmin] = useState(window.location.pathname === '/admin/pdca')
+
+  // Listen for navigation changes (simple routing)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsAdmin(window.location.pathname === '/admin/pdca')
+    }
+    window.addEventListener('popstate', handleLocationChange)
+    return () => window.removeEventListener('popstate', handleLocationChange)
+  }, [])
+
+  if (isAdmin) {
+    return <PdcaDashboard />
+  }
   const [step, setStep] = useState(1) // 1: Upload, 2: OCR, 3: Validation, 4: Budget
   const [imageFile, setImageFile] = useState(null)
   const [selectedUnit, setSelectedUnit] = useState('Goiânia Centro')
