@@ -92,8 +92,12 @@ class ValidationService:
             "vit b12": ["dosagem de vitamina b12", "vitamina b12"],
             "hemoglobina glicada": ["hemoglobina glicada (a1c)", "dosagem de hemoglobina glicada"],
             "glicada": ["hemoglobina glicada (a1c)"],
-            "vitamina d": ["25 hidroxivitamina d", "dosagem de vitamina d"],
+            "vitamina d": ["25 hidroxivitamina d", "dosagem de vitamina d", "vitamina d 25 oh", "vit d"],
+            "vitamina d 25-oh": ["25 hidroxivitamina d"],
             "vit d": ["25 hidroxivitamina d"],
+            "tgo": ["tgo transaminase oxalacetica", "transaminase oxalacetica (tgo)", "ast"],
+            "tgp": ["tgp transaminase piruvica", "transaminase piruvica (tgp)", "alt"],
+            "vhs": ["vhs hemossedimentacao exames laboratoriais", "vhs"],
             "tsh ultra": ["hormonio tireoestimulante", "tsh"],
             "urocultura": ["cultura de urina (urocultura)", "pesquisa de bacterias na urina"],
             "antibioticograma": ["teste de sensibilidade a antibioticos (antibiograma)"],
@@ -189,17 +193,27 @@ class ValidationService:
             
             # 2b. Busca por Sinônimos
             if not found_matches:
-                # Normaliza input term para chave do dicionario (se necessário)
-                # Mas as chaves do SYNONYMS estão explicitamente hardcoded. Vamos assumir usar o lower original ou normalizar tb
-                # Vamos tentar direto no SYNONYMS com term_norm se as chaves la forem compativeis
-                
-                if term_norm in SYNONYMS: # Direct Normalized Match
-                   for syn in SYNONYMS[term_norm]:
-                       syn_key = ValidationService.normalize_text(syn)
-                       if syn_key in exam_map:
-                           found_matches = exam_map[syn_key]
-                           strategy = "synonym"
-                           break
+                # V83 Improved Synonym Lookup: Check if term CAUSES a synonym trigger
+                # Example: "TGO (AST)" -> norm is "tgo ast" -> should trigger "tgo" synonym
+                matched_synonym_key = None
+                if term_norm in SYNONYMS:
+                    matched_synonym_key = term_norm
+                else:
+                    # Look for the synonym key WITHIN the term (for abbreviations)
+                    # or the term WITHIN a synonym key
+                    for skey in SYNONYMS.keys():
+                        if len(skey) >= 3: # Only for meaningful abbreviations
+                            if skey == term_norm or (skey in term_norm and len(skey) <= 4) or (term_norm in skey and len(term_norm) <= 4): 
+                                matched_synonym_key = skey
+                                break
+
+                if matched_synonym_key:
+                    for syn in SYNONYMS[matched_synonym_key]:
+                        syn_key = ValidationService.normalize_text(syn)
+                        if syn_key in exam_map:
+                            found_matches = exam_map[syn_key]
+                            strategy = f"synonym ({matched_synonym_key})"
+                            break
                 
                 # Fuzzy no dicionario
                 if not found_matches:

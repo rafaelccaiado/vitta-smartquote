@@ -102,6 +102,20 @@ class TussService:
             self.synonyms["vitamina b12"] = "vitamina b12 - pesquisa e/ou dosagem"
             self.synonyms["vit b12"] = "vitamina b12 - pesquisa e/ou dosagem"
             self.synonyms["b12"] = "vitamina b12 - pesquisa e/ou dosagem"
+
+            # Vitamina D
+            self.synonyms["vitamina d"] = "25 hidroxivitamina d (25-oh)"
+            self.synonyms["vit d"] = "25 hidroxivitamina d (25-oh)"
+            self.synonyms["25-oh"] = "25 hidroxivitamina d (25-oh)"
+
+            # TGO / TGP
+            self.synonyms["tgo"] = "tgo (ast) transaminase oxalacetica"
+            self.synonyms["ast"] = "tgo (ast) transaminase oxalacetica"
+            self.synonyms["tgp"] = "tgp (alt) transaminase piruvica"
+            self.synonyms["alt"] = "tgp (alt) transaminase piruvica"
+
+            # VHS
+            self.synonyms["vhs"] = "vhs - velocidade de hemossedimentacao"
             
             # TODO: Idealmente, carregar chaves do BQ na inicialização para validar cruzamento
             

@@ -37,12 +37,26 @@ class MockBQClient:
             {"item_id": 4, "item_name": "Hemoglobina Glicada (A1C)", "search_name": "hemoglobina glicada", "price": 45.0},
             {"item_id": 5, "item_name": "Urina Rotina EAS", "search_name": "urina rotina eas", "price": 30.0},
             {"item_id": 6, "item_name": "Vitamina B12", "search_name": "vitamina b12", "price": 60.0},
+            {"item_id": 7, "item_name": "25 Hidroxivitamina D", "search_name": "25 hidroxivitamina d", "price": 100.0},
+            {"item_id": 8, "item_name": "TGO TRANSAMINASE OXALACETICA", "search_name": "tgo transaminase oxalacetica", "price": 24.0},
+            {"item_id": 9, "item_name": "TGP TRANSAMINASE PIRUVICA", "search_name": "tgp transaminase piruvica", "price": 24.0},
+            {"item_id": 10, "item_name": "VHS HEMOSSEDIMENTACAO EXAMES LABORATORIAIS", "search_name": "vhs hemossedimentacao exames laboratoriais", "price": 49.0},
         ]
 
 def test_validation():
-    print("Testing Validation Heuristics...")
+    print("Testing Validation Heuristics (Lab Specialist Phase)...")
     bq = MockBQClient()
-    terms = ["Hemograma", "Glicose", "Hemoglobina Glicada", "Urina Tipo 1", "Vit B12"]
+    terms = [
+        "Hemograma", 
+        "Glicose", 
+        "Hemoglobina Glicada", 
+        "Urina Tipo 1", 
+        "Vit B12",
+        "Vitamina D (25-OH)",
+        "TGO (AST)",
+        "TGP (ALT)",
+        "VHS"
+    ]
     
     result = ValidationService.validate_batch(terms, "Goiânia Centro", bq)
     
