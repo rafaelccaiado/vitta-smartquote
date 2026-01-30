@@ -208,21 +208,24 @@ class OCRProcessor:
             matched_term, score, index = match
             official_name = self.exams_flat_list[index][1]
             
-            # Regras de Threshold
+            # === REGRAS DE CALIBRAÇÃO ===
             
-            # 1. Match "Perfeito" ou quase (Abreviações exatas: TSH, T4)
+            # Regra CRÍTICA para Siglas Curtas (2-4 chars)
+            # Evita que "DA" vire "C4", "EM" vire "FE", etc.
+            if len(text_norm) <= 4:
+                # Exige match muito alto para curtos
+                if score >= 95:
+                    return official_name, score, "short_token_high_precision"
+                return None
+
+            # 1. Phase A: Match Alta Precisão (Quase Exato)
+            # Aceita pequenos erros de OCR (1 char errado em palavra longa)
             if score >= 92:
-                return official_name, score, "exact_high_confidence"
+                return official_name, score, "phase_a_high_precision"
             
-            # 2. Match "Bom" (Phase B - Erros de OCR leves, acentos)
+            # 2. Phase B: Match Alta Cobertura (Fuzzy)
+            # Aceita variações maiores, mas seguro para textos longos (>4 chars)
             if score >= 85:
-                # Validação extra para curtos em Phase B
-                if len(text_norm) <= 3 and score < 100:
-                    return None # Evitar alucinação em siglas curtas difusas
-                return official_name, score, "fuzzy_phase_b"
-                
-            # 3. Match "Parcial Confiável" (Contém uma palavra forte)
-            # Ex: "Exame de Hemograma Completo" -> "Hemograma"
             # Se o termo matched (ex: HEMOGRAMA) está contido totalmente no input
             if len(matched_term) > 4 and matched_term in text_norm:
                 return official_name, 80.0, "contains_fallback"
@@ -231,23 +234,27 @@ class OCRProcessor:
 
     def _is_valid_candidate(self, text: str) -> bool:
         """
-        Filtra ruído (Blacklist) e Tokens Curtos inuteis.
-        Retorna True se for um candidato a exame válido.
+        Filtra ruído (Blacklist) e Tokens Curtos e valida candidatos.
         """
         text = text.strip()
         if not text: return False
         
         text_upper = text.upper()
         
-        # 1. Tokens muito curtos
-        # Permitidos: T3, T4, CK, K+, NA+, P, MG, ZN, FE, LI, V, DHL
-        whitelist_short = {"T3", "T4", "CK", "K", "NA", "P", "MG", "ZN", "FE", "LI", "V", "DHL", "C3", "C4", "TSH", "VHS", "PCR", "PSA", "CEA", "AFP", "CA", "PTH", "ACTH", "GH", "LH", "FSH"}
+        # 1. Tokens muito curtos (< 3 chars)
+        # Lista expandida de siglas médicas válidas
+        whitelist_short = {
+            "T3", "T4", "T4L", "TSH", "CK", "K", "NA", "P", "MG", "ZN", "FE", "LI", "V", "DHL", 
+            "C3", "C4", "VHS", "PCR", "PSA", "CEA", "AFP", "CA", "PTH", "ACTH", "GH", "LH", "FSH",
+            "EAS", "HIV", "VDRL", "HBSAG", "FAN", "IGA", "IGE", "IGG", "IGM", "CROSS"
+        }
         
         # Remove caracteres não alfanuméricos para checar tamanho real
         clean_len = len(re.sub(r'[^A-Z0-9]', '', text_upper))
         
         if clean_len < 3:
             # Se for curto, SÓ passa se estiver na whitelist exata
+            # Check normal e com sufixos comuns (+, -)
             if text_upper not in whitelist_short and text_upper.rstrip("+-") not in whitelist_short:
                 return False
 
@@ -258,18 +265,18 @@ class OCRProcessor:
              "SOLICITO", "PEDIDO", "REQUISICAO", "CNPJ", "CPF", "RG",
              "LABORATORIO", "CLINICA", "HOSPITAL", "UNIMED", "BRADESCON",
              "RESULTADO", "IMPRESSO", "PAGINA", "FOLHA", "OBS:", "OBSERVACAO",
-             "ATENCIOSAMENTE", "GRATO", "VISTO"
+             "ATENCIOSAMENTE", "GRATO", "VISTO", "REMESSA", "PROTOCOLO",
+             "SENHA", "HORA", "COLETA", "IDADE", "SEXO", "NASCIMENTO"
         ]
         
         # Verifica início da linha ou palavra solta
         for term in blacklist_terms:
-            # Se a linha COMEÇA com termo proibido
             if text_upper.startswith(term):
                 return False
-            # Se o termo proibido está solto na linha (ex: "Data: 10/10")
-            if f" {term}" in text_upper or f"{term}:" in text_upper:
-                # Permitir se for exame que contem a palavra (raro, mas cuidado)
-                # Ex: "Data" é noise puro.
+            # Verifica delimitadores comuns para evitar falsos positivos em substrings
+            # Ex: "DATA" não deve dar match em "CANDIDATA" (mas startswith protege)
+            # Mas "Data:" no meio da linha deve ser pego
+            if f" {term}" in text_upper:
                  return False
 
         # 3. Formato de Data (dd/mm/aaaa) ou Hora (hh:mm)
