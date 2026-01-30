@@ -24,6 +24,10 @@ class BigQueryClient:
 
     def get_all_exams(self, unit: str) -> List[Dict[str, Any]]:
         """Busca TODOS os exames da unidade para cache em memória (Otimização de Performance)"""
+        if not self.client:
+             print("⚠️ BigQuery Client offline. Retornando Mock vazio.")
+             return []
+
         query = f"""
         SELECT 
             item_id, 
@@ -67,6 +71,9 @@ class BigQueryClient:
             return []
 
     def search_exams(self, term: str, unit: str, limit: int = 10) -> List[Dict[str, Any]]:
+        if not self.client:
+             return []
+
         # Legacy: Mantido para retrocompatibilidade, mas lento para loops
         query = f"""
         SELECT 
@@ -102,6 +109,18 @@ class BigQueryClient:
         return results
 
     def get_units(self) -> List[str]:
+        if not self.client:
+            # Fallback List
+            return [
+                "Goiânia Centro", 
+                "Anápolis", 
+                "Trindade", 
+                "Aparecida de Goiânia", 
+                "Rio Verde", 
+                "Jataí", 
+                "Catalão"
+            ]
+
         query = f"""
         SELECT DISTINCT price_table_name
         FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`

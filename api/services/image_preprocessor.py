@@ -1,10 +1,18 @@
 try:
-    import cv2
-    OPENCV_AVAILABLE = True
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+
+try:
+    if NUMPY_AVAILABLE:
+        import cv2
+        OPENCV_AVAILABLE = True
+    else:
+        OPENCV_AVAILABLE = False
 except ImportError:
     print("⚠️ OpenCV não disponível. Pré-processamento será desativado.")
     OPENCV_AVAILABLE = False
-import numpy as np
 from PIL import Image
 import io
 from typing import Tuple, Optional
