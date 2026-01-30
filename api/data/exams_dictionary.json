@@ -1013,6 +1013,114 @@
             "categoria": "FEZES"
         },
         {
+            "id": "proteinas_totais_fracoes",
+            "nome_oficial": "Proteínas Totais e Frações",
+            "codigo_tuss": "40302423",
+            "sinonimos": [
+                "PROTEINAS TOTAIS"
+            ],
+            "variacoes": [
+                "PROTEINOGRAMA"
+            ],
+            "erros_ocr_comuns": [
+                "PROTEINAS TOTAIS E FRACOES"
+            ],
+            "categoria": "BIOQUIMICA"
+        },
+        {
+            "id": "tolerancia_lactose_frutose",
+            "nome_oficial": "Teste de Tolerância a Lactose e Frutose",
+            "codigo_tuss": null,
+            "sinonimos": [
+                "CURVA DE LACTOSE",
+                "CURVA DE FRUTOSE"
+            ],
+            "variacoes": [
+                "TESTE TOLERANCIA A LACTOSE E FRUTOSE"
+            ],
+            "erros_ocr_comuns": [
+                "LACTOSE E FRUTOSE"
+            ],
+            "categoria": "CURVAS_GLICEMICAS"
+        },
+        {
+            "id": "tolerancia_sacarose",
+            "nome_oficial": "Teste de Tolerância a Sacarose",
+            "codigo_tuss": "40302513",
+            "sinonimos": [
+                "CURVA DE SACAROSE"
+            ],
+            "variacoes": [
+                "TESTE TOLERANCIA A SACAROSE"
+            ],
+            "erros_ocr_comuns": [
+                "SACAROSE"
+            ],
+            "categoria": "CURVAS_GLICEMICAS"
+        },
+        {
+            "id": "anti_endomisio",
+            "nome_oficial": "Anti-Endomísio (IgA)",
+            "codigo_tuss": "40306143",
+            "sinonimos": [
+                "ANTI ENDOMISIO"
+            ],
+            "variacoes": [
+                "ENDOIGA",
+                "ANTI-ENDOMISIO IGA"
+            ],
+            "erros_ocr_comuns": [
+                "ANTI ENDOMISIO IGA"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "anti_transglutaminase",
+            "nome_oficial": "Anti-Transglutaminase (IgA)",
+            "codigo_tuss": "40306160",
+            "sinonimos": [
+                "TTG IGA",
+                "ANTI TTG"
+            ],
+            "variacoes": [
+                "ANTI TRANSGLUTAMINASE TECIDUAl IGA"
+            ],
+            "erros_ocr_comuns": [
+                "ANTI TRANSGLUTAMINASE IGA"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "anti_gliadina",
+            "nome_oficial": "Anti-Gliadina (IgA)",
+            "codigo_tuss": "40306151",
+            "sinonimos": [
+                "ANTI GLIADINA"
+            ],
+            "variacoes": [
+                "GLIADINA IGA"
+            ],
+            "erros_ocr_comuns": [
+                "ANTI GLIADINA IGA"
+            ],
+            "categoria": "SOROLOGIAS"
+        },
+        {
+            "id": "iga_serica",
+            "nome_oficial": "IgA Sérica",
+            "codigo_tuss": "40303012",
+            "sinonimos": [
+                "IGA"
+            ],
+            "variacoes": [
+                "IMUNOGLOBULINA A"
+            ],
+            "erros_ocr_comuns": [
+                "IGA SERICA"
+            ],
+            "categoria": "IMUNOLOGIA"
+        },
+        {
             "id": "inr",
             "nome_oficial": "INR",
             "codigo_tuss": "40304370",
