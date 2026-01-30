@@ -2,14 +2,14 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/index.py"
+            "destination": "/api"
         },
         {
             "source": "/admin/pdca",
             "destination": "/index.html"
         },
         {
-            "source": "/(.*)",
+            "source": "/((?!api/).*)",
             "destination": "/index.html"
         }
     ]
