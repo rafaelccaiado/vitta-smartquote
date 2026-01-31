@@ -1,1 +1,55 @@
-﻿牦浯琠灹湩⁧浩潰瑲䰠獩ⱴ䐠捩ⱴ䄠祮਍਍牦浯猠牥楶散⹳敳慭瑮捩獟牥楶散椠灭牯⁴敳慭瑮捩獟牥楶散਍牦浯猠牥楶散⹳畴獳獟牥楶散椠灭牯⁴畴獳獟牥楶散਍牦浯猠牥楶散⹳敬牡楮杮獟牥楶散椠灭牯⁴敬牡楮杮獟牥楶散਍਍汣獡⁳敒潳畬整牏档獥牴瑡牯ഺ †∠∢਍††楖瑴⁡敒潳畬整›䥁䘠物睥污⁬桴瑡猠慴摮牡楤敺⁳整浲⁳䕂但䕒搠瑡扡獡⁥敳牡档മ †䜠慯㩬䔠楬業慮整✠敐摮湩❧猠慴畴⁳祢爠獥汯楶杮洠摥捩污愠扭杩極祴甠晰潲瑮മ †∠∢਍††਍††獀慴楴浣瑥潨൤ †搠晥猠慴摮牡楤敺扟瑡档琨牥獭›楌瑳獛牴⥝ⴠ‾楌瑳䑛捩孴瑳Ⱳ䄠祮嵝ഺ †††猠慴摮牡楤敺彤瑩浥⁳‽嵛਍††††਍††††潦⁲整浲椠⁮整浲㩳਍††††††敲潳癬摥瑟牥⁭‽敒潳畬整牏档獥牴瑡牯爮獥汯敶獟湩汧彥整浲琨牥⥭਍††††††瑳湡慤摲穩摥楟整獭愮灰湥⡤ൻ †††††††∠牯杩湩污㨢琠牥Ɑ਍††††††††爢獥汯敶≤›敲潳癬摥瑟牥孭琢牥≭ⱝ਍††††††††猢畯捲≥›敲潳癬摥瑟牥孭猢畯捲≥ⱝ਍††††††††挢湯楦敤据≥›敲潳癬摥瑟牥孭挢湯楦敤据≥൝ †††††素ഩ †††††ഠ †††爠瑥牵⁮瑳湡慤摲穩摥楟整獭਍਍††獀慴楴浣瑥潨൤ †搠晥爠獥汯敶獟湩汧彥整浲琨牥㩭猠牴 㸭䐠捩孴瑳Ⱳ䄠祮㩝਍††††整浲损敬湡㴠琠牥⹭瑳楲⡰⸩潬敷⡲ഩ †††ഠ †††⌠ㄠ‮桃捥⁫敌牡楮杮匠獹整⁭䘨獡整瑳ഩ †††氠慥湲摥㴠氠慥湲湩彧敳癲捩⹥敧彴敬牡敮彤慭捴⡨整浲损敬湡ഩ †††椠⁦敬牡敮㩤਍††††††敲畴湲笠琢牥≭›敬牡敮Ɽ∠潳牵散㨢∠敬牡楮杮Ⱒ∠潣普摩湥散㨢ㄠ〮ൽ †††††ഠ †††⌠㈠‮桃捥⁫啔卓䰯䥏䍎䈠楲杤൥ †††⌠丠瑯㩥吠獵即牥楶散洠杩瑨爠瑥牵⁮潎敮漠⁲⁡祳潮祮൭ †††琠獵彳慭捴⁨‽畴獳獟牥楶散献慥捲⡨整浲损敬湡ഩ †††椠⁦畴獳浟瑡档ഺ †††††爠瑥牵⁮≻整浲㨢琠獵彳慭捴ⱨ∠潳牵散㨢∠畴獳扟楲杤≥‬挢湯楦敤据≥›⸱細਍††††††਍††††‣⸳䄠⁉敓慭瑮捩丠牯慭楬慺楴湯⠠浓牡整瑳ഩ †††⌠唠敳䜠浥湩⁩潴映湩⁤桴⁥潭瑳瀠潲慢汢⁥敭楤慣⁬慮敭਍††††牴㩹਍††††††楡牟獥汯敶⁤‽敳慭瑮捩獟牥楶散渮牯慭楬敺瑟牥⡭整浲损敬湡ഩ †††††椠⁦楡牟獥汯敶⁤湡⁤楡牟獥汯敶⁤㴡琠牥彭汣慥㩮਍††††††††‣慂楳⁣潣普摩湥散挠敨正⠠晩椠⁴档湡敧⁤楳湧晩捩湡汴⁹瑩洠杩瑨戠⁥潧摯ഩ †††††††爠瑥牵⁮≻整浲㨢愠彩敲潳癬摥‬猢畯捲≥›猢浥湡楴彣楡Ⱒ∠潣普摩湥散㨢〠㠮紵਍††††硥散瑰䔠捸灥楴湯愠⁳㩥਍††††††牰湩⡴≦髢辸删獥汯瑵⁥䥁䔠牲牯映牯✠瑻牥絭㨧笠絥⤢਍਍††††敲畴湲笠琢牥≭›整浲损敬湡‬猢畯捲≥›漢楲楧慮≬‬挢湯楦敤据≥›⸰紵਍਍敲潳畬整潟捲敨瑳慲潴⁲‽敒潳畬整牏档獥牴瑡牯⤨਍
+from typing import List, Dict, Any
+
+from services.semantic_service import semantic_service
+from services.tuss_service import tuss_service
+from services.learning_service import learning_service
+
+class ResoluteOrchestrator:
+    """
+    Vitta Resolute: AI Firewall that standardizes terms BEFORE database search.
+    Goal: Eliminate 'Pending' status by resolving medical ambiguity upfront.
+    """
+    
+    @staticmethod
+    def standardize_batch(terms: List[str]) -> List[Dict[str, Any]]:
+        standardized_items = []
+        
+        for term in terms:
+            resolved_term = ResoluteOrchestrator.resolve_single_term(term)
+            standardized_items.append({
+                "original": term,
+                "resolved": resolved_term["term"],
+                "source": resolved_term["source"],
+                "confidence": resolved_term["confidence"]
+            })
+            
+        return standardized_items
+
+    @staticmethod
+    def resolve_single_term(term: str) -> Dict[str, Any]:
+        term_clean = term.strip().lower()
+        
+        # 1. Check Learning System (Fastest)
+        learned = learning_service.get_learned_match(term_clean)
+        if learned:
+            return {"term": learned, "source": "learning", "confidence": 1.0}
+            
+        # 2. Check TUSS/LOINC Bridge
+        # Note: TussService might return None or a synonym
+        tuss_match = tuss_service.search(term_clean)
+        if tuss_match:
+            return {"term": tuss_match, "source": "tuss_bridge", "confidence": 1.0}
+            
+        # 3. AI Semantic Normalization (Smartest)
+        # Use Gemini to find the most probable medical name
+        try:
+            ai_resolved = semantic_service.normalize_term(term_clean)
+            if ai_resolved and ai_resolved != term_clean:
+                # Basic confidence check (if it changed significantly it might be good)
+                return {"term": ai_resolved, "source": "semantic_ai", "confidence": 0.8}
+        except Exception as e:
+            print(f"❌ Resolute AI Error for '{term}': {e}")
+
+        return {"term": term_clean, "source": "original", "confidence": 0.0}
+
+resolute_orchestrator = ResoluteOrchestrator()
