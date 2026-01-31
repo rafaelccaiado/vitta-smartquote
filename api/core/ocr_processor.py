@@ -1,1 +1,394 @@
-﻿牦浯琠灹湩⁧浩潰瑲䐠捩ⱴ䄠祮‬楌瑳‬畔汰ⱥ传瑰潩慮൬椊灭牯⁴敲畱獥獴਍牦浯朠潯汧⹥畡桴琮慲獮潰瑲爮煥敵瑳⁳浩潰瑲删煥敵瑳਍浩潰瑲椠൯椊灭牯⁴牴捡扥捡൫昊潲⁭䥐⁌浩潰瑲䤠慭敧਍浩潰瑲爠൥昊潲⁭潣敲愮瑵彨瑵汩⁳浩潰瑲朠瑥束灣损敲敤瑮慩獬਍਍‣潎潶瀠灩汥湩⁥敤传剃਍牦浯猠牥楶散⹳浩条彥牰灥潲散獳牯椠灭牯⁴浩条彥牰灥潲散獳牯਍牦浯猠牥楶散⹳汬彭湩整灲敲整⁲浩潰瑲氠浬楟瑮牥牰瑥牥਍牦浯猠牥楶散⹳捯彲敲潳畬整慟摵瑩牯椠灭牯⁴捯彲敲潳畬整慟摵瑩牯਍浩潰瑲樠潳൮椊灭牯⁴湵捩摯摥瑡ൡഊ椊灭牯⁴獯਍਍汣獡⁳䍏偒潲散獳牯ഺ †搠晥张楟楮彴⡟敳晬㨩਍††††牰湩⡴䤢楮楣污穩湡潤传剃牐捯獥潳⁲潣⁭潇杯敬䌠潬摵嘠獩潩⁮偁⁉飢辸⤢਍††††牴㩹਍††††††敳晬挮敲獤㴠朠瑥束灣损敲敤瑮慩獬⤨਍††††††晩猠汥⹦牣摥⁳湡⁤敳晬挮敲獤爮煥極敲彳捳灯獥ഺ †††††††猠汥⹦牣摥⁳‽敳晬挮敲獤眮瑩彨捳灯獥嬨栧瑴獰⼺眯睷朮潯汧慥楰⹳潣⽭畡桴振潬摵瀭慬晴牯❭⥝਍††††††††਍††††††晩猠汥⹦牣摥㩳਍††††††††瀠楲瑮∨鿰醔䌠敲敤据慩獩挠牡敲慧慤⁳⁥獥潣慰慤⁳䌨潬摵倠慬晴牯⥭∡ഩ †††††攠獬㩥਍††††††††瀠楲瑮∨髢辸䌠敲敤据慩獩爠瑥牯慮慲⁭潎敮‮䍏⁐物ꇃ映污慨⹲⤢਍††††††††ഠ †††††瀠楲瑮∨䍏⁒牐捯獥潳⁲刨卅⁔潍敤 湩捩慩楬慺潤∡ഩ †††††猠汥⹦湩瑩敟牲牯㴠丠湯൥ †††††ഠ †††††⌠丠癯獯挠浯潰敮瑮獥搠⁯楰数楬敮਍††††††敳晬甮敳灟敲牰捯獥楳杮㴠吠畲൥ †††††ഠ †††††⌠䌠牡敲慧⁲楄楣湯ꇃ楲⁯敤䔠慸敭⁳嘨〸〮ഩ †††††猠汥⹦硥浡彳楤瑣㴠猠汥⹦江慯彤硥浡彳楤瑣潩慮祲⤨਍††††††਍††††††‣牐灥牡⁡獥牴瑵牵獡搠⁥畢捳⁡瑯浩穩摡獡਍††††††敳晬攮慸獭晟慬彴楬瑳㴠猠汥⹦晟慬瑴湥摟捩楴湯牡⡹ ‣慐慲䘠穵祺਍††††††敳晬攮慸瑣獟瑥㴠笠敳晬弮潮浲污穩牡瑟硥潴渨浡⥥映牯渠浡ⱥ张椠⁮敳晬攮慸獭晟慬彴楬瑳⁽‣慐慲倠慨敳䄠਍††††††਍††††††牰湩⡴≦鿰隓䐠捩潩썮犡潩䴠꧃楤潣䌠牡敲慧潤›汻湥猨汥⹦硥浡彳汦瑡江獩⥴⁽整浲獯椠摮硥摡獯∮ഩ †††††ഠ †††攠捸灥⁴硅散瑰潩⁮獡攠ഺ †††††瀠楲瑮昨䔢牲⁯潡椠楮楣污穩牡䜠潯汧⁥楖楳湯䌠楬湥㩴笠絥⤢਍††††††敳晬椮楮彴牥潲⁲‽瑳⡲⥥਍††††††敳晬挮楬湥⁴‽潎敮਍਍††敤⁦牰捯獥彳浩条⡥敳晬‬浩条彥祢整㩳戠瑹獥 㸭䐠捩孴瑳Ⱳ䄠祮㩝਍††††∢ഢ †††倠潲散獳⁡浩条浥挠浯倠灩汥湩⁥ⴲ桐獡⁥慍捴楨杮☠䄠瑬⁡潃敢瑲牵⹡਍††††∢ഢ †††椠⁦潮⁴敳晬挮敲獤ഺ †††††爠瑥牵⁮≻牥潲≲›≦佃䙎䝉䔠剒剏›䍇⁐牃摥湥楴污⁳楍獳湩⹧笠敳晬椮楮彴牥潲絲Ⱒ∠瑳瑡獵㨢∠潣普杩敟牲牯索਍਍††††牴㩹਍††††††‣㴽‽䅃䅍䅄ㄠ›佒⁉䕄䕔呃佉⁎…剐ⵅ剐䍏卅䅓䕍呎⁏㴽ഽ †††††瀠潲散獳摥楟慭敧扟瑹獥㴠椠慭敧扟瑹獥਍††††††਍††††††晩猠汥⹦獵彥牰灥潲散獳湩㩧਍††††††††牴㩹਍††††††††††‣敔瑮⁡敭桬牯牡挠湯牴獡整攠爠浥癯牥猠浯牢獡਍††††††††††牰捯獥敳彤浩条彥祢整⁳‽浩条彥牰灥潲散獳牯瀮敲牰捯獥⡳浩条彥祢整⥳਍††††††††硥散瑰䔠捸灥楴湯愠⁳㩥਍††††††††††牰湩⡴≦髢辸圠牡楮杮›牐灥潲散獳湩⁧慦汩摥‬獵湩⁧牯杩湩污›敻≽ഩഊ †††††⌠㴠㴽䌠䵁䑁⁁㨲䜠住䱇⁅䥖䥓乏传剃㴠㴽਍††††††‣㴽‽䅃䅍䅄㈠›佇䝏䕌嘠卉佉⁎䍏⁒嘨䅉删卅⁔偁⥉㴠㴽਍††††††‣潃楤楦慣⁲浩条浥攠⁭慢敳㐶਍††††††浩潰瑲戠獡㙥ഴ †††††戠㐶楟慭敧㴠戠獡㙥⸴㙢攴据摯⡥牰捯獥敳彤浩条彥祢整⥳搮捥摯⡥產晴㠭⤢਍††††††਍††††††‣敒牦獥⁨潴敫⁮敳渠捥獥썳犡潩਍††††††牴㩹਍††††††††晩渠瑯猠汥⹦牣摥⹳慶楬㩤਍††††††††††畡桴牟煥㴠删煥敵瑳⤨਍††††††††††敳晬挮敲獤爮晥敲桳愨瑵彨敲⥱਍††††††††潴敫⁮‽敳晬挮敲獤琮歯湥਍††††††硥散瑰䔠捸灥楴湯愠⁳㩥਍††††††††敲畴湲笠攢牲牯㨢映䄢呕⁈剅佒㩒䘠楡敬⁤潴爠晥敲桳琠歯湥‮敻≽‬猢慴畴≳›愢瑵彨牥潲≲ൽഊ †††††⌠䴠湯慴⁲慰汹慯⁤半乏਍††††††牵⁬‽栢瑴獰⼺瘯獩潩⹮潧杯敬灡獩挮浯瘯⼱浩条獥愺湮瑯瑡≥਍††††††敨摡牥⁳‽ൻ †††††††∠畁桴牯穩瑡潩≮›≦敂牡牥笠潴敫絮Ⱒ਍††††††††䌢湯整瑮吭灹≥›愢灰楬慣楴湯樯潳≮਍††††††ൽ †††††瀠祡潬摡㴠笠਍††††††††爢煥敵瑳≳›൛ †††††††††笠਍††††††††††††椢慭敧㨢笠挢湯整瑮㨢戠㐶楟慭敧ⱽ਍††††††††††††昢慥畴敲≳›筛琢灹≥›䐢䍏䵕久彔䕔员䑟呅䍅䥔乏索ⱝ਍††††††††††††椢慭敧潃瑮硥≴›≻慬杮慵敧楈瑮≳›≛瑰Ⱒ∠瑰䈭≒絝਍††††††††††ൽ †††††††崠਍††††††ൽഊ †††††爠獥潰獮彥扯⁪‽敲畱獥獴瀮獯⡴牵ⱬ栠慥敤獲栽慥敤獲‬獪湯瀽祡潬摡ഩ †††††ഠ †††††椠⁦敲灳湯敳潟橢献慴畴彳潣敤℠‽〲㨰਍††††††††敲畴湲笠攢牲牯㨢映䄢䥐䔠剒剏笠敲灳湯敳潟橢献慴畴彳潣敤㩽笠敲灳湯敳潟橢琮硥絴Ⱒ∠瑳瑡獵㨢∠牥潲≲ൽ †††††ഠ †††††爠獥潰獮彥獪湯㴠爠獥潰獮彥扯⹪獪湯⤨਍††††††‣⁏半乏搠⁥敲灳獯慴琠浥攠瑳畲畴慲笠爢獥潰獮獥㨢嬠⸮崮ൽ †††††⌠倠来浡獯漠瀠楲敭物⁯瑩浥搠⁡楬瑳⁡敲灳湯敳൳ †††††愠楰牟獥⁰‽敲灳湯敳機潳⹮敧⡴爢獥潰獮獥Ⱒ嬠絻⥝せ൝ഊ †††††椠⁦攢牲牯•湩愠楰牟獥㩰਍††††††††敲畴湲笠攢牲牯㨢愠楰牟獥孰攢牲牯崢朮瑥∨敭獳条≥Ⱙ∠瑳瑡獵㨢∠牥潲≲ൽഊ †††††⌠䔠瑸慲ꟃꏃ⁯牂瑵⁡慤⁳楌桮獡⠠摁灡慴潤瀠牡⁡楄瑣ഩ †††††爠睡江湩獥㴠猠汥⹦敟瑸慲物江湩慨⡳灡彩敲灳ഩ †††††ഠ †††††⌠㴠㴽䌠䵁䑁⁁㨳䘠䱉剔䝁䵅☠䌠䅌卓䙉䍉썁쎇侃⠠䅃䑎䑉呁卅 㴽ഽ †††††挠湡楤慤整⁳‽嵛਍††††††਍††††††‣桔敲桳汯獤删慥獩⠠慈摲潣敤⁤慰慲挠湯楳瑳꫃据慩挠浯张慭捴彨整浲ഩ †††††吠剈卅彈䡐十彅⁁‽㈹਍††††††䡔䕒䡓偟䅈䕓䉟㴠㠠വ †††††ഠ †††††⌠䴠瑥摡摡獯搠⁥硥捥썵쎧澣਍††††††瑳瑡⁳‽ൻ †††††††∠潴慴彬捯彲楬敮≳›敬⡮慲彷楬敮⥳ബ †††††††∠慣摮摩瑡獥损畯瑮㨢〠ബ †††††††∠慭捴敨彤潣湵≴›ⰰ਍††††††††產癮牥晩敩彤潣湵≴›ⰰ⌠䘠污扬捡⁫瑩浥൳ †††††††∠畦空役獵摥㨢䘠污敳ബ †††††††∠桴敲桳汯獤㨢笠瀢慨敳慟㨢吠剈卅彈䡐十彅ⱁ∠桰獡彥≢›䡔䕒䡓偟䅈䕓䉟‬猢潨瑲瑟歯湥㨢㤠紵਍††††††ൽ †††††ഠ †††††映牯氠湩⁥湩爠睡江湩獥ഺ †††††††椠⁦敳晬弮獩癟污摩损湡楤慤整氨湩⥥ഺ †††††††††挠湡楤慤整⹳灡数摮氨湩⥥਍਍††††††瑳瑡孳挢湡楤慤整彳潣湵≴⁝‽敬⡮慣摮摩瑡獥ഩ †††††ഠ †††††⌠㴠㴽䌠䵁䑁⁁㨴㈠倭䅈䕓䴠呁䡃义⁇㴽ഽ †††††洠瑡档摥敟慸獭㴠嬠൝ †††††ഠ †††††映牯挠湡⁤湩挠湡楤慤整㩳਍††††††††‣慆敳䄠☠䈠攠据灡畳慬慤⁳潮洠瑡档牥਍††††††††慭捴彨敲畳瑬㴠猠汥⹦浟瑡档瑟牥⡭慣摮ഩ †††††††ഠ †††††††椠⁦慭捴彨敲畳瑬ഺ †††††††††挠牯敲瑣摥‬捳牯ⱥ洠瑥潨⁤‽慭捴彨敲畳瑬਍††††††††††਍††††††††††晩∠畦空≹椠⁮敭桴摯ഺ †††††††††††猠慴獴≛畦空役獵摥崢㴠吠畲൥ †††††††††††ഠ †††††††††洠瑡档摥敟慸獭愮灰湥⡤ൻ †††††††††††∠牯杩湩污㨢挠湡Ɽ਍††††††††††††挢牯敲瑣摥㨢挠牯敲瑣摥ബ †††††††††††∠潣普摩湥散㨢猠潣敲⼠ㄠ〰〮ബ †††††††††††∠敭桴摯㨢洠瑥潨൤ †††††††††素ഩ †††††ഠ †††††⌠䐠摥灵楬慣ꟃꏃ⁯썢玡捩⁡渨浯獥攠慸潴⁳杩慵獩ഩ †††††甠楮畱彥慭捴敨⁳‽絻਍††††††潦⁲⁭湩洠瑡档摥敟慸獭ഺ †††††††欠祥㴠洠≛潣牲捥整≤൝ †††††††椠⁦敫⁹潮⁴湩甠楮畱彥慭捴敨⁳牯洠≛潣普摩湥散崢㸠甠楮畱彥慭捴敨孳敫嵹≛潣普摩湥散崢ഺ ††††††††††湵煩敵浟瑡档獥歛祥⁝‽൭ †††††洠瑡档摥敟慸獭㴠氠獩⡴湵煩敵浟瑡档獥瘮污敵⡳⤩਍††††††਍††††††瑳瑡孳洢瑡档摥损畯瑮崢㴠氠湥洨瑡档摥敟慸獭ഩഊ †††††⌠㴠㴽䌠䵁䑁⁁㨵䘠䱁䉌䍁⁋义䕔䥌䕇呎⁅㴽ഽ †††††映污扬捡彫獵摥㴠䘠污敳਍††††††਍††††††‣敓琠浥獯挠湡楤慤潴⁳琨硥潴氠来귃敶⥬洠獡娠剅⁏慭捴敨⁳搨捩潩썮犡潩映污潨⥵਍††††††晩渠瑯洠瑡档摥敟慸獭愠摮挠湡楤慤整㩳਍††††††††慦汬慢正畟敳⁤‽牔敵਍††††††††牰湩⡴ꂚ룯₏慆汬慢正愠楴慶潤›敔瑸⁯敤整瑣摡⁯慭⁳敳⁭潣牲獥潰摮꫃据慩洠꧃楤慣∮ഩ †††††††映牯挠湡⁤湩挠湡楤慤整孳ㄺ崰›‣楌業慴愠ㄠ‰慰慲渠ꏃ⁯潰畬物਍††††††††††洠瑡档摥敟慸獭愮灰湥⡤ൻ †††††††††††∠牯杩湩污㨢挠湡Ɽ਍††††††††††††挢牯敲瑣摥㨢映笢慣摮⁽ꂚ룯₏썎澣嘠牥晩捩摡嵯Ⱒ਍††††††††††††挢湯楦敤据≥›⸰ⰱ਍††††††††††††洢瑥潨≤›昢污扬捡彫慲≷਍††††††††††⥽਍††††††਍††††††‣썃没畣潬搠⁥썍璩楲慣⁳䅑਍††††††敶楲楦摥损畯瑮㴠猠浵ㄨ映牯砠椠⁮慭捴敨彤硥浡⁳晩∠慦汬慢正•潮⁴湩砠≛敭桴摯崢ഩ †††††甠癮牥晩敩彤潣湵⁴‽敬⡮慭捴敨彤硥浡⥳ⴠ瘠牥晩敩彤潣湵൴ †††††琠瑯污牟瑥牵敮⁤‽敬⡮慭捴敨彤硥浡⥳਍††††††਍††††††瑳瑡孳產癮牥晩敩彤潣湵≴⁝‽湵敶楲楦摥损畯瑮਍††††††਍††††††‣㴽‽䅃䅍䅄㘠›䥖呔⁁䕒体啌䕔䄠䑕呉☠儠䅕䥌奔匠佃䕒㴠㴽਍††††††敭牴捩⁳‽ൻ †††††††∠潣敶慲敧㨢⠠敬⡮慲彷楬敮⥳㸠〠愠摮琠瑯污牟瑥牵敮⁤‾⤰ബ †††††††∠敶楲楦摥牟瑡潩㨢爠畯摮瘨牥晩敩彤潣湵⁴ 慭⡸ⰱ琠瑯污牟瑥牵敮⥤‬⤲ബ †††††††∠慦汬慢正牟瑡彥汦条㨢⠠湵敶楲楦摥损畯瑮㸠〠ഩ †††††素਍††††††਍††††††畡楤彴敲畳瑬㴠笠ൽ †††††琠祲ഺ †††††††愠摵瑩牟獥汵⁴‽捯彲敲潳畬整慟摵瑩牯愮摵瑩爨睡江湩獥‬慭捴敨彤硥浡⥳਍††††††硥散瑰䔠捸灥楴湯愠⁳畡楤彴㩥਍††††††††牰湩⡴≦髢辸删獥汯瑵⁥畁楤⁴慦汩›慻摵瑩敟≽ഩഊ †††††⌠䴠湯慴敧⁭慤删獥潰瑳ൡ †††††挠敬湡瑟硥⁴‽尢≮樮楯⡮硛≛潣牲捥整≤⁝潦⁲⁸湩洠瑡档摥敟慸獭⥝਍††††††癡彧潣普㴠猠浵砨≛潣普摩湥散崢映牯砠椠⁮慭捴敨彤硥浡⥳氯湥洨瑡档摥敟慸獭 晩洠瑡档摥敟慸獭攠獬⁥⸰രഊ †††††爠瑥牵⁮ൻ †††††††∠整瑸㨢挠敬湡瑟硥ⱴ਍††††††††氢湩獥㨢洠瑡档摥敟慸獭ബ †††††††∠潣普摩湥散㨢爠畯摮愨杶损湯ⱦ㈠Ⱙ਍††††††††猢慴獴㨢笠਍††††††††††琢瑯污潟牣江湩獥㨢氠湥爨睡江湩獥Ⱙ਍††††††††††挢慬獳晩敩彤硥浡≳›敬⡮慣摮摩瑡獥Ⱙ਍††††††††††瘢污摩浟瑡档獥㨢氠湥洨瑡档摥敟慸獭ഩ †††††††素ബ †††††††∠慢正湥彤敶獲潩≮›嘢ㄸ㈮䠭杩剨捥污⵬䅑Ⱒ⌠嘠牥楳湯戠浵൰ †††††††∠潭敤彬獵摥㨢∠楖楳湯ⴠ‾ⴲ桐獡⁥慍捴敨⁲㸭儠⁁敍牴捩≳ബ †††††††∠敤畢彧慲≷›慣摮摩瑡獥‬਍††††††††搢扥杵浟瑥≡›ൻ †††††††††∠慲彷捯彲楬敮彳潣湵≴›敬⡮慲彷楬敮⥳ബ †††††††††∠慣摮摩瑡獥损畯瑮㨢氠湥挨湡楤慤整⥳ബ †††††††††∠慭捴敨彤潣湵≴›敶楲楦摥损畯瑮‬‣獕⁥敶楲楦摥漠汮⁹潦⁲汣慥⁲瑳瑡൳ †††††††††∠湵敶楲楦摥损畯瑮㨢甠癮牥晩敩彤潣湵ⱴ਍††††††††††琢瑯污牟瑥牵敮≤›潴慴彬敲畴湲摥ബ †††††††††∠畦空役獵摥㨢猠慴獴≛畦空役獵摥崢ബ †††††††††∠桴敲桳汯獤㨢猠慴獴≛桴敲桳汯獤崢ബ †††††††††∠楤瑣潩慮祲江慯敤≤›潢汯猨汥⹦硥浡彳汦瑡江獩⥴ബ †††††††††∠楤瑣潩慮祲獟穩≥›敬⡮敳晬攮慸獭晟慬彴楬瑳Ⱙ਍††††††††††昢污扬捡彫獵摥㨢映污扬捡彫獵摥ബ †††††††††∠慱浟瑥楲獣㨢洠瑥楲獣ബ †††††††††∠敲潳畬整慟摵瑩㨢愠摵瑩牟獥汵൴ †††††††素਍††††††ൽഊ †††攠捸灥⁴硅散瑰潩⁮獡攠ഺ †††††瀠楲瑮昨䔢捸썥쎧澣渠⁯牰捯獥慳敭瑮⁯䍏㩒笠絥⤢਍††††††牴捡扥捡⹫牰湩彴硥⡣ഩ †††††爠瑥牵⁮ൻ †††††††∠整瑸㨢∠Ⱒ਍††††††††氢湩獥㨢嬠ⱝ਍††††††††攢牲牯㨢映匢剅䕖⁒剅佒㩒笠瑳⡲⥥≽ബ †††††††∠敤畢彧敭慴㨢笠攢牲牯瑟慲散㨢猠牴攨紩਍††††††ൽഊ †搠晥张慭捴彨整浲猨汥ⱦ琠硥㩴猠牴 㸭传瑰潩慮孬畔汰孥瑳Ⱳ映潬瑡‬瑳嵲㩝਍††††∢ഢ †††䤠灭敬敭瑮⁡慍捴楨杮攠⁭′慆敳㩳਍††††慆敳䄠›汁慴倠敲楣썳澣⠠潎浲污穩썡쎧澣⬠䔠慸瑣䌯湯慴湩⥳਍††††慆敳䈠›汁慴䌠扯牥畴慲⠠畆空⁹楄晦楬⁢‭畐敲倠瑹潨⥮਍††††∢ഢ †††琠硥彴潮浲㴠猠汥⹦湟牯慭楬慺彲整瑸⡯整瑸ഩ †††椠⁦潮⁴整瑸湟牯㩭爠瑥牵⁮潎敮਍਍††††‣ⴭ‭䅆䕓䈠›畆空⁹慍捴楨杮⠠楄晦楬⥢ⴠⴭ਍††††敢瑳牟瑡潩㴠〠〮਍††††敢瑳潟晦捩慩⁬‽潎敮਍††††敢瑳湟牯彭整浲㴠∠ഢഊ †††⌠传楴業慺ꟃꏃ㩯匠⁥潨癵牥洠瑡档攠慸潴‬敲潴湲⁡浩摥慩慴敭瑮൥ †††映牯渠牯彭整浲‬景楦楣污湟浡⁥湩猠汥⹦硥浡彳汦瑡江獩㩴਍††††††晩琠硥彴潮浲㴠‽潮浲瑟牥㩭਍††††††††敲畴湲漠晦捩慩彬慮敭‬〱⸰ⰰ∠硥捡彴慭捴≨਍††††††਍††††牦浯搠晩汦扩椠灭牯⁴敓畱湥散慍捴敨൲ †††ഠ †††映牯渠牯彭整浲‬景楦楣污湟浡⁥湩猠汥⹦硥浡彳汦瑡江獩㩴਍††††††‣敓畱湥散慍捴敨⹲慲楴⡯ 敲畴湲⁳せ〮‬⸱崰ⴠ‾ㄪ〰਍††††††浳㴠匠煥敵据䵥瑡档牥丨湯ⱥ琠硥彴潮浲‬潮浲瑟牥⥭਍††††††慲楴⁯‽浳爮瑡潩⤨⨠ㄠ〰〮਍††††††਍††††††晩爠瑡潩㸠戠獥彴慲楴㩯਍††††††††敢瑳牟瑡潩㴠爠瑡潩਍††††††††敢瑳潟晦捩慩⁬‽景楦楣污湟浡൥ †††††††戠獥彴潮浲瑟牥⁭‽潮浲瑟牥൭ഊ †††猠潣敲㴠戠獥彴慲楴൯ †††ഠ †††椠⁦潮⁴敢瑳潟晦捩慩㩬਍††††††敲畴湲丠湯൥ †††††ഠ †††⌠㴠㴽删䝅䅒⁓䕄䌠䱁䉉䅒蟃菃⁏㴽ഽ †††ഠ †††⌠删来慲䌠썒咍䍉⁁慰慲匠杩慬⁳畃瑲獡⠠ⴲ‴档牡⥳਍††††晩氠湥琨硥彴潮浲 㴼㐠ഺ †††††椠⁦捳牯⁥㴾㤠㨵਍††††††††敲畴湲戠獥彴景楦楣污‬捳牯ⱥ∠桳牯彴潴敫彮楨桧灟敲楣楳湯ഢ †††††爠瑥牵⁮潎敮਍਍††††‣⸱倠慨敳䄠›慍捴⁨汁慴倠敲楣썳澣਍††††晩猠潣敲㸠‽㈹ഺ †††††爠瑥牵⁮敢瑳潟晦捩慩ⱬ猠潣敲‬瀢慨敳慟桟杩彨牰捥獩潩≮਍††††਍††††‣⸲倠慨敳䈠›慍捴⁨汁慴䌠扯牥畴慲਍††††晩猠潣敲㸠‽㔸ഺ †††††爠瑥牵⁮敢瑳潟晦捩慩ⱬ猠潣敲‬瀢慨敳扟桟杩彨潣敶慲敧ഢഊ †††⌠匠⁥⁯整浲⁯慭捴敨⁤獥썴₡潣瑮摩⁯潴慴浬湥整渠⁯湩異൴ †††椠⁦敬⡮敢瑳湟牯彭整浲 ‾‴湡⁤敢瑳湟牯彭整浲椠⁮整瑸湟牯㩭਍††††††爠瑥牵⁮敢瑳潟晦捩慩ⱬ㠠⸰ⰰ∠潣瑮楡獮晟污扬捡≫਍਍††††敲畴湲丠湯൥ഊ †搠晥张獩癟污摩损湡楤慤整猨汥ⱦ琠硥㩴猠牴 㸭戠潯㩬਍††††∢ഢ †††䘠汩牴⁡畲귃潤⠠求捡汫獩⥴攠吠歯湥⁳畃瑲獯攠瘠污摩⁡慣摮摩瑡獯മ †††∠∢਍††††整瑸㴠琠硥⹴瑳楲⡰ഩ †††椠⁦潮⁴整瑸›敲畴湲䘠污敳਍††††਍††††整瑸畟灰牥㴠琠硥⹴灵数⡲ഩ †††ഠ †††⌠ㄠ‮潔敫獮洠極潴挠牵潴⁳㰨㌠挠慨獲ഩ †††⌠䰠獩慴攠灸湡楤慤搠⁥楳汧獡洠꧃楤慣⁳썶没摩獡਍††††桷瑩汥獩彴桳牯⁴‽ൻ †††††∠㍔Ⱒ∠㑔Ⱒ∠㑔≌‬吢䡓Ⱒ∠䭃Ⱒ∠≋‬丢≁‬倢Ⱒ∠䝍Ⱒ∠乚Ⱒ∠䕆Ⱒ∠䥌Ⱒ∠≖‬䐢䱈Ⱒഠ †††††∠㍃Ⱒ∠㑃Ⱒ∠䡖≓‬倢剃Ⱒ∠卐≁‬䌢䅅Ⱒ∠䙁≐‬䌢≁‬倢䡔Ⱒ∠䍁䡔Ⱒ∠䡇Ⱒ∠䡌Ⱒ∠卆≈ബ †††††∠䅅≓‬䠢噉Ⱒ∠䑖䱒Ⱒ∠䉈䅓≇‬䘢乁Ⱒ∠䝉≁‬䤢䕇Ⱒ∠䝉≇‬䤢䵇Ⱒ∠剃协≓਍††††ൽ †††ഠ †††⌠删浥癯⁥慣慲瑣牥獥渠ꏃ⁯污慦畮썭犩捩獯瀠牡⁡档捥牡琠浡湡潨爠慥൬ †††挠敬湡江湥㴠氠湥爨⹥畳⡢❲幛ⵁず㤭❝‬✧‬整瑸畟灰牥⤩਍††††਍††††晩挠敬湡江湥㰠㌠ഺ †††††⌠匠⁥潦⁲畣瑲Ɐ匠鏃瀠獡慳猠⁥獥楴敶⁲慮眠楨整楬瑳攠慸慴਍††††††‣桃捥⁫潮浲污攠挠浯猠晵硩獯挠浯湵⁳⬨‬⤭਍††††††晩琠硥彴灵数⁲潮⁴湩眠楨整楬瑳獟潨瑲愠摮琠硥彴灵数⹲獲牴灩∨⴫⤢渠瑯椠⁮桷瑩汥獩彴桳牯㩴਍††††††††敲畴湲䘠污敳਍਍††††‣⸲䈠慬正楬瑳⠠慐慬牶獡搠⁥慣敢ꟃ污潨爯摯灡꧃洯꧃楤潣ഩ †††戠慬正楬瑳瑟牥獭㴠嬠਍††††††∠剄⹁Ⱒ∠剄∮‬䌢䵒Ⱒ∠䅄䅔Ⱒ∠十䥓䅎啔䅒Ⱒ∠䅐䥃久䕔Ⱒ∠佃噎久佉Ⱒ਍††††††∠啒≁‬䄢⹖Ⱒ∠䕔㩌Ⱒ∠䕃㩐Ⱒ∠䅂剉佒Ⱒ∠䥃䅄䕄Ⱒ∠卅䅔佄Ⱒ਍††††††∠体䥌䥃佔Ⱒ∠䕐䥄佄Ⱒ∠䕒啑卉䍉佁Ⱒ∠乃䩐Ⱒ∠偃≆‬刢≇ബ ††††††‣䰢䉁剏呁剏佉Ⱒ⌠删䵅噏䑉㩏戠潬畱楥⁡䔢䅘䕍⁓䅌佂䅒佔䥒䥁≓਍††††††∠䱃义䍉≁‬䠢协䥐䅔≌‬唢䥎䕍≄‬䈢䅒䕄䍓乏Ⱒ਍††††††∠䕒啓呌䑁≏‬䤢偍䕒卓≏‬倢䝁义≁‬䘢䱏䅈Ⱒ∠䉏㩓Ⱒ∠䉏䕓噒䍁佁Ⱒ਍††††††∠呁久䥃协䵁久䕔Ⱒ∠則呁≏‬嘢卉佔Ⱒ∠䕒䕍卓≁‬倢佒佔佃佌Ⱒ਍††††††∠䕓䡎≁‬䠢剏≁‬䌢䱏呅≁‬䤢䅄䕄Ⱒ∠䕓佘Ⱒ∠䅎䍓䵉久佔ഢ †††崠਍††††਍††††‣敖楲楦慣椠썮掭潩搠⁡楬桮ൡ †††映牯琠牥⁭湩戠慬正楬瑳瑟牥獭ഺ †††††椠⁦整瑸畟灰牥献慴瑲睳瑩⡨整浲㨩਍††††††††敲畴湲䘠污敳਍††††††晩映•瑻牥絭•湩琠硥彴灵数㩲਍††††††††爠瑥牵⁮慆獬൥ഊ †††⌠㌠‮潆浲瑡⁯敤䐠瑡⁡搨⽤浭愯慡⥡漠⁵潈慲⠠桨洺⥭਍††††晩爠⹥敳牡档爨尧筤紲尯筤紲尯筤ⰲ紴Ⱗ琠硥⥴ഺ †††††爠瑥牵⁮慆獬൥ †††椠⁦敲献慥捲⡨❲摜㉻㩽摜㉻❽‬整瑸㨩਍††††††敲畴湲䘠污敳਍਍††††敲畴湲吠畲൥ഊ †搠晥张潮浲污穩牡瑟硥潴猨汥ⱦ琠硥潴›瑳⥲ⴠ‾瑳㩲਍††††∢丢牯慭楬慺ꟃꏃ⁯条敲獳癩⁡慰慲洠瑡档湩㩧唠偐剅‬敓⁭捁湥潴ⱳ匠浥倠湯畴썡쎧澣∢ഢ †††椠⁦潮⁴整瑸㩯爠瑥牵⁮∢਍††††整瑸⁯‽整瑸⹯灵数⡲ഩ †††ഠ †††⌠删䵅噏⁅啒跃佄䌠䵏䵕䐠⁅䥌呓⁁嘨㈸〮ഩ †††渠楯敳㴠嬠਍††††††䔢䅘䕍⁓䅌佂䅒佔䥒䥁≓‬਍††††††䔢䅘䕍䰠䉁剏呁剏䅉≌ബ †††††∠体䥌䥃䅔䅃⁏䕄䔠䅘䕍≓ബ †††††∠⁅塅䵁卅Ⱒ਍††††††䰢䉁剏呁剏䅉卉Ⱒ਍††††††䰢䉁剏呁剏䅉≌਍††††൝ †††映牯渠椠⁮潮獩㩥਍††††††整瑸⁯‽整瑸⹯敲汰捡⡥Ɱ∠⤢਍਍††††‣敒潭敶愠散瑮獯਍††††整瑸⁯‽湵捩摯摥瑡⹡潮浲污穩⡥丧䭆❄‬整瑸⥯਍††††整瑸⁯‽∢樮楯⡮捛映牯挠椠⁮整瑸⁯晩渠瑯甠楮潣敤慤慴挮浯楢楮杮挨崩ഩ †††ഠ †††⌠䔠灳捥慩⁬慰慲嘠瑩浡湩⁡⁄㈨㔬ⴠ‾㔲ഩ †††琠硥潴㴠琠硥潴爮灥慬散∨ⰲ∵‬㈢∵⸩敲汰捡⡥㈢㔮Ⱒ∠㔲⤢਍਍††††‣慍瑮꧃⁭灡湥獡氠瑥慲⁳⁥썮涺牥獯⠠敲潭敶琠慲ꟃ獯‬慢牲獡‬瑥⥣਍††††整瑸⁯‽敲献扵爨嬧䅞娭ⴰ尹嵳Ⱗ✠✠‬整瑸⥯ഠ †††⌠䌠汯灡慳攠灳썡澧൳ †††琠硥潴㴠爠⹥畳⡢❲獜✫‬‧Ⱗ琠硥潴⸩瑳楲⡰ഩ †††爠瑥牵⁮整瑸൯ഊ †搠晥张潬摡敟慸獭摟捩楴湯牡⡹敳晬 㸭搠捩㩴਍††††牴㩹਍††††††‣慢敳摟物椠⁳灡⽩潣敲‬楤瑣潩慮祲椠⁳湩愠楰搯瑡ൡ †††††挠牯彥楤⁲‽獯瀮瑡⹨楤湲浡⡥獯瀮瑡⹨扡灳瑡⡨彟楦敬彟⤩਍††††††灡彩楤⁲‽獯瀮瑡⹨楤湲浡⡥潣敲摟物ഩ †††††樠潳彮慰桴㴠漠⹳慰桴樮楯⡮灡彩楤Ⱳ∠慤慴Ⱒ∠硥浡彳楤瑣潩慮祲樮潳≮ഩ †††††椠⁦潮⁴獯瀮瑡⹨硥獩獴樨潳彮慰桴㨩਍††††††††爠瑥牵⁮≻硥浡獥㨢嬠絝਍††††††楷桴漠数⡮獪湯灟瑡ⱨ∠≲‬湥潣楤杮∽瑵ⵦ∸ 獡映ഺ †††††††爠瑥牵⁮獪湯氮慯⡤⥦਍††††硥散瑰ഺ †††††爠瑥牵⁮≻硥浡獥㨢嬠絝਍਍††敤⁦晟慬瑴湥摟捩楴湯牡⡹敳晬 㸭氠獩㩴਍††††汦瑡江獩⁴‽嵛਍††††晩渠瑯猠汥⹦硥浡彳楤瑣›敲畴湲嬠൝ †††映牯椠整⁭湩猠汥⹦硥浡彳楤瑣朮瑥∨硥浡獥Ⱒ嬠⥝ഺ †††††漠晦捩慩⁬‽瑩浥≛潮敭潟楦楣污崢਍††††††‣潎浲污穩⁡獡挠慨敶⁳潤搠捩潩썮犡潩琠浡썢涩ഡ †††††映慬彴楬瑳愮灰湥⡤猨汥⹦湟牯慭楬慺彲整瑸⡯景楦楣污Ⱙ漠晦捩慩⥬ഩ †††††映牯猠湹椠⁮瑩浥朮瑥∨楳潮楮潭≳‬嵛㨩਍††††††††汦瑡江獩⹴灡数摮⠨敳晬弮潮浲污穩牡瑟硥潴猨湹Ⱙ漠晦捩慩⥬ഩ †††††映牯瘠牡椠⁮瑩浥朮瑥∨慶楲捡敯≳‬嵛㨩਍††††††††汦瑡江獩⹴灡数摮⠨敳晬弮潮浲污穩牡瑟硥潴瘨牡Ⱙ漠晦捩慩⥬ഩ †††††映牯攠牲椠⁮瑩浥朮瑥∨牥潲彳捯彲潣畭獮Ⱒ嬠⥝ഺ †††††††映慬彴楬瑳愮灰湥⡤猨汥⹦湟牯慭楬慺彲整瑸⡯牥⥲‬景楦楣污⤩਍††††敲畴湲映慬彴楬瑳਍਍††敤⁦敟瑸慲物江湩慨⡳敳晬‬灡彩敲灳›楤瑣 㸭䰠獩孴瑳嵲ഺ †††氠湩慨⁳‽嵛਍††††‣潎映牯慭潴删卅ⱔ愠散獳浡獯挠浯⁯楤瑣›灡彩敲灳朮瑥∨畦汬敔瑸湁潮慴楴湯⤢਍††††畦汬瑟硥⁴‽灡彩敲灳朮瑥∨畦汬敔瑸湁潮慴楴湯⤢਍††††਍††††晩渠瑯映汵彬整瑸ഺ †††††爠瑥牵⁮嵛਍††††††਍††††潦⁲慰敧椠⁮畦汬瑟硥⹴敧⡴瀢条獥Ⱒ嬠⥝ഺ †††††映牯戠潬正椠⁮慰敧朮瑥∨汢捯獫Ⱒ嬠⥝ഺ †††††††映牯瀠牡条慲桰椠⁮汢捯⹫敧⡴瀢牡条慲桰≳‬嵛㨩਍††††††††††楬桮⁡‽∢਍††††††††††潦⁲潷摲椠⁮慰慲牧灡⹨敧⡴眢牯獤Ⱒ嬠⥝ഺ †††††††††††⌠匠浹潢獬琠浡썢涩쌠₩楬瑳⁡敤搠捩獴਍††††††††††††慰慬牶⁡‽∢樮楯⡮獛朮瑥∨整瑸Ⱒ∠⤢映牯猠椠⁮潷摲朮瑥∨祳扭汯≳‬嵛崩ഩ †††††††††††氠湩慨⬠‽慰慬牶⁡‫•ഢ †††††††††椠⁦楬桮⹡瑳楲⡰㨩਍††††††††††††楬桮獡愮灰湥⡤楬桮⹡瑳楲⡰⤩਍††††敲畴湲氠湩慨൳
+﻿from typing import Dict, Any, List, Tuple, Optional
+import requests
+from google.auth.transport.requests import Request
+import io
+import traceback
+from PIL import Image
+import re
+from core.auth_utils import get_gcp_credentials
+import json
+import unicodedata
+import os
+
+# New OCR Pipeline V87.0
+from services.image_preprocessor import ImagePreprocessor
+from services.llm_interpreter import LLMInterpreter
+from services.ocr_resolute_auditor import OCRResoluteAuditor
+
+class OCRProcessor:
+    def __init__(self):
+        print("Initializing OCRProcessor with Google Cloud Vision API V87.0...")
+        try:
+            self.creds = get_gcp_credentials()
+            if self.creds and self.creds.requires_scopes:
+                self.creds = self.creds.with_scopes(['https://www.googleapis.com/auth/cloud-platform'])
+            
+            if self.creds:
+                print("✅ Credentials loaded and scoped (Cloud Platform)!")
+            else:
+                print("❌ Credentials returned None. GCP will fail.")
+                
+            print("OCR Processor (REST Mode) initialized!")
+            self.init_error = None
+            
+            # Components
+            self.use_preprocessing = True
+            
+            # Load Dictionary
+            self.exams_dict = self._load_exams_dictionary()
+            
+            # Flat list for matching
+            self.exams_flat_list = self._flatten_dictionary()
+            self.exact_set = {self._normalizar_texto(name) for name, _ in self.exams_flat_list}
+            
+            print(f"✅ Medical Dictionary Loaded: {len(self.exams_flat_list)} terms indexed.")
+            
+        except Exception as e:
+            print(f"Error initializing Google Vision Client: {e}")
+            self.init_error = str(e)
+
+    def process_image(self, image_bytes: bytes) -> Dict[str, Any]:
+        """
+        Processa a imagem com Pipeline 3-Phase Matching & Alta Cobertura.
+        """
+        if not self.creds:
+            return {"error": f"CONFIG ERROR: GCP Credentials Missing. {self.init_error}", "status": "config_error"}
+
+        try:
+            # Phase 1: ROI Detection & Pre-processing
+            processed_image_bytes = image_bytes
+            
+            if self.use_preprocessing:
+                try:
+                    # Attempt to enhance contrast and remove shadows
+                    from services.image_preprocessor import image_preprocessor
+                    processed_image_bytes = image_preprocessor.preprocess(image_bytes)
+                except Exception as e:
+                    print(f"⚠️ Preprocessing failed, using original: {e}")
+
+            # Phase 2: Google Vision OCR (via REST API)
+            import base64
+            b64_image = base64.b64encode(processed_image_bytes).decode("utf-8")
+            
+            # Refresh token if needed
+            try:
+                if not self.creds.valid:
+                    auth_req = Request()
+                    self.creds.refresh(auth_req)
+                token = self.creds.token
+            except Exception as e:
+                return {"error": f"AUTH ERROR: Failed to refresh token. {e}", "status": "auth_error"}
+
+            url = "https://vision.googleapis.com/v1/images:annotate"
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "requests": [
+                    {
+                        "image": {"content": b64_image},
+                        "features": [{"type": "DOCUMENT_TEXT_DETECTION"}],
+                        "imageContext": {"languageHints": ["pt", "pt-BR"]}
+                    }
+                ]
+            }
+
+            response_obj = requests.post(url, headers=headers, json=payload)
+            
+            if response_obj.status_code != 200:
+                return {"error": f"API ERROR {response_obj.status_code}: {response_obj.text}", "status": "error"}
+
+            response_json = response_obj.json()
+            api_resp = response_json.get("responses", [{}])[0]
+
+            if "error" in api_resp:
+                return {"error": api_resp["error"].get("message"), "status": "error"}
+
+            # Extraction
+            raw_lines = self._extrair_linhas(api_resp)
+
+            # Phase 3: Filtering & Classification (CANDIDATES)
+            candidates = []
+            
+            # Thresholds
+            THRESH_PHASE_A = 92
+            THRESH_PHASE_B = 85
+
+            stats = {
+                "total_ocr_lines": len(raw_lines),
+                "candidates_count": 0,
+                "matched_count": 0,
+                "unverified_count": 0,
+                "fuzzy_used": False,
+                "thresholds": {"phase_a": THRESH_PHASE_A, "phase_b": THRESH_PHASE_B, "short_token": 95}
+            }
+
+            for line in raw_lines:
+                if self._is_valid_candidate(line):
+                    candidates.append(line)
+
+            stats["candidates_count"] = len(candidates)
+
+            # Phase 4: 2-Phase Matching
+            matched_exams = []
+
+            for can in candidates:
+                match_result = self._match_term(can)
+
+                if match_result:
+                    corrected, score, method = match_result
+                    
+                    if "fuzzy" in method:
+                        stats["fuzzy_used"] = True
+
+                    matched_exams.append({
+                        "original": can,
+                        "corrected": corrected,
+                        "confidence": score / 100.0,
+                        "method": method
+                    })
+
+            # Dedup
+            unique_matches = {}
+            for m in matched_exams:
+                key = m["corrected"]
+                if key not in unique_matches or m["confidence"] > unique_matches[key]["confidence"]:
+                    unique_matches[key] = m
+            matched_exams = list(unique_matches.values())
+            
+            stats["matched_count"] = len(matched_exams)
+
+            # Phase 5: Fallback Intelligence
+            fallback_used = False
+            
+            if not matched_exams and candidates:
+                fallback_used = True
+                for can in candidates[:10]:
+                    matched_exams.append({
+                        "original": can,
+                        "corrected": f"{can} [⚠️ Não Verificado]",
+                        "confidence": 0.1,
+                        "method": "fallback_raw"
+                    })
+            
+            # Metrics
+            verified_count = sum(1 for x in matched_exams if "fallback" not in x["method"])
+            unverified_count = len(matched_exams) - verified_count
+            total_returned = len(matched_exams)
+            
+            stats["unverified_count"] = unverified_count
+            
+            metrics = {
+                "coverage": (len(raw_lines) > 0 and total_returned > 0),
+                "verified_ratio": round(verified_count / max(1, total_returned), 2),
+                "fallback_rate_flag": (unverified_count > 0)
+            }
+
+            audit_result = {}
+            try:
+                from services.ocr_resolute_auditor import ocr_resolute_auditor
+                audit_result = ocr_resolute_auditor.audit(raw_lines, matched_exams)
+            except Exception as e:
+                print(f"⚠️ Resolute Audit fail: {e}")
+
+            clean_text = "\n".join([x["corrected"] for x in matched_exams])
+            avg_conf = sum(x["confidence"] for x in matched_exams) / len(matched_exams) if matched_exams else 0.0
+
+            return {
+                "text": clean_text,
+                "lines": matched_exams,
+                "confidence": round(avg_conf, 2),
+                "stats": {
+                    "total_ocr_lines": len(raw_lines),
+                    "classified_exams": len(candidates),
+                    "valid_matches": len(matched_exams)
+                },
+                "backend_version": "V87.0-Split-Fixed",
+                "mode_used": "Vision -> 2-Phase Matcher -> QA Metrics",
+                "debug_raw": candidates,
+                "debug_meta": {
+                    "raw_ocr_lines_count": len(raw_lines),
+                    "candidates_count": len(candidates),
+                    "matched_count": verified_count,
+                    "unverified_count": unverified_count,
+                    "total_returned": total_returned,
+                    "fuzzy_used": stats["fuzzy_used"],
+                    "thresholds": stats["thresholds"],
+                    "dictionary_loaded": bool(self.exams_flat_list),
+                    "dictionary_size": len(self.exams_flat_list),
+                    "fallback_used": fallback_used,
+                    "raw_metrics": metrics,
+                    "resolute_audit": audit_result
+                }
+            }
+
+        except Exception as e:
+            print(f"Exceção no processamento OCR: {e}")
+            traceback.print_exc()
+            return {
+                "text": "",
+                "lines": [],
+                "error": f"SERVER ERROR: {str(e)}",
+                "debug_meta": {"error_trace": str(e)}
+            }
+
+    def _match_term(self, text: str) -> Optional[Tuple[str, float, str]]:
+        text_norm = self._normalizar_texto(text)
+        if not text_norm: return None
+
+        # Phase A: Exact Match
+        best_ratio = 0.0
+        best_official = None
+        best_norm_term = ""
+
+        for norm_term, official_name in self.exams_flat_list:
+            if text_norm == norm_term:
+                return official_name, 100.0, "exact_match"
+        
+        from difflib import SequenceMatcher
+        
+        for norm_term, official_name in self.exams_flat_list:
+            sm = SequenceMatcher(None, text_norm, norm_term)
+            ratio = sm.ratio() * 100.0
+            
+            if ratio > best_ratio:
+                best_ratio = ratio
+                best_official = official_name
+                best_norm_term = norm_term
+
+        score = best_ratio
+        
+        if not best_official:
+            return None
+            
+        # Calibration Rules
+        if len(text_norm) <= 4:
+            if score >= 95:
+                return best_official, score, "short_token_high_precision"
+            return None
+
+        if score >= 92:
+            return best_official, score, "phase_a_high_precision"
+        
+        if score >= 85:
+            return best_official, score, "phase_b_high_coverage"
+
+        if len(best_norm_term) > 4 and best_norm_term in text_norm:
+            return best_official, 80.0, "contains_fallback"
+
+        return None
+
+    def _is_valid_candidate(self, text: str) -> bool:
+        text = text.strip()
+        if not text: return False
+        
+        text_upper = text.upper()
+        
+        whitelist_short = {
+            "T3", "T4", "TSH", "CK", "K", "NA", "P", "MG", "CL", "FE", "LI", "CR", "DHL",
+            "C3", "C4", "VHS", "PCR", "PSA", "CEA", "AFP", "CA", "PTH", "ACTH", "GH", "LH", "FSH",
+            "EAS", "HIV", "VDRL", "HBSAG", "FAN", "IGA", "IGE", "IGG", "IGM", "ROSS"
+        }
+        
+        clean_len = len(re.sub(r'[^A-Z0-9]', '', text_upper))
+        
+        if clean_len < 3:
+            if text_upper not in whitelist_short and text_upper.rstrip("+-") not in whitelist_short:
+                return False
+
+        blacklist_terms = [
+            "DRA.", "DR.", "CRM", "DATA", "ASSINATURA", "PACIENTE", "CONVENIO",
+            "RUA", "AV.", "TEL:", "CEP:", "BAIRRO", "CIDADE", "ESTADO",
+            "SOLICITO", "PEDIDO", "REQUISICAO", "CNPJ", "CPF", "RG",
+            "LABORATORIO", "CLINICA", "HOSPITAL", "UNIMED", "BRADESCO",
+            "RESULTADO", "IMPRESSAO", "PAGINA", "FOLHA", "OBS:", "OBSERVACAO",
+            "ATENCIOSAMENTE", "GRATO", "VISTO", "REMESSA", "PROTOCOLO",
+            "SENHA", "HORA", "COLETA", "IDADE", "SERV.", "NASCIMENTO"
+        ]
+        
+        for term in blacklist_terms:
+            if text_upper.startswith(term):
+                return False
+            if f" {term} " in text_upper:
+                return False
+        
+        if re.search(r'\d{2}/\d{2}/\d{2,4}', text):
+            return False
+        if re.search(r'\d{2}:\d{2}', text):
+            return False
+
+        return True
+
+    def _normalizar_texto(self, texto: str) -> str:
+        if not texto: return ""
+        texto = texto.upper()
+        
+        noise = [
+            "EXAMES LABORATORIAIS", 
+            "EXAME LABORATORIAL",
+            "SOLICITACAO DE EXAMES",
+            " E EXAMES",
+            "LABORATORIAIS",
+            "LABORATORIAL"
+        ]
+        for n in noise:
+            texto = texto.replace(n, "")
+
+        # Remove acentos
+        texto = unicodedata.normalize('NFKD', texto)
+        texto = "".join([c for c in texto if not unicodedata.combining(c)])
+        
+        # Vitamin D special
+        texto = texto.replace("2,5", "25").replace("2.5", "25")
+
+        # Keep only letters and numbers
+        texto = re.sub(r'[^A-Z0-9\s]', ' ', texto)
+        
+        # Collapse whitespace
+        texto = re.sub(r'\s+', ' ', texto).strip()
+        return texto
+
+    def _load_exams_dictionary(self) -> Dict:
+        try:
+            core_dir = os.path.dirname(os.path.abspath(__file__))
+            api_dir = os.path.dirname(core_dir)
+            json_path = os.path.join(api_dir, "data", "exams_dictionary.json")
+            if not os.path.exists(json_path):
+                return {"exames": []}
+            with open(json_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return {"exames": []}
+
+    def _flatten_dictionary(self) -> List:
+        flat_list = []
+        if not self.exams_dict: return []
+        for item in self.exams_dict.get("exames", []):
+            official = item["nome_oficial"]
+            flat_list.append((self._normalizar_texto(official), official))
+            for syn in item.get("sinonimos", []):
+                flat_list.append((self._normalizar_texto(syn), official))
+            for var in item.get("variacoes", []):
+                flat_list.append((self._normalizar_texto(var), official))
+            for err in item.get("erros_ocr_comuns", []):
+                flat_list.append((self._normalizar_texto(err), official))
+        return flat_list
+
+    def _extrair_linhas(self, api_resp: Dict) -> List[str]:
+        linhas = []
+        full_text = api_resp.get("fullTextAnnotation")
+        
+        if not full_text:
+            return []
+            
+        for page in full_text.get("pages", []):
+            for block in page.get("blocks", []):
+                for paragraph in block.get("paragraphs", []):
+                    linha = ""
+                    for word in paragraph.get("words", []):
+                        palavra = "".join([s.get("text", "") for s in word.get("symbols", [])])
+                        linha += palavra + " "
+                    if linha.strip():
+                        linhas.append(linha.strip())
+        return linhas

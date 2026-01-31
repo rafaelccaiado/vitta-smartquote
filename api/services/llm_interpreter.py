@@ -1,1 +1,64 @@
-﻿浩潰瑲樠潳൮椊灭牯⁴獯਍浩潰瑲爠煥敵瑳൳昊潲⁭祴楰杮椠灭牯⁴楌瑳‬楄瑣‬灏楴湯污਍牴㩹਍††牦浯搠瑯湥⁶浩潰瑲氠慯彤潤整癮਍††潬摡摟瑯湥⡶ഩ攊捸灥⁴浉潰瑲牅潲㩲਍††慰獳਍਍汣獡⁳䱌䥍瑮牥牰瑥牥ഺ †∠∢਍††湉整灲敲慴琠硥潴传剃甠慳摮⁯敇業楮䄠䥐瘠慩删卅⁔猨浥匠䭄瀠獥摡⥯മ †䔠灳捥慩楬慺潤攠⁭硥牴썡쎧澣攠瑳畲畴慲慤搠⁥硥浡獥മ †∠∢਍††਍††敤⁦彟湩瑩彟猨汥⥦ഺ †††猠汥⹦灡彩敫⁹‽獯朮瑥湥⡶䜢䵅义彉偁彉䕋≙ഩ †††猠汥⹦牵⁬‽≦瑨灴㩳⼯敧敮慲楴敶慬杮慵敧朮潯汧慥楰⹳潣⽭ㅶ敢慴洯摯汥⽳敧業楮ㄭ㔮昭慬桳机湥牥瑡䍥湯整瑮欿祥笽敳晬愮楰歟祥≽਍††††਍††††晩渠瑯猠汥⹦灡彩敫㩹਍††††††牰湩⡴ꂚ룯₏䕇䥍䥎䅟䥐䭟奅渠ꏃ⁯潣普杩牵摡⁡‭䱌⁍湉整灲敲整⁲敤慳楴慶潤⤢਍††††††਍††敤⁦硥牴捡彴硥浡⡳敳晬‬捯彲整瑸›瑳⥲ⴠ‾楄瑣獛牴‬湡嵹ഺ †††∠∢਍††††硅牴楡攠渠牯慭楬慺攠慸敭⁳潤琠硥潴戠畲潴മ †††∠∢਍††††晩渠瑯猠汥⹦灡彩敫㩹਍††††††敲畴湲笠攢慸敭≳›嵛‬攢牲牯㨢∠偁⁉敋⁹業獳湩≧ൽ †††††ഠ †††††ഠ †††瀠潲灭⁴‽≦∢潖썣₪꧃甠⁭獥数楣污獩慴攠⁭数楤潤⁳썭撩捩獯戠慲楳敬物獯‮湁污獩⁥⁯整瑸⁯䍏⁒扡楡潸മഊ吊剁䙅㩁਍⸱䤠敤瑮晩煩敵䄠䕐䅎⁓獯攠慸敭⁳慬潢慲潴楲楡⁳楣慴潤⹳਍⸲䌠牯楲慪攠牲獯쌠抳楶獯搠⁥䍏⁒攨㩸∠浨牧浡≡ⴠ‾䠢浥杯慲慭Ⱒ∠楇潣敳•㸭∠汇捩獯≥⸩਍⸳丠牯慭楬敺猠杩慬⁳攨㩸∠㑔≌ⴠ‾吢‴楌牶≥‬䠢䅢挱•㸭∠效潭汧扯湩⁡汇捩摡≡⸩਍਍䕒則十䐠⁅問佒⠠低卉⁅䥆䕒䅗䱌㨩਍鷢₌剐䥏䥂佄删呅剏䅎⁒久䕄䕒蟃协›杉潮敲∠畒≡‬䄢≶‬䄢慬敭慤Ⱒ∠敓潴≲‬儢慵牤≡‬䰢瑯≥മ貝倠佒䉉䑉⁏䕒佔乒剁䌠䑉䑁卅›杉潮敲∠潇썩溢慩Ⱒ∠牂獡귃楬≡‬䄢慰敲楣慤Ⱒ∠慖灬牡썡玭≯മ貝倠佒䉉䑉⁏䕒佔乒剁䴠觃䥄佃㩓䤠湧牯⁥潮敭⁳敤瀠獥潳獡‬䐢⹲Ⱒ∠牄⹡Ⱒ∠剃≍മ貝倠佒䉉䑉⁏䕒佔乒剁䴠呅䑁䑁协›杉潮敲∠썐枡湩≡‬䘢汯慨Ⱒ∠浉牰獥潳攠≭‬䐢瑡≡‬吢汥晥湯≥മഊ薜䔠䕘偍佌⁓䕄䔠䅘䕍⁓썖䲁䑉协⠠䅓噌䝁䅕䑒⥁ഺ匊⁥⁯整瑸⁯潦⁲䄢呎⁉䱇䅉䥄䅎Ⱒ∠協≈‬䠢䵅䝏䅒䅍Ⱒ∠剕䥅≁ⴠ‾썓侃䔠䅘䕍ⱓ䴠乁䕔䡎⹁਍਍䕔员⁏䍏㩒਍≜≜≜਍潻牣瑟硥絴਍≜≜≜਍਍楓慧删䝉剏协䵁久䕔攠瑳⁥潦浲瑡⁯半乏ഺ笊ൻ ∠硥浡獥㨢嬠਍††筻਍†††琢硥潴潟楲楧慮≬›挢浯⁯敶潩搠⁯䍏≒ബ ††∠硥浡彥摩湥楴楦慣潤㨢∠潎敭瀠摡潲楮慺潤Ⱒ਍†††挢湯楦湡慣㨢〠〮愠ㄠ〮਍††絽਍†൝紊ൽ刊獥潰摮⁡偁久十漠䨠体⹎匠⁥썮澣栠畯敶⁲硥浡獥‬敲潴湲⁥筻攢慸敭≳›嵛絽∮∢਍਍††††慰汹慯⁤‽ൻ †††††∠潣瑮湥獴㨢嬠ൻ †††††††∠慰瑲≳›筛琢硥≴›牰浯瑰嵽਍††††††嵽ബ †††††∠敧敮慲楴湯潃普杩㨢笠਍††††††††爢獥潰獮彥業敭瑟灹≥›愢灰楬慣楴湯樯潳≮਍††††††ൽ †††素਍††††਍††††牴㩹਍††††††敲灳湯敳㴠爠煥敵瑳⹳潰瑳猨汥⹦牵ⱬ樠潳㵮慰汹慯Ɽ琠浩潥瑵㌽⤰਍††††††敲灳湯敳爮楡敳晟牯獟慴畴⡳ഩ †††††搠瑡⁡‽敲灳湯敳樮潳⡮ഩ †††††ഠ †††††⌠䔠瑸慲物漠琠硥潴搠⁡敲灳獯慴搠⁯敇業楮਍††††††潣瑮湥⁴‽慤慴❛慣摮摩瑡獥崧せ孝挧湯整瑮崧❛慰瑲❳孝崰❛整瑸崧਍††††††敲畴湲樠潳⹮潬摡⡳潣瑮湥⥴਍††††††਍††††硥散瑰䔠捸灥楴湯愠⁳㩥਍††††††牰湩⡴≦鷢₌牅潲渠⁯䱌⁍湉整灲敲整㩲笠絥⤢਍††敤⁦汣獡楳祦江湩獥猨汥ⱦ氠湩獥›楌瑳獛牴⥝ⴠ‾楌瑳䑛捩孴瑳Ⱳ愠祮嵝ഺ †††∠∢਍††††汃獡楳楦慣挠摡⁡楬桮⁡浥挠瑡来牯慩⁳䔨䅘䕍‬䕍䥄佃‬瑥⥣਍††††∢ഢ †††椠⁦潮⁴敳晬愮楰歟祥ഺ †††††爠瑥牵⁮嵛਍਍††††牰浯瑰㴠映∢䌢慬獳晩煩敵挠摡⁡楬桮⁡浥唠䅍挠瑡来牯慩ഺഊ䌊呁䝅剏䅉㩓਍‭塅䵁㩅渠浯⁥敤攠慸敭氠扡牯瑡牯慩൬ⴊ䴠䑅䍉㩏渠浯⽥剃⁍敤洠꧃楤潣਍‭久䕄䕒佃›畲ⱡ挠摩摡ⱥ䌠偅‬敲敦썲溪楣ൡⴊ倠䍁䕉呎㩅渠浯ⱥ䌠䙐‬潣癮꫃楮⁯潤瀠捡敩瑮൥ⴊ䴠呅䑁呁㩁搠瑡ⱡ愠獳湩瑡牵ⱡ挠牡浩潢਍‭䥌佘›整瑸⁯汩来귃敶⁬畯椠牲汥癥湡整਍਍䥌䡎十倠剁⁁䱃十䥓䥆䅃㩒਍橻潳⹮畤灭⡳楬敮ⱳ椠摮湥㵴ⰲ攠獮牵彥獡楣㵩慆獬⥥ൽഊ刊卅佐䑎⁁偁久十䨠体⁎敮瑳⁥潦浲瑡㩯਍൛ 笠≻楬桮≡›琢硥潴漠楲楧慮≬‬挢瑡来牯慩㨢∠䅃䕔佇䥒≁‬挢湯楦湡慣㨢〠〮愠ㄠ〮絽਍≝∢਍਍††††慰汹慯⁤‽ൻ †††††∠潣瑮湥獴㨢嬠≻慰瑲≳›筛琢硥≴›牰浯瑰嵽嵽ബ †††††∠敧敮慲楴湯潃普杩㨢笠爢獥潰獮彥業敭瑟灹≥›愢灰楬慣楴湯樯潳≮ൽ †††素਍††††਍††††牴㩹਍††††††敲灳湯敳㴠爠煥敵瑳⹳潰瑳猨汥⹦牵ⱬ樠潳㵮慰汹慯Ɽ琠浩潥瑵㌽⤰਍††††††敲灳湯敳爮楡敳晟牯獟慴畴⡳ഩ †††††搠瑡⁡‽敲灳湯敳樮潳⡮ഩ †††††挠湯整瑮㴠搠瑡孡挧湡楤慤整❳孝崰❛潣瑮湥❴孝瀧牡獴崧せ孝琧硥❴൝ †††††爠瑥牵⁮獪湯氮慯獤挨湯整瑮ഩ †††攠捸灥⁴硅散瑰潩⁮獡攠ഺ †††††瀠楲瑮昨貝䔠牲⁯慮挠慬獳晩捩썡쎧澣䰠䵌›敻≽ഩ †††††爠瑥牵⁮嵛਍਍‣楓杮敬潴൮氊浬楟瑮牥牰瑥牥㴠䰠䵌湉整灲敲整⡲ഩ
+﻿import json
+import os
+import requests
+from typing import List, Dict, Any, Optional
+
+try:
+    from library.dotenv import load_dotenv
+    load_dotenv()
+except:
+    pass
+
+class LLMInterpreter:
+    """
+    Interpreta texto OCR usando Gemini API via REST.
+    """
+    
+    def __init__(self):
+        self.api_key = os.getenv("GEMINI_API_KEY")
+        self.url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.api_key}"
+        
+        if not self.api_key:
+            print("⚠️ GEMINI_API_KEY não configurada - LLMInterpreter desativado")
+            
+    def extract_exams(self, ocr_text: str) -> Dict[str, Any]:
+        if not self.api_key:
+            return {"exames": [], "error": "API Key missing"}
+            
+        prompt = f"""Você é um especialista em pedidos médicos brasileiros. Analise o texto OCR abaixo.
+        TAREFA:
+        1. Identifique APENAS os exames laboratoriais citados.
+        2. Corrija erros óbvios de OCR (ex: "hmgrama" -> "Hemograma").
+        3. Normalize siglas (ex: "T4L" -> "T4 Livre", "Hba1c" -> "Hemoglobina Glicada").
+
+        TEXTO OCR:
+        {ocr_text}
+
+        Retorne APENAS JSON neste formato:
+        {{
+          "exames": [
+            {{
+              "texto_original": "como veio do OCR",
+              "exame_identificado": "Nome padronizado",
+              "confianca": 0.0 a 1.0
+            }}
+          ]
+        }}
+        """
+        
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"response_mime_type": "application/json"}
+        }
+        
+        try:
+            response = requests.post(self.url, json=payload, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            content = data['candidates'][0]['content']['parts'][0]['text']
+            return json.loads(content)
+        except Exception as e:
+            print(f"❌ Erro no LLMInterpreter: {e}")
+            return {"exames": [], "error": str(e)}
+
+llm_interpreter = LLMInterpreter()

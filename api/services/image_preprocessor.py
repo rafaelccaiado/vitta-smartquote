@@ -1,1 +1,116 @@
-﻿牦浯张晟瑵牵彥 浩潰瑲愠湮瑯瑡潩獮਍浩潰瑲椠൯昊潲⁭祴楰杮椠灭牯⁴畔汰ⱥ传瑰潩慮ⱬ䄠祮਍਍‣潒畢瑳䤠灭牯獴⠠㍖ഩ琊祲ഺ †椠灭牯⁴畮灭⁹獡渠൰ †丠䵕奐䅟䅖䱉䉁䕌㴠吠畲൥攊捸灥⁴浉潰瑲牅潲㩲਍††啎偍彙噁䥁䅌䱂⁅‽慆獬൥ †渠⁰‽潎敮⌠䐠晥湩⁥獡丠湯⁥潴愠潶摩丠浡䕥牲牯਍਍牴㩹਍††晩丠䵕奐䅟䅖䱉䉁䕌ഺ †††椠灭牯⁴癣ല †††传䕐䍎彖噁䥁䅌䱂⁅‽牔敵਍††汥敳ഺ †††传䕐䍎彖噁䥁䅌䱂⁅‽慆獬൥攊捸灥⁴浉潰瑲牅潲㩲਍††偏久噃䅟䅖䱉䉁䕌㴠䘠污敳਍਍牴㩹਍††牦浯倠䱉椠灭牯⁴浉条൥攊捸灥⁴浉潰瑲牅潲㩲਍††浉条⁥‽潎敮਍਍汣獡⁳浉条健敲牰捯獥潳㩲਍††敤⁦彟湩瑩彟猨汥⥦ഺ †††猠汥⹦慴杲瑥摟楰㴠㌠〰਍††††敳晬洮湩獟穩⁥‽〱〰਍††਍††敤⁦牰灥潲散獳猨汥ⱦ椠慭敧扟瑹獥›祢整⥳ⴠ‾祢整㩳਍††††晩渠瑯传䕐䍎彖噁䥁䅌䱂⁅牯渠瑯丠䵕奐䅟䅖䱉䉁䕌ഺ †††††爠瑥牵⁮浩条彥祢整൳ഊ †††琠祲ഺ †††††渠慰牲㴠渠⹰牦浯畢晦牥椨慭敧扟瑹獥‬灮甮湩㡴ഩ †††††椠杭㴠挠㉶椮摭捥摯⡥灮牡Ⱳ挠㉶䤮前䅅彄佃佌⥒਍††††††਍††††††晩椠杭椠⁳潎敮ഺ †††††††爠瑥牵⁮浩条彥祢整൳ †††††ഠ †††††⌠倠灩汥湩൥ †††††椠杭㴠猠汥⹦牟獥穩彥晩湟敥敤⡤浩⥧਍††††††浩⁧‽敳晬弮潣癮牥彴潴束慲獹慣敬椨杭ഩ †††††椠杭㴠猠汥⹦敟桮湡散损湯牴獡⡴浩⥧਍††††††浩⁧‽敳晬弮敤潮獩⡥浩⥧਍††††††浩⁧‽敳晬弮敤歳睥椨杭ഩ †††††椠杭㴠猠汥⹦扟湩牡穩⡥浩⥧਍††††††浩⁧‽敳晬弮敲潭敶扟牯敤獲椨杭ഩ †††††ഠ †††††猠捵散獳‬湥潣敤⁤‽癣⸲浩湥潣敤✨瀮杮Ⱗ椠杭ഩ †††††爠瑥牵⁮湥潣敤⹤潴祢整⡳ 晩猠捵散獳攠獬⁥浩条彥祢整൳ †††攠捸灥㩴਍††††††敲畴湲椠慭敧扟瑹獥਍††਍††敤⁦牟獥穩彥晩湟敥敤⡤敳晬‬浩㩧渠⹰摮牡慲⥹ⴠ‾灮渮慤牲祡ഺ †††椠⁦潮⁴偏久噃䅟䅖䱉䉁䕌›敲畴湲椠杭਍††††敨杩瑨‬楷瑤⁨‽浩⹧桳灡孥㈺൝ †††椠⁦業⡮敨杩瑨‬楷瑤⥨㰠猠汥⹦業彮楳敺ഺ †††††猠慣敬㴠猠汥⹦業彮楳敺⼠洠湩栨楥桧ⱴ眠摩桴ഩ †††††椠杭㴠挠㉶爮獥穩⡥浩Ⱨ⠠湩⡴楷瑤⁨‪捳污⥥‬湩⡴敨杩瑨⨠猠慣敬⤩‬湩整灲汯瑡潩㵮癣⸲义䕔归啃䥂⥃਍††††汥晩洠硡栨楥桧ⱴ眠摩桴 ‾〴〰ഺ †††††猠慣敬㴠㐠〰‰ 慭⡸敨杩瑨‬楷瑤⥨਍††††††浩⁧‽癣⸲敲楳敺椨杭‬椨瑮眨摩桴⨠猠慣敬Ⱙ椠瑮栨楥桧⁴‪捳污⥥Ⱙ椠瑮牥潰慬楴湯挽㉶䤮呎剅䅟䕒⥁਍††††敲畴湲椠杭਍††਍††敤⁦损湯敶瑲瑟彯牧祡捳污⡥敳晬‬浩㩧渠⹰摮牡慲⥹ⴠ‾灮渮慤牲祡ഺ †††椠⁦潮⁴偏久噃䅟䅖䱉䉁䕌›敲畴湲椠杭਍††††晩氠湥椨杭献慨数 㴽㌠ഺ †††††爠瑥牵⁮癣⸲癣䍴汯牯椨杭‬癣⸲佃佌归䝂㉒則奁ഩ †††爠瑥牵⁮浩൧ †ഠ †搠晥张湥慨据彥潣瑮慲瑳猨汥ⱦ椠杭›灮渮慤牲祡 㸭渠⹰摮牡慲㩹਍††††晩渠瑯传䕐䍎彖噁䥁䅌䱂㩅爠瑥牵⁮浩൧ †††挠慬敨㴠挠㉶挮敲瑡䍥䅌䕈挨楬䱰浩瑩㈽〮‬楴敬片摩楓敺⠽ⰸ㠠⤩਍††††敲畴湲挠慬敨愮灰祬椨杭ഩ †ഠ †搠晥张敤潮獩⡥敳晬‬浩㩧渠⹰摮牡慲⥹ⴠ‾灮渮慤牲祡ഺ †††椠⁦潮⁴偏久噃䅟䅖䱉䉁䕌›敲畴湲椠杭਍††††敲畴湲挠㉶昮獡乴䵬慥獮敄潮獩湩⡧浩Ⱨ栠ㄽ⤰਍††਍††敤⁦摟獥敫⡷敳晬‬浩㩧渠⹰摮牡慲⥹ⴠ‾灮渮慤牲祡ഺ †††椠⁦潮⁴偏久噃䅟䅖䱉䉁䕌›敲畴湲椠杭਍††††摥敧⁳‽癣⸲慃湮⡹浩Ⱨ㔠ⰰㄠ〵‬灡牥畴敲楓敺㌽ഩ †††氠湩獥㴠挠㉶䠮畯桧楌敮⡳摥敧ⱳㄠ‬⸳㐱㔱‹ 㠱ⰰ㈠〰ഩ †††椠⁦楬敮⁳獩丠湯㩥爠瑥牵⁮浩൧ †††愠杮敬⁳‽㍛ㄮㄴ㤵⨠琠敨慴⼠ㄠ〸ⴠ㤠‰潦⁲桲Ɐ琠敨慴椠⁮楬敮孳ⰺ〠嵝਍††††晩渠瑯愠杮敬㩳爠瑥牵⁮浩൧ †††椠灭牯⁴瑳瑡獩楴獣਍††††敭楤湡慟杮敬㴠猠慴楴瑳捩⹳敭楤湡愨杮敬⥳਍††††晩愠獢洨摥慩彮湡汧⥥㰠〠㔮›敲畴湲椠杭਍††††栨‬⥷㴠椠杭献慨数㩛崲਍††††⁍‽癣⸲敧剴瑯瑡潩䵮瑡楲㉸⡄眨⼠ ⰲ栠⼠ ⤲‬敭楤湡慟杮敬‬⸱⤰਍††††敲畴湲挠㉶眮牡䅰晦湩⡥浩Ⱨ䴠‬眨‬⥨‬汦条㵳癣⸲义䕔归啃䥂ⱃ戠牯敤䵲摯㵥癣⸲佂䑒剅剟偅䥌䅃䕔ഩ †ഠ †搠晥张楢慮楲敺猨汥ⱦ椠杭›灮渮慤牲祡 㸭渠⹰摮牡慲㩹਍††††晩渠瑯传䕐䍎彖噁䥁䅌䱂㩅爠瑥牵⁮浩൧ †††戠畬牲摥㴠挠㉶䜮畡獳慩䉮畬⡲浩Ⱨ⠠ⰵ㔠Ⱙ〠ഩ †††张‬楢慮祲㴠挠㉶琮牨獥潨摬戨畬牲摥‬ⰰ㈠㔵‬癣⸲䡔䕒䡓䉟义剁⁙‫癣⸲䡔䕒䡓佟協⥕਍††††敲畴湲戠湩牡൹ †ഠ †搠晥张敲潭敶扟牯敤獲猨汥ⱦ椠杭›灮渮慤牲祡 㸭渠⹰摮牡慲㩹਍††††晩渠瑯传䕐䍎彖噁䥁䅌䱂㩅爠瑥牵⁮浩൧ †††挠湯潴牵ⱳ张㴠挠㉶昮湩䍤湯潴牵⡳浩Ⱨ挠㉶刮呅归塅䕔乒䱁‬癣⸲䡃䥁彎偁剐塏卟䵉䱐⥅਍††††晩渠瑯挠湯潴牵㩳爠瑥牵⁮浩൧ †††氠牡敧瑳损湯潴牵㴠洠硡挨湯潴牵ⱳ欠祥挽㉶挮湯潴牵牁慥ഩ †††砠‬ⱹ眠‬⁨‽癣⸲潢湵楤杮敒瑣氨牡敧瑳损湯潴牵ഩ †††爠瑥牵⁮浩孧慭⡸ⰰ礠ㄭ⤰洺湩椨杭献慨数せⱝ礠栫ㄫ⤰‬慭⡸ⰰ砠ㄭ⤰洺湩椨杭献慨数ㅛⱝ砠眫ㄫ⤰൝ഊ †搠晥搠瑥捥彴潲⡩敳晬‬浩条彥祢整㩳戠瑹獥 㸭戠瑹獥ഺ †††爠瑥牵⁮浩条彥祢整⁳‣瑓扵映牯猠晡瑥൹ഊ †搠晥朠瑥摟扥杵楟慭敧⡳敳晬‬浩条彥祢整㩳戠瑹獥 㸭搠捩㩴਍††††敲畴湲笠⁽‣瑓扵映牯猠晡瑥൹ †ഠ †搠晥张湥潣敤楟慭敧猨汥ⱦ椠杭›灮渮慤牲祡 㸭戠瑹獥ഺ †††椠⁦潮⁴偏久噃䅟䅖䱉䉁䕌›敲畴湲戠✧਍††††畳捣獥ⱳ攠据摯摥㴠挠㉶椮敭据摯⡥⸧湰❧‬浩⥧਍††††敲畴湲攠据摯摥琮扯瑹獥⤨椠⁦畳捣獥⁳汥敳戠✧਍਍浩条彥牰灥潲散獳牯㴠䤠慭敧牐灥潲散獳牯⤨਍
+﻿from __future__ import annotations
+import io
+from typing import Tuple, Optional, Any
+
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
+
+try:
+    if NUMPY_AVAILABLE:
+        import cv2
+        OPENCV_AVAILABLE = True
+    else:
+        OPENCV_AVAILABLE = False
+except ImportError:
+    OPENCV_AVAILABLE = False
+
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+
+class ImagePreprocessor:
+    def __init__(self):
+        self.target_dpi = 300
+        self.min_size = 1000
+    
+    def preprocess(self, image_bytes: bytes) -> bytes:
+        if not OPENCV_AVAILABLE or not NUMPY_AVAILABLE:
+            return image_bytes
+        
+        try:
+            nparr = np.frombuffer(image_bytes, np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            
+            if img is None:
+                return image_bytes
+            
+            # Pipeline
+            img = self._resize_if_needed(img)
+            img = self._convert_to_grayscale(img)
+            img = self._enhance_contrast(img)
+            img = self._denoise(img)
+            img = self._deskew(img)
+            img = self._binarize(img)
+            img = self._remove_borders(img)
+            
+            success, encoded = cv2.imencode('.png', img)
+            return encoded.tobytes() if success else image_bytes
+        except:
+            return image_bytes
+    
+    def _resize_if_needed(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        height, width = img.shape[:2]
+        if min(height, width) < self.min_size:
+            scale = self.min_size / min(height, width)
+            img = cv2.resize(img, (int(width * scale), int(height * scale)), interpolation=cv2.INTER_CUBIC)
+        elif max(height, width) > 4000:
+            scale = 4000 / max(height, width)
+            img = cv2.resize(img, (int(width * scale), int(height * scale)), interpolation=cv2.INTER_AREA)
+        return img
+    
+    def _convert_to_grayscale(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        if len(img.shape) == 3:
+            return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        return img
+    
+    def _enhance_contrast(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        return clahe.apply(img)
+    
+    def _denoise(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        return cv2.fastNlMeansDenoising(img, h=10)
+    
+    def _deskew(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        edges = cv2.Canny(img, 50, 150, apertureSize=3)
+        lines = cv2.HoughLines(edges, 1, 3.14159 / 180, 200)
+        if lines is None: return img
+        angles = [3.14159 * theta / 180 - 90 for rho, theta in lines[:, 0]]
+        if not angles: return img
+        import statistics
+        median_angle = statistics.median(angles)
+        if abs(median_angle) < 0.5: return img
+        (h, w) = img.shape[:2]
+        M = cv2.getRotationMatrix2D((w // 2, h // 2), median_angle, 1.0)
+        return cv2.warpAffine(img, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    
+    def _binarize(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        blurred = cv2.GaussianBlur(img, (5, 5), 0)
+        _, binary = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        return binary
+    
+    def _remove_borders(self, img: np.ndarray) -> np.ndarray:
+        if not OPENCV_AVAILABLE: return img
+        contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if not contours: return img
+        largest_contour = max(contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(largest_contour)
+        return img[max(0, y-10):min(img.shape[0], y+h+10), max(0, x-10):min(img.shape[1], x+w+10)]
+
+    def detect_roi(self, image_bytes: bytes) -> bytes:
+        return image_bytes # Stub
+    
+    def get_debug_images(self, image_bytes: bytes) -> dict:
+        return {} # Stub
+
+image_preprocessor = ImagePreprocessor()
