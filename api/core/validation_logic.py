@@ -466,3 +466,6 @@ class ValidationService:
     @staticmethod
     def get_fuzzy_suggestions(term: str, all_exam_names: List[str]) -> List[str]:
         return get_close_matches(term, all_exam_names, n=3, cutoff=0.6)
+
+# Singleton global instance
+validation_service = ValidationService()
