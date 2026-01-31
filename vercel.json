@@ -3,6 +3,26 @@
     "framework": "vite",
     "rewrites": [
         {
+            "source": "/api/validate-list",
+            "destination": "/api/validate-list.py"
+        },
+        {
+            "source": "/api/search-exams",
+            "destination": "/api/search-exams.py"
+        },
+        {
+            "source": "/api/learn-correction",
+            "destination": "/api/learn-correction.py"
+        },
+        {
+            "source": "/api/pdca/logs",
+            "destination": "/api/pdca-logs.py"
+        },
+        {
+            "source": "/api/pdca/approve",
+            "destination": "/api/pdca-approve.py"
+        },
+        {
             "source": "/api/ocr",
             "destination": "/api/ocr.py"
         },
