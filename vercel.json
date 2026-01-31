@@ -1,11 +1,17 @@
 {
+    "name": "vitta-smartquote",
+    "framework": "vite",
     "rewrites": [
         {
-            "source": "/admin/pdca",
-            "destination": "/index.html"
+            "source": "/api/ocr",
+            "destination": "/api/ocr.py"
         },
         {
-            "source": "/((?!api/).*)",
+            "source": "/api/(.*)",
+            "destination": "/api/index.py"
+        },
+        {
+            "source": "/(.*)",
             "destination": "/index.html"
         }
     ]
