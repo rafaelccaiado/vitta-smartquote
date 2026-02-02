@@ -72,7 +72,7 @@ class ValidationService:
         total_rows = stats.get("total", 0)
         samples = stats.get("sample_units", "NONE")
         
-        results["stats"]["backend_version"] = f"V110.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V111.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
@@ -317,13 +317,8 @@ class ValidationService:
                         is_match = False
                         if essential_v and essential_k:
                             if essential_v.issubset(k_tokens):
-                        # V109 Bidirectional Overlap: Input is subset of DB (classic) OR DB is subset of Input (descriptive)
-                        is_match = False
-                        if essential_v and essential_k:
-                            if essential_v.issubset(k_tokens):
                                 is_match = True
                             elif essential_k.issubset(v_tokens):
-                                # If DB term is a subset of input (e.g. DB "ELASTASE FECAL" subset of Input "ELASTASE PANCREATICA FECAL")
                                 is_match = True
                         
                         if is_match:
@@ -333,7 +328,7 @@ class ValidationService:
                         strategy = f"token_overlap_{var['tag']}"
                         break
 
-            # 3. SEMANTIC AI MATCH (V110 - Smart Suggestion) =====================
+            # STAGE 5: SEMANTIC AI MATCH (V110 - Smart Suggestion) =====================
             # If everything failed, ask Gemini to normalize context
             if not found_matches and semantic_service.model:
                 try:
@@ -352,7 +347,7 @@ class ValidationService:
                 except Exception as e:
                     print(f"⚠️ Semantic Logic Error: {e}")
 
-            # 4. FINAL RESULTS PROCESSING =====================
+            # FINAL RESULTS PROCESSING
             if found_matches:
                 unique_matches = {}
                 for m in found_matches:
@@ -388,7 +383,6 @@ class ValidationService:
                 item["selectedMatch"] = 0
                 item["status"] = "confirmed" if len(matches_list) == 1 else "multiple"
                 item["match_strategy"] = strategy
-                results["items"].append(item)
                 
                 if item["status"] == "confirmed": results["stats"]["confirmed"] += 1
                 else: results["stats"]["pending"] += 1
@@ -398,25 +392,10 @@ class ValidationService:
                 missing_terms_logger.log_not_found(term=original_term, unit=unit)
                 results["stats"]["not_found"] += 1
                 
-                results["items"].append({
-                    "term": original_term,
-                    "status": "not_found",
-                    "matches": [],
-                    "match_strategy": "manual_fallback"
-                })
-                        item["status"] = "multiple" 
-                        item["matches"] = [{
-                            "item_id": 99999, # Safe Mock ID
-                            "item_name": f"{fallback_name} (Verificar Cadastro)",
-                            "search_name": fallback_name,
-                            "price": 0.0,
-                            "unit_name": unit
-                        }]
-                        item["selectedMatch"] = None # Force user to look (or default select?) None is safer for "Pending"
-                        item["match_strategy"] = "manual_fallback"
-                        results["stats"]["pending"] += 1
-                        results["stats"]["not_found"] -= 1 # Correct stat
-                
+                item["status"] = "not_found"
+                item["matches"] = []
+                item["match_strategy"] = "manual_fallback"
+
             results["items"].append(item)
             
         
