@@ -22,31 +22,31 @@ app.add_middleware(
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "version": "V90.0-CleanSweep"}
+    return {"status": "ok", "version": "V93.0-Robust"}
 
 @app.get("/api/qa-proof")
 async def qa_proof():
-    return {"status": "ready", "engine": "Vitta SmartQuote REST Engine V90.0"}
+    return {"status": "ready", "engine": "Vitta SmartQuote REST Engine V93.0"}
 
-# --- UPDATED ENDPOINTS (V90.0) ---
+# --- ROBUST ENDPOINTS (V93.0) ---
 
 @app.post("/api/validate-list")
 async def validate_list(request: Request):
     """Valida uma lista de termos de exames (Phase 4/5)."""
     try:
-        from core.validation_logic import validation_service
+        from core.validation_logic import ValidationService
         from core.bigquery_client import bq_client
         
         data = await request.json()
         terms = data.get("terms", [])
         unit = data.get("unit", "Goiânia Centro")
         
-        # V90: Use batch validation for efficiency and consistency
-        results_data = validation_service.validate_batch(terms, unit, bq_client)
+        # V93: Call static method directly to avoid singleton import issues
+        results_data = ValidationService.validate_batch(terms, unit, bq_client)
             
         return results_data
     except Exception as e:
-        print(f"Error in validate-list: {e}")
+        print(f"❌ Error in validate-list: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -65,7 +65,7 @@ async def search_exams(request: Request):
         results = bq_client.search_exams(term, unit)
         return {"exams": results}
     except Exception as e:
-        print(f"Error in search-exams: {e}")
+        print(f"❌ Error in search-exams: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/learn-correction")
@@ -78,12 +78,11 @@ async def learn_correction(request: Request):
         correct = data.get("correct_exam_name")
         
         if original and correct:
-            # V90: Match new signature 'learn(original_term, correct_exam_name)'
             learning_service.learn(original, correct)
             return {"status": "learned"}
         return {"status": "ignored"}
     except Exception as e:
-        print(f"Error in learn-correction: {e}")
+        print(f"❌ Error in learn-correction: {e}")
         return {"status": "error", "detail": str(e)}
 
 @app.get("/api/pdca/logs")
@@ -91,10 +90,9 @@ async def get_pdca_logs():
     """Retorna logs do sistema de aprendizado para o Admin Dashboard."""
     try:
         from services.pdca_service import pdca_service
-        # V90: pdca_service.logs is the list itself
         return pdca_service.logs
     except Exception as e:
-        print(f"Error getting PDCA logs: {e}")
+        print(f"❌ Error getting PDCA logs: {e}")
         return []
 
 @app.post("/api/pdca/approve")
@@ -118,5 +116,5 @@ async def catch_all(path_name: str):
     return {
         "error": "Not Found",
         "path": path_name,
-        "message": f"Endpoint '/api/{path_name}' not specifically handled in V90.0. Check index.py routes."
+        "message": f"Endpoint '/api/{path_name}' not specifically handled in V93.0. Check index.py routes."
     }

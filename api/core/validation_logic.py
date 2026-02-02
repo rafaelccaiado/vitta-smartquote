@@ -7,6 +7,8 @@ from services.resolute_orchestrator import resolute_orchestrator
 from services.fuzzy_matcher import fuzzy_matcher
 from services.learning_service import learning_service
 
+print("🛡️ Validation Logic: Module Loaded Successfully")
+
 class ValidationService:
     @staticmethod
     def calculate_similarity(term1: str, term2: str) -> float:
