@@ -206,7 +206,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
             return exam
         }))
         setSearchingId(null)
-        setSearchResults([])
+        // setSearchResults([]) // No longer needed globally, results are scoped to searchingId
     }
 
     if (loading) {
@@ -322,7 +322,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                         <div className="text-sm text-red-600 font-medium mb-2">❌ Não encontrado no banco de dados</div>
                                     )}
 
-                                    {/* SEARCH INTERFACE */}
+                                    {/* SEARCH INTERFACE - V110: Isolated and Robust */}
                                     {(exam.status === 'not_found' || searchingId === exam.id) ? (
                                         <div className="mt-2 bg-white p-3 rounded-lg border border-blue-200 shadow-sm relative">
                                             <label className="text-xs font-bold text-blue-800 uppercase block mb-1">
@@ -336,8 +336,8 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                                 onChange={(e) => handleManualSearch(e.target.value)}
                                             />
 
-                                            {/* Dropdown Results */}
-                                            {searchResults.length > 0 && (searchingId === exam.id || exam.status === 'not_found') && (
+                                            {/* Dropdown Results - V110: Isolated to active search card */}
+                                            {searchResults.length > 0 && searchingId === exam.id && (
                                                 <div className="absolute z-10 w-full bg-white border border-gray-200 mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto">
                                                     {searchResults.map(res => (
                                                         <div
@@ -355,7 +355,7 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                                 </div>
                                             )}
 
-                                            {searchResults.length === 0 && isSearching && (
+                                            {searchResults.length === 0 && isSearching && searchingId === exam.id && (
                                                 <div className="text-xs text-center p-2 text-gray-400">Buscando...</div>
                                             )}
 
@@ -384,8 +384,8 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                 </div>
                             </div>
 
-                            {/* Existing Matches List (Hide if searching, maybe? No, keep it) */}
-                            {exam.matches.length > 0 && !searchingId && (
+                            {/* Existing Matches List - V110: Always show for confirmed items, regardless of global searchingId */}
+                            {exam.matches.length > 0 && (exam.status === 'confirmed' || (searchingId !== exam.id)) && (
                                 <div className="space-y-2 mt-3">
                                     {exam.matches.map((match, index) => (
                                         <label
@@ -403,12 +403,8 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                                 className="w-4 h-4 text-primary"
                                             />
                                             <div className="flex-1">
-                                                <div className="font-medium text-gray-900 text-sm">
-                                                    {match.item_name}
-                                                </div>
-                                                <div className="text-xs text-gray-500">
-                                                    ID: {match.item_id}
-                                                </div>
+                                                <div className="font-medium text-sm text-gray-900">{match.item_name}</div>
+                                                <div className="text-xs text-gray-500">ID: {match.item_id}</div>
                                             </div>
                                             <div className="text-lg font-bold text-primary">
                                                 R$ {match.price.toFixed(2)}
@@ -423,7 +419,6 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
             </div>
 
             {/* Footer Buttons */}
-            {/* Same as before... */}
             <div className="flex gap-3">
                 <button onClick={onBack} className="btn-secondary flex-1">← Voltar</button>
                 <button

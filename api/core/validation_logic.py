@@ -72,7 +72,7 @@ class ValidationService:
         total_rows = stats.get("total", 0)
         samples = stats.get("sample_units", "NONE")
         
-        results["stats"]["backend_version"] = f"V109.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V110.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
@@ -317,6 +317,10 @@ class ValidationService:
                         is_match = False
                         if essential_v and essential_k:
                             if essential_v.issubset(k_tokens):
+                        # V109 Bidirectional Overlap: Input is subset of DB (classic) OR DB is subset of Input (descriptive)
+                        is_match = False
+                        if essential_v and essential_k:
+                            if essential_v.issubset(k_tokens):
                                 is_match = True
                             elif essential_k.issubset(v_tokens):
                                 # If DB term is a subset of input (e.g. DB "ELASTASE FECAL" subset of Input "ELASTASE PANCREATICA FECAL")
@@ -329,51 +333,45 @@ class ValidationService:
                         strategy = f"token_overlap_{var['tag']}"
                         break
 
-            # STAGE 5: Smart Fuzzy Search
-            if not found_matches:
-                for var in search_variants:
-                    v_text = var["text"]
-                    min_score_threshold = 95 if len(v_text) <= 3 else 75
-                    best_results = fuzzy_matcher.find_top_matches(v_text, limit=3, min_score=min_score_threshold)
-                    if best_results:
-                        for match in best_results:
-                            found_matches.extend(exam_map[match["match"]])
-                        strategy = f"fuzzy_{var['tag']}"
-                        break
+            # 3. SEMANTIC AI MATCH (V110 - Smart Suggestion) =====================
+            # If everything failed, ask Gemini to normalize context
+            if not found_matches and semantic_service.model:
+                try:
+                    suggestion = semantic_service.normalize_term(resolved_term)
+                    if suggestion and suggestion != resolved_term:
+                        s_norm = ValidationService.normalize_text(suggestion)
+                        if s_norm in exam_map:
+                            found_matches = exam_map[s_norm]
+                            strategy = "ai_context_suggestion"
+                        else:
+                            # Final fuzzy on suggestion
+                            best_s = fuzzy_matcher.find_top_matches(suggestion, limit=1, min_score=80)
+                            if best_s:
+                                found_matches = exam_map[best_s[0]["match"]]
+                                strategy = "ai_fuzzy_context"
+                except Exception as e:
+                    print(f"⚠️ Semantic Logic Error: {e}")
 
-
-            # 3. SEMANTIC AI MATCH (V67 - Smart Match) =====================
-            # If standard fuzzy failed, ask Gemini to normalize the term
-            # Collect candidates first to batch (but for now we do inside the loop or just before returning?)
-            # PROB: We are inside a loop `for term in terms`. Batching requires refactoring loop.
-            # WORKAROUND: For V67, we do one-by-one or small batch inside?
-            # Generating content 10 times is slow.
-            # OPTION B: Run Semantic Step AFTER the loop for all "not_found" items?
-            # Yes. Let's finish the loop, then re-process "not_found" items.
-            pass
-
-            # Processar resultado encontrado
+            # 4. FINAL RESULTS PROCESSING =====================
             if found_matches:
-
                 unique_matches = {}
                 for m in found_matches:
                     unique_matches[m['item_id']] = m
                 
                 matches_list = list(unique_matches.values())
                 
-                # --- HEURÍSTICA DE MATERIAL BIOLÓGICO (V44 Fix) ---
-                # Se o termo original mencionar material, prioriza matches que contenham esse material
-                material_keywords = {
-                    "fecal": "fezes", "fezes": "fezes",
-                    "sangue": "sangue", "sanguineo": "sangue", "serico": "serico",
-                    "urina": "urina", "urinario": "urina",
-                }
-                boost_keywords = []
-                for kw, target in material_keywords.items():
-                    if kw in term_norm:
-                        boost_keywords.append(target)
+                # De-duplicate by name to avoid pollution
+                seen_names = set()
+                final_matches = []
+                for m in matches_list:
+                    if m['item_name'] not in seen_names:
+                        final_matches.append(m)
+                        seen_names.add(m['item_name'])
                 
-                # V86: Improved sorting with token-overlap boost
+                matches_list = final_matches
+
+                # Sort by overlap and material
+                term_norm = ValidationService.normalize_text(resolved_term)
                 def get_overlap(candidate_name):
                     c_norm = ValidationService.normalize_text(candidate_name)
                     t_tokens = set(term_norm.split())
@@ -381,50 +379,31 @@ class ValidationService:
                     return len(t_tokens.intersection(c_tokens))
 
                 matches_list.sort(key=lambda x: (
-                    -get_overlap(x['item_name']), # High overlap is better
-                    0 if any(bk in ValidationService.normalize_text(x['item_name']) for bk in boost_keywords) else 1, # Material match boost
-                    0 if term_norm == ValidationService.normalize_text(x['search_name']) else 1, # Exact
-                    0 if term_norm in ValidationService.normalize_text(x['search_name']) else 1, # Contained
-                    abs(len(x['search_name']) - len(term_norm)),
-                    len(x['search_name']),
-                    x['search_name']
+                    -get_overlap(x['item_name']),
+                    abs(len(x['item_name']) - len(term_norm)),
+                    x['item_name']
                 ))
 
                 item["matches"] = matches_list
                 item["selectedMatch"] = 0
-                
-                is_perfect_match = (strategy in ["exact", "synonym", "tuss_exact"]) or (ValidationService.normalize_text(matches_list[0]['search_name']) == term_norm)
-                
-                if len(matches_list) == 1 or is_perfect_match:
-                    item["status"] = "confirmed"
-                    results["stats"]["confirmed"] += 1
-                else:
-                    item["status"] = "multiple"
-                    results["stats"]["pending"] += 1
-                
-                if strategy in ["fuzzy", "substring", "fuzzy_synonym"]:
-                    missing_terms_logger.log_fuzzy_match(
-                        term=original_term,
-                        matched_exam=matches_list[0]['search_name'],
-                        strategy=strategy,
-                        unit=unit
-                    )
-                
+                item["status"] = "confirmed" if len(matches_list) == 1 else "multiple"
                 item["match_strategy"] = strategy
+                results["items"].append(item)
+                
+                if item["status"] == "confirmed": results["stats"]["confirmed"] += 1
+                else: results["stats"]["pending"] += 1
             else:
+                # Completely Not Found
                 pdca_service.log_fca(original_term, unit, "not_found", matches=[])
                 missing_terms_logger.log_not_found(term=original_term, unit=unit)
                 results["stats"]["not_found"] += 1
                 
-                # V62/V63: Last Resort - Create Generic Match from Simplified Term
-                # If we have a simplified code-like term (e.g. "IgG", "C4"), but it wasn't in the DB,
-                # we create a placeholder so the user sees something instead of "0 exams".
-                tokens = term_norm.split()
-                if len(tokens) > 0:
-                    fallback_name = tokens[-1].upper()
-                    # Only for code-like terms
-                    if len(fallback_name) <= 4 or fallback_name.startswith("ANTI"):
-                        # V63: Use 'multiple' status so it counts as Pending (Yellow) in frontend
+                results["items"].append({
+                    "term": original_term,
+                    "status": "not_found",
+                    "matches": [],
+                    "match_strategy": "manual_fallback"
+                })
                         item["status"] = "multiple" 
                         item["matches"] = [{
                             "item_id": 99999, # Safe Mock ID
