@@ -19,8 +19,10 @@ class BigQueryClient:
             
             self.session = AuthorizedSession(creds)
             self.base_url = f"https://bigquery.googleapis.com/bigquery/v2/projects/{self.project_id}/queries"
+            self.auth_info = "OK"
             print("🛡️ BQ REST Client Authenticated!")
         except Exception as e:
+            self.auth_info = f"ERR: {str(e)[:50]}"
             print(f"❌ Error BQ Auth: {e}")
             self.session = None
 
@@ -39,6 +41,7 @@ class BigQueryClient:
         try:
             resp = self.session.post(self.base_url, json=payload)
             if resp.status_code != 200:
+                self.auth_info = f"BQ_ERR_{resp.status_code}"
                 print(f"BQ Error {resp.status_code}: {resp.text}")
                 return []
                 

@@ -67,7 +67,8 @@ class ValidationService:
         # Mapa para busca exata rápida: "termo_normalizado" -> Objeto Exame
         exam_map = {}
         # Dynamic versioning to help debug
-        results["stats"]["backend_version"] = f"V101.0-Expert (Catalog: {len(all_exams)})"
+        auth_status = getattr(bq_client, 'auth_info', 'INIT')
+        results["stats"]["backend_version"] = f"V102.2-Expert (Catalog: {len(all_exams)}, Auth: {auth_status})"
         
         for exam in all_exams:
             # Normaliza chave do mapa (sem acentos)
