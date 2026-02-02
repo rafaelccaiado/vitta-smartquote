@@ -6,8 +6,8 @@ import logging
 class BigQueryClient:
     def __init__(self):
         print("Initializing BigQuery REST Client (Lightweight)...")
-        self.project_id = "high-nature-131701"
-        self.dataset_id = "rtnt_prod_vitta_core"
+        self.project_id = "high-nature-319701"
+        self.dataset_id = "vtntprod_vitta_core"
         self.table_id = "lista_precos"
         
         try:
@@ -31,10 +31,11 @@ class BigQueryClient:
         if not self.session:
             return []
             
-        # V106: Strictly sanitized payload to avoid BQ_ERR_400
+        # V107: Strictly sanitized payload with explicit location
         payload = {
             "query": query,
-            "useLegacySql": False
+            "useLegacySql": False,
+            "location": "US"
         }
         
         if parameters:
