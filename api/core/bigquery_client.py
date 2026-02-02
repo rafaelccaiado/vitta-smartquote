@@ -85,15 +85,16 @@ class BigQueryClient:
         
         raw_results = self._run_query(query, params)
 
-        # Resilient Fallback: If 0 results, try WITHOUT group_name filter
         if not raw_results:
-            print(f"⚠️ 0 results with group_name filter for '{unit}'. Retrying broad query...")
-            query_broad = f"""
+            print(f"⚠️ 0 results for '{unit}'. Attempting BLIND FETCH (Catalog Discovery)...")
+            query_blind = f"""
             SELECT item_id, item_name, group_name, price 
             FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
-            WHERE LOWER(TRIM(price_table_name)) = LOWER(TRIM(@unit))
+            LIMIT 500
             """
-            raw_results = self._run_query(query_broad, params)
+            raw_results = self._run_query(query_blind)
+            if raw_results:
+                self.auth_info = f"OK (BLIND MODE)"
         
         # Post-processing (Normalization compatible with old client)
         processed = []
@@ -128,6 +129,18 @@ class BigQueryClient:
         ]
         
         return self._run_query(query, params)
+
+    def get_raw_table_stats(self) -> Dict[str, Any]:
+        """Diagnostic: Counts rows and gets top units."""
+        query = f"SELECT count(*) as total FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`"
+        res = self._run_query(query)
+        total = res[0].get("total", 0) if res else 0
+        
+        query_units = f"SELECT price_table_name, count(*) as c FROM `{self.project_id}.{self.dataset_id}.{self.table_id}` GROUP BY 1 LIMIT 5"
+        units_res = self._run_query(query_units)
+        units_str = "|".join([str(u.get("price_table_name")) for u in units_res])
+        
+        return {"total": total, "sample_units": units_str}
 
     def get_units(self) -> List[str]:
         query = f"""

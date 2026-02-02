@@ -68,7 +68,11 @@ class ValidationService:
         exam_map = {}
         # Dynamic versioning to help debug
         auth_status = getattr(bq_client, 'auth_info', 'INIT')
-        results["stats"]["backend_version"] = f"V104.0-Expert (Catalog: {len(all_exams)}, Auth: {auth_status})"
+        stats = bq_client.get_raw_table_stats()
+        total_rows = stats.get("total", 0)
+        samples = stats.get("sample_units", "NONE")
+        
+        results["stats"]["backend_version"] = f"V105.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
