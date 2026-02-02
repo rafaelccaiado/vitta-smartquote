@@ -22,11 +22,24 @@ app.add_middleware(
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "version": "V93.0-Robust"}
+    return {"status": "ok", "version": "V103.0-MONOLITH"}
 
 @app.get("/api/qa-proof")
 async def qa_proof():
-    return {"status": "ready", "engine": "Vitta SmartQuote REST Engine V93.0"}
+    return {"status": "ready", "engine": "Vitta SmartQuote REST Engine V103.0"}
+
+@app.post("/api/ocr")
+async def ocr_endpoint(request: Request, file: UploadFile = File(...)):
+    """Processamento de OCR (Phase 2)."""
+    try:
+        from core.ocr_processor import OCRProcessor
+        ocr_p = OCRProcessor()
+        image_bytes = await file.read()
+        return ocr_p.process_image(image_bytes)
+    except Exception as e:
+        print(f"❌ Error in index-ocr: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 # --- ROBUST ENDPOINTS (V93.0) ---
 
@@ -70,6 +83,18 @@ async def search_exams(request: Request):
     except Exception as e:
         print(f"❌ Error in search-exams: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/units")
+@app.get("/units")
+async def get_units():
+    """Retorna lista de unidades (tabelas de preço) disponíveis."""
+    try:
+        from core.bigquery_client import bq_client
+        units = bq_client.get_units()
+        return {"units": units}
+    except Exception as e:
+        print(f"❌ Error fetching units: {e}")
+        return {"units": [], "error": str(e)}
 
 @app.post("/api/learn-correction")
 @app.post("/learn-correction")

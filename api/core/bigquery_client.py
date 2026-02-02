@@ -78,7 +78,6 @@ class BigQueryClient:
         SELECT item_id, item_name, group_name, price 
         FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
         WHERE LOWER(TRIM(price_table_name)) = LOWER(TRIM(@unit))
-        AND group_name = 'EXAMES LABORATORIAIS'
         """
         params = [
             {"name": "unit", "parameterType": {"type": "STRING"}, "parameterValue": {"value": unit}}
@@ -119,8 +118,7 @@ class BigQueryClient:
         SELECT item_id, item_name, group_name, price 
         FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
         WHERE LOWER(item_name) LIKE LOWER(@term)
-        AND price_table_name = @unit
-        AND group_name = 'EXAMES LABORATORIAIS'
+        AND LOWER(TRIM(price_table_name)) = LOWER(TRIM(@unit))
         LIMIT @limit
         """
         params = [
