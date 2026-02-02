@@ -72,7 +72,7 @@ class ValidationService:
         total_rows = stats.get("total", 0)
         samples = stats.get("sample_units", "NONE")
         
-        results["stats"]["backend_version"] = f"V107.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V108.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
@@ -149,6 +149,19 @@ class ValidationService:
             "gama gt": ["gama glutamil transferase", "gama - gt", "ggt"],
             "gama-gt": ["gama glutamil transferase", "gama gt", "ggt"],
             "pcr": ["proteina c reativa", "pcr ultra sensivel"],
+            # V108 Synonyms
+            "25oh": ["vitamina d", "25 hidroxivitamina d", "vitamina d 25 oh"],
+            "vitamina d 25 oh": ["25 hidroxivitamina d", "vitamina d", "25oh"],
+            "citomegalovirus": ["cmv"],
+            "cmv": ["citomegalovirus"],
+            "toxoplasmose": ["toxo"],
+            "toxo": ["toxoplasmose"],
+            "rubéola": ["rubeola"],
+            "rubeola": ["rubeola"],
+            "herpes simples": ["hsv"],
+            "hsv": ["herpes simples"],
+            "anti hcv": ["hcv", "hepatite c"],
+            "hbsag": ["hepatite b", "antigeno australia"],
         }
         
         seen_terms = set()
@@ -235,6 +248,14 @@ class ValidationService:
                 {"text": term_norm, "tag": "resolved"},
                 {"text": orig_norm, "tag": "original"}
             ]
+
+            # V108: Acronym Extractor - Identify terms in parentheses
+            import re
+            parentheses_matches = re.findall(r'\((.*?)\)', original_term + " " + resolved_term)
+            for p_text in parentheses_matches:
+                p_norm = ValidationService.normalize_text(p_text)
+                if len(p_norm) >= 2:
+                    search_variants.append({"text": p_norm, "tag": "parentheses_acronym"})
             
             # Se forem muito diferentes, adiciona sinônimos de ambos
             for var in list(search_variants):
