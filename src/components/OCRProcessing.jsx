@@ -197,6 +197,7 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                                     <th className="px-4 py-3 w-1/3">OCR Leu</th>
                                     <th className="px-4 py-3 w-1/3">Corrigido Para</th>
                                     <th className="px-4 py-3 text-right">Confiança</th>
+                                    {isEditing && <th className="px-4 py-3 text-center">Ações</th>}
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -251,6 +252,23 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                                                 </span>
                                             </div>
                                         </td>
+                                        {isEditing && (
+                                            <td className="px-4 py-3 text-center">
+                                                <button
+                                                    onClick={() => {
+                                                        const newLines = linesData.filter((_, i) => i !== idx);
+                                                        setLinesData(newLines);
+                                                        setExtractedText(newLines.map(l => l.corrected).join('\n'));
+                                                    }}
+                                                    className="text-red-500 hover:text-red-700 transition-colors"
+                                                    title="Remover"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                                 {(!linesData || linesData.length === 0) && (
