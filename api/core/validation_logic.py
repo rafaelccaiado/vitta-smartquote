@@ -33,6 +33,8 @@ class ValidationService:
         text = "".join([c for c in nfkd_form if not unicodedata.combining(c)]).lower()
         # Remove pontuação e caracteres especiais, mantendo apenas letras, números e espaços
         text = re.sub(r'[^a-z0-9\s]', ' ', text)
+        # Remove sufixos comuns que poluem o match
+        text = text.replace(' exames laboratoriais', '').replace(' exames', '')
         # Normaliza espaços extras
         text = re.sub(r'\s+', ' ', text).strip()
         return text
@@ -79,6 +81,8 @@ class ValidationService:
             "parasitologico": ["parasitologico de fezes"],
             "glicose": ["glicemia", "glicemia de jejum", "dosagem de glicose"],
             "glicemia": ["glicemia", "glicemia de jejum"],
+            "glicada": ["hemoglobina glicada", "hemoglobina glicada a1c", "hba1c"],
+            "hemoglobina glicada": ["hemoglobina glicada", "hemoglobina glicada a1c", "hba1c"],
             "colesterol": ["colesterol total", "colesterol total e fracoes"],
             "perfil lipidico": ["lipidogramas"],
             "lipidogramas": ["lipidogramas"],
@@ -102,8 +106,11 @@ class ValidationService:
             "tgp": ["dosagem de tgp", "tgp transaminase piruvica", "transaminase glutamico piruvica", "alanina aminotransferase", "alt"],
             "alt": ["dosagem de tgp", "alanina aminotransferase", "tgp"],
             "vitamina d": ["25 hidroxivitamina d", "dosagem de vitamina d", "vitamina d 25 oh", "vit d", "25 oh vitamina d"],
+            "25 hidroxivitamina d": ["vitamina d", "vitamina d 25 oh", "25 oh vitamina d"],
             "vitamina d 25-oh": ["25 hidroxivitamina d", "vitamina d"],
             "vit d": ["25 hidroxivitamina d", "vitamina d"],
+            "ferritina": ["ferritina serica", "dosagem de ferritina"],
+            "vitamina b12": ["vitamina b12 serica", "dosagem de vitamina b12", "cobalamina"],
             "vhs": ["vhs hemossedimentacao", "vhs hemossedimentacao exames laboratoriais", "velocidade de hemossedimentacao"],
             "tsh ultra": ["hormonio tireoestimulante", "tsh"],
             "urocultura": ["cultura de urina (urocultura)", "pesquisa de bacterias na urina"],
@@ -126,8 +133,8 @@ class ValidationService:
         import re
         date_pattern = re.compile(r'\d{1,2}/\d{1,2}/\d{2,4}')
 
-        # Caracteres de bullet point
-        clean_pattern = re.compile(r'[\s\*•-]')
+        # Caracteres de bullet point (NÃO remove espaços \s para não quebrar Vitamina D)
+        clean_pattern = re.compile(r'[\*•-]')
         
         valid_terms = []
         for term in terms:
