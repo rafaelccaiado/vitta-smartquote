@@ -72,7 +72,7 @@ class ValidationService:
         total_rows = stats.get("total", 0)
         samples = stats.get("sample_units", "NONE")
         
-        results["stats"]["backend_version"] = f"V108.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V109.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
@@ -162,6 +162,12 @@ class ValidationService:
             "hsv": ["herpes simples"],
             "anti hcv": ["hcv", "hepatite c"],
             "hbsag": ["hepatite b", "antigeno australia"],
+            # V109 Synonyms
+            "elastase": ["elastase fecal", "elastase pancreatica", "elastase pancreatica fecal"],
+            "gordura fecal": ["gordura nas fezes", "sudan iii", "pesquisa de gordura fecal"],
+            "gordura nas fezes": ["gordura fecal", "sudan iii"],
+            "nas fezes": ["fecal"],
+            "fecal": ["nas fezes"],
         }
         
         seen_terms = set()
@@ -302,8 +308,21 @@ class ValidationService:
                     if not essential_v: continue
                     
                     for key in exam_keys:
-                        k_tokens = set(key.split())
-                        if essential_v.issubset(k_tokens):
+                        k_norm = ValidationService.normalize_text(key)
+                        k_tokens = set(k_norm.split())
+                        # Database tokens: > 2 chars
+                        essential_k = {t for t in k_tokens if len(t) > 2}
+                        
+                        # V109 Bidirectional Overlap: Input is subset of DB (classic) OR DB is subset of Input (descriptive)
+                        is_match = False
+                        if essential_v and essential_k:
+                            if essential_v.issubset(k_tokens):
+                                is_match = True
+                            elif essential_k.issubset(v_tokens):
+                                # If DB term is a subset of input (e.g. DB "ELASTASE FECAL" subset of Input "ELASTASE PANCREATICA FECAL")
+                                is_match = True
+                        
+                        if is_match:
                             found_matches.extend(exam_map[key])
                     
                     if found_matches:
