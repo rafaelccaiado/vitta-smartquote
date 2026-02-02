@@ -264,7 +264,25 @@ export default function OCRProcessing({ imageFile, selectedUnit, onComplete, onB
                         </table>
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-3">
+                        {isEditing && (
+                            <button
+                                onClick={() => {
+                                    const newLine = {
+                                        original: 'Manual',
+                                        corrected: 'Novo Exame',
+                                        confidence: 1.0,
+                                        method: 'manual_injection'
+                                    };
+                                    const newLines = [...linesData, newLine];
+                                    setLinesData(newLines);
+                                    setExtractedText(newLines.map(l => l.corrected).join('\n'));
+                                }}
+                                className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center gap-1"
+                            >
+                                ➕ Adicionar Exame
+                            </button>
+                        )}
                         <button
                             onClick={() => setIsEditing(!isEditing)}
                             className="text-sm text-primary hover:text-blue-700 font-medium flex items-center gap-1"

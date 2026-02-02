@@ -90,6 +90,21 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
         setExams(exams.filter(exam => exam.id !== examId))
     }
 
+    const addManualExam = () => {
+        const newId = exams.length > 0 ? Math.max(...exams.map(e => e.id)) + 1 : 1;
+        const newExam = {
+            id: newId,
+            term: 'Manual',
+            status: 'not_found',
+            matches: [],
+            selectedMatch: null,
+            match_strategy: 'manual_injection',
+            normalized_term: ''
+        };
+        setExams([...exams, newExam]);
+        setSearchingId(newId);
+    }
+
     const handleContinue = async () => {
         // Filtra exames confirmados
         const validatedExams = exams
@@ -333,6 +348,10 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                                                 type="text"
                                                 placeholder="Digite o nome do exame..."
                                                 className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                                                onFocus={() => {
+                                                    setSearchingId(exam.id)
+                                                    setSearchResults([])
+                                                }}
                                                 onChange={(e) => handleManualSearch(e.target.value)}
                                             />
 
@@ -416,6 +435,14 @@ export default function ValidationModal({ ocrResult, selectedUnit, onComplete, o
                         </div>
                     ))
                 )}
+
+                {/* Botão Adicionar Manual - V113 */}
+                <button
+                    onClick={addManualExam}
+                    className="w-full py-3 border-2 border-dashed border-blue-300 rounded-lg text-blue-600 hover:bg-blue-50 font-bold flex items-center justify-center gap-2 transition-all mt-4 mb-2"
+                >
+                    ➕ Adicionar Exame Manualmente
+                </button>
             </div>
 
             {/* Footer Buttons */}
