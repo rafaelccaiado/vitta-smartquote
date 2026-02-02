@@ -66,6 +66,9 @@ class ValidationService:
             exam_map[name_key].append(exam)
         
         exam_keys = list(exam_map.keys()) # Para fuzzy search
+        print(f"📊 Catálogo Carregado: {len(all_exams)} itens, {len(exam_keys)} chaves únicas.")
+        if exam_keys:
+            print(f"🔬 Amostra de Chaves: {exam_keys[:10]}")
         
         # Atualizar FuzzyMatcher
         fuzzy_matcher.update_known_exams(exam_keys)
@@ -124,7 +127,11 @@ class ValidationService:
             "dosagens de imunoglobulinas iga": ["iga", "imunoglobulina a"],
             "igg": ["imunoglobulina g", "dosagem de igg"],
             "igm": ["imunoglobulina m", "dosagem de igm"],
-            "iga": ["imunoglobulina a", "dosagem de iga"]
+            "iga": ["imunoglobulina a", "dosagem de iga"],
+            "colesterol total": ["colesterol total e fracoes"],
+            "gama gt": ["gama glutamil transferase", "gama - gt", "ggt"],
+            "gama-gt": ["gama glutamil transferase", "gama gt", "ggt"],
+            "pcr": ["proteina c reativa", "pcr ultra sensivel"],
         }
         
         seen_terms = set()
@@ -166,6 +173,9 @@ class ValidationService:
             original_term = res_item["original"]
             resolved_term = res_item["resolved"]
             
+            # Diagnostic for expert
+            # print(f"🔍 Cruzando: '{original_term}' (AI: '{resolved_term}')")
+            
             item = {"term": original_term, "resolved_term": resolved_term, "status": "not_found", "matches": [], "original_term": original_term}
             
             # Normaliza o termo de busca (sem acentos, lower)
@@ -195,107 +205,84 @@ class ValidationService:
             
             seen_terms.add(term_norm)
             
+            # --- V100.0 MULTI-STAGE MATCHING PIPELINE ---
             found_matches = []
             strategy = "none"
-
-            # 2a. TUSS Lookup
-            tuss_name = tuss_service.search(original_term)
-            if not tuss_name:
-                tuss_name = tuss_service.search(resolved_term)
-                
-            if tuss_name:
-                tuss_key = ValidationService.normalize_text(tuss_name)
-                if tuss_key in exam_map:
-                    found_matches = exam_map[tuss_key]
-                    strategy = "tuss_exact"
-
-            # 2b. Busca Exata Direta (Com normalização de acentos)
-            if not found_matches and term_norm in exam_map:
-                found_matches = exam_map[term_norm]
-                strategy = "exact"
             
-            # 2b. Busca por Sinônimo
-            if not found_matches:
-                # V83 Improved Synonym Lookup: Check if term CONTAINS a synonym trigger
-                # Example: "TGO (AST)" -> norm is "tgo ast" -> should trigger "tgo" synonym
-                matched_synonym_key = None
-                if term_norm in SYNONYMS:
-                    matched_synonym_key = term_norm
-                else:
-                    # Look for the synonym key WITHIN the term (for abbreviations)
-                    # or the term WITHIN a synonym key
-                    for skey in SYNONYMS.keys():
-                        if len(skey) >= 3: # Only for meaningful abbreviations
-                            if skey == term_norm or (skey in term_norm and len(skey) <= 4) or (term_norm in skey and len(term_norm) <= 4):
-                                matched_synonym_key = skey
-                                break
-                
-                if matched_synonym_key:
-                    for syn in SYNONYMS[matched_synonym_key]:
-                        syn_key = ValidationService.normalize_text(syn)
-                        if syn_key in exam_map:
-                            found_matches = exam_map[syn_key]
-                            strategy = f"synonym ({matched_synonym_key})"
-                            break
-                
-                # Fuzzy no dicionário
-                if not found_matches:
-                    synonym_keys = list(SYNONYMS.keys())
-                    close_synonyms = get_close_matches(term_norm, synonym_keys, n=1, cutoff=0.85) # Strict override
-                    if close_synonyms:
-                        matched_key = close_synonyms[0]
-                        for syn in SYNONYMS[matched_key]:
-                            syn_key = ValidationService.normalize_text(syn)
-                            if syn_key in exam_map:
-                                found_matches = exam_map[syn_key]
-                                strategy = f"fuzzy_synonym ({matched_key})"
-                                break
+            # Sub-etapas de normalização
+            term_norm = ValidationService.normalize_text(resolved_term)
+            orig_norm = ValidationService.normalize_text(original_term)
+            
+            # Lista de variantes para tentar buscar
+            search_variants = [
+                {"text": term_norm, "tag": "resolved"},
+                {"text": orig_norm, "tag": "original"}
+            ]
+            
+            # Se forem muito diferentes, adiciona sinônimos de ambos
+            for var in list(search_variants):
+                if var["text"] in SYNONYMS:
+                    for syn in SYNONYMS[var["text"]]:
+                        search_variants.append({"text": ValidationService.normalize_text(syn), "tag": f"synonym_of_{var['tag']}"})
 
-            # 2c. Substring Search
-            if not found_matches and len(term_norm) > 3:
-                for key in exam_keys:
-                    # Verifica boundaries de palavra para evitar matches falsos (ex: "ferro" em "transferrina")
-                    if term_norm in key or key in term_norm:
-                        found_matches.extend(exam_map[key])
-                if found_matches: strategy = "substring"
-
-            # 2d. Smart Fuzzy Search
+            # STAGE 1: Exact Match on any variant
+            for var in search_variants:
+                if var["text"] in exam_map:
+                    found_matches = exam_map[var["text"]]
+                    strategy = f"exact_{var['tag']}"
+                    break
+            
+            # STAGE 2: TUSS Lookup
             if not found_matches:
-                # Regra de Segurança para Siglas Curtas (V44 Fix)
-                # Se for curto (<= 3 chars), exige score altíssimo (90)
-                min_score_threshold = 95 if len(term_norm) <= 3 else 65
-                
-                best_results = fuzzy_matcher.find_top_matches(term_norm, limit=5, min_score=min_score_threshold)
-                if best_results:
-                    for match in best_results:
-                        match_name = match["match"] # match_name is normalized key if update_known_exams received normalized keys 
-                        # update_known_exams received exam_keys which ARE normalized keys now.
-                        found_matches.extend(exam_map[match_name])
-                    strategy = "fuzzy_smart"
-                
-                if not found_matches and len(term_norm) > 3: # Only fallback for longer terms
-                    close_names = get_close_matches(term_norm, exam_keys, n=5, cutoff=0.6) 
-                    for name in close_names:
-                        found_matches.extend(exam_map[name])
-                    if found_matches: strategy = "fuzzy_fallback"
+                tuss_name = tuss_service.search(original_term) or tuss_service.search(resolved_term)
+                if tuss_name:
+                    tuss_key = ValidationService.normalize_text(tuss_name)
+                    if tuss_key in exam_map:
+                        found_matches = exam_map[tuss_key]
+                        strategy = "tuss_match"
 
-            # 2e. Simplify & Retry (V81)
+            # STAGE 3: Substring Search (More conservative)
             if not found_matches:
-                tokens = term_norm.split()
-                if len(tokens) > 1:
-                    last_token = tokens[-1]
-                    is_code_like = len(last_token) <= 4 or last_token.startswith("anti")
-                    if is_code_like:
-                        if last_token in exam_map:
-                            found_matches = exam_map[last_token]
-                            strategy = f"simplified_exact ({last_token})"
-                        elif last_token in SYNONYMS:
-                            for syn in SYNONYMS[last_token]:
-                                syn_key = ValidationService.normalize_text(syn)
-                                if syn_key in exam_map:
-                                    found_matches = exam_map[syn_key]
-                                    strategy = f"simplified_synonym ({last_token})"
-                                    break
+                for var in search_variants:
+                    v_text = var["text"]
+                    if len(v_text) < 4: continue
+                    for key in exam_keys:
+                        if v_text == key or (len(v_text) > 5 and (v_text in key or key in v_text)):
+                            found_matches.extend(exam_map[key])
+                    if found_matches:
+                        strategy = f"substring_{var['tag']}"
+                        break
+
+            # STAGE 4: Token Overlap Discovery (V100.0 Power Feature)
+            # Find exams that contain all essential tokens of the search term
+            if not found_matches:
+                for var in search_variants:
+                    v_tokens = set(var["text"].split())
+                    if not v_tokens: continue
+                    # Essential tokens: > 2 chars OR specific medical codes/letters
+                    essential_v = {t for t in v_tokens if len(t) > 2 or t in ["d", "k", "p", "ca", "fe", "zn", "c3", "c4"]}
+                    if not essential_v: continue
+                    
+                    for key in exam_keys:
+                        k_tokens = set(key.split())
+                        if essential_v.issubset(k_tokens):
+                            found_matches.extend(exam_map[key])
+                    
+                    if found_matches:
+                        strategy = f"token_overlap_{var['tag']}"
+                        break
+
+            # STAGE 5: Smart Fuzzy Search
+            if not found_matches:
+                for var in search_variants:
+                    v_text = var["text"]
+                    min_score_threshold = 95 if len(v_text) <= 3 else 75
+                    best_results = fuzzy_matcher.find_top_matches(v_text, limit=3, min_score=min_score_threshold)
+                    if best_results:
+                        for match in best_results:
+                            found_matches.extend(exam_map[match["match"]])
+                        strategy = f"fuzzy_{var['tag']}"
+                        break
 
 
             # 3. SEMANTIC AI MATCH (V67 - Smart Match) =====================

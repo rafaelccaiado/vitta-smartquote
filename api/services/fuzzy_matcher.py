@@ -20,8 +20,16 @@ class FuzzyMatcher:
     
     def _normalize(self, text: str) -> str:
         import unicodedata
-        text = unicodedata.normalize('NFKD', str(text)).encode('ASCII', 'ignore').decode('ASCII')
-        return text.lower().strip()
+        import re
+        if not text: return ""
+        # Remove acentos
+        nfkd_form = unicodedata.normalize('NFKD', str(text))
+        text = "".join([c for c in nfkd_form if not unicodedata.combining(c)]).lower()
+        # Remove pontuação e caracteres especiais, mantendo apenas letras, números e espaços
+        text = re.sub(r'[^a-z0-9\s]', ' ', text)
+        # Normaliza espaços extras
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
     
     def update_known_exams(self, exams: List[str]):
         self.known_exams = exams
