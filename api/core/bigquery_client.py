@@ -34,14 +34,14 @@ class BigQueryClient:
         payload = {
             "query": query,
             "useLegacySql": False,
-            "parameterMode": "NAMED",
             "queryParameters": parameters or []
         }
         
         try:
             resp = self.session.post(self.base_url, json=payload)
             if resp.status_code != 200:
-                self.auth_info = f"BQ_ERR_{resp.status_code}"
+                err_msg = resp.text[:50].replace('"', "'")
+                self.auth_info = f"BQ_ERR_{resp.status_code}: {err_msg}"
                 print(f"BQ Error {resp.status_code}: {resp.text}")
                 return []
                 

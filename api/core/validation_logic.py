@@ -68,7 +68,8 @@ class ValidationService:
         exam_map = {}
         # Dynamic versioning to help debug
         auth_status = getattr(bq_client, 'auth_info', 'INIT')
-        results["stats"]["backend_version"] = f"V103.0-MONOLITH (Catalog: {len(all_exams)}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V104.0-Expert (Catalog: {len(all_exams)}, Auth: {auth_status})"
+        results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
             # Normaliza chave do mapa (sem acentos)
