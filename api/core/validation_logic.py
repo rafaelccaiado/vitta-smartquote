@@ -48,16 +48,27 @@ class ValidationService:
                 "pending": 0,
                 "not_found": 0,
                 "total": 0,
-                "backend_version": "V70-Antihallucination"
+                "catalog_count": 0,
+                "bq_error": None,
+                "backend_version": "V101.0-RESOLUTE-ULTRA"
             }
         }
         
         # 1. Carregar catálogo completo (Cache Local) - O(1) Query
         print(f"Carregando catálogo para unidade: {unit}...")
-        all_exams = bq_client.get_all_exams(unit)
+        try:
+            all_exams = bq_client.get_all_exams(unit)
+            results["stats"]["catalog_count"] = len(all_exams)
+        except Exception as e:
+            print(f"❌ Critical BQ Error: {e}")
+            all_exams = []
+            results["stats"]["bq_error"] = str(e)
         
         # Mapa para busca exata rápida: "termo_normalizado" -> Objeto Exame
         exam_map = {}
+        # Dynamic versioning to help debug
+        results["stats"]["backend_version"] = f"V101.0-Expert (Catalog: {len(all_exams)})"
+        
         for exam in all_exams:
             # Normaliza chave do mapa (sem acentos)
             name_key = ValidationService.normalize_text(exam["search_name"])
