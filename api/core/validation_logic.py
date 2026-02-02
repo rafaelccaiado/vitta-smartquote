@@ -6,6 +6,7 @@ from services.pdca_service import pdca_service
 from services.resolute_orchestrator import resolute_orchestrator
 from services.fuzzy_matcher import fuzzy_matcher
 from services.learning_service import learning_service
+from services.semantic_service import semantic_service
 
 print("🛡️ Validation Logic: Module Loaded Successfully")
 
@@ -72,7 +73,7 @@ class ValidationService:
         total_rows = stats.get("total", 0)
         samples = stats.get("sample_units", "NONE")
         
-        results["stats"]["backend_version"] = f"V111.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V112.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:
@@ -420,11 +421,8 @@ class ValidationService:
                 candidate_indices.append(idx)
         
         if candidates:
-            # Import locally to avoid circular deps
             try:
-                from services.semantic_service import semantic_service
                 print(f"🧠 Semantic Service: Normalizando {len(candidates)} termos...")
-                
                 normalized_map = semantic_service.normalize_batch(candidates)
                 
                 for i, original_term in zip(candidate_indices, candidates):
@@ -466,11 +464,7 @@ class ValidationService:
                 print(f"❌ Erro Semantic Service: {e}")
         
         # Add Semantic Status to Stats
-        try:
-            from services.semantic_service import semantic_service
-            results["stats"]["semantic_active"] = semantic_service.model is not None
-        except:
-            results["stats"]["semantic_active"] = False
+        results["stats"]["semantic_active"] = semantic_service.model is not None
 
         return results
 
