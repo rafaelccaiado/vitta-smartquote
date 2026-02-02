@@ -31,8 +31,10 @@ async def qa_proof():
 # --- ROBUST ENDPOINTS (V93.0) ---
 
 @app.post("/api/validate-list")
+@app.post("/validate-list")
 async def validate_list(request: Request):
     """Valida uma lista de termos de exames (Phase 4/5)."""
+    print(f"📡 Request Path: {request.url.path}")
     try:
         from core.validation_logic import ValidationService
         from core.bigquery_client import bq_client
@@ -51,6 +53,7 @@ async def validate_list(request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/search-exams")
+@app.post("/search-exams")
 async def search_exams(request: Request):
     """Busca manual no BigQuery."""
     try:
@@ -69,6 +72,7 @@ async def search_exams(request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/learn-correction")
+@app.post("/learn-correction")
 async def learn_correction(request: Request):
     """Registra aprendizado do sistema (Learning System)."""
     try:
@@ -86,6 +90,7 @@ async def learn_correction(request: Request):
         return {"status": "error", "detail": str(e)}
 
 @app.get("/api/pdca/logs")
+@app.get("/pdca/logs")
 async def get_pdca_logs():
     """Retorna logs do sistema de aprendizado para o Admin Dashboard."""
     try:
@@ -96,6 +101,7 @@ async def get_pdca_logs():
         return []
 
 @app.post("/api/pdca/approve")
+@app.post("/pdca/approve")
 async def approve_pdca(request: Request):
     """Aprova um ajuste de PDCA."""
     try:
