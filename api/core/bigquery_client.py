@@ -82,6 +82,16 @@ class BigQueryClient:
         ]
         
         raw_results = self._run_query(query, params)
+
+        # Resilient Fallback: If 0 results, try WITHOUT group_name filter
+        if not raw_results:
+            print(f"⚠️ 0 results with group_name filter for '{unit}'. Retrying broad query...")
+            query_broad = f"""
+            SELECT item_id, item_name, group_name, price 
+            FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
+            WHERE LOWER(TRIM(price_table_name)) = LOWER(TRIM(@unit))
+            """
+            raw_results = self._run_query(query_broad, params)
         
         # Post-processing (Normalization compatible with old client)
         processed = []
