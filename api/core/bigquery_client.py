@@ -1,4 +1,4 @@
-﻿from google.auth.transport.requests import AuthorizedSession
+from google.auth.transport.requests import AuthorizedSession
 from typing import List, Dict, Any
 from core.auth_utils import get_gcp_credentials
 import logging

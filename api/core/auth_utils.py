@@ -1,4 +1,4 @@
-﻿import os
+import os
 import base64
 import json
 from google.oauth2 import service_account

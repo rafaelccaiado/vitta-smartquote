@@ -1,4 +1,4 @@
-﻿import google.generativeai as genai
+import google.generativeai as genai
 import json
 import os
 from typing import List, Dict, Optional

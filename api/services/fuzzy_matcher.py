@@ -1,4 +1,4 @@
-﻿from typing import List, Dict, Tuple, Optional, Any
+from typing import List, Dict, Tuple, Optional, Any
 from difflib import SequenceMatcher, get_close_matches
 
 class FuzzyMatcher:

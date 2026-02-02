@@ -1,4 +1,4 @@
-﻿from typing import Dict, Any, List, Tuple, Optional
+from typing import Dict, Any, List, Tuple, Optional
 import requests
 from google.auth.transport.requests import Request
 import io

@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import io
 from typing import Tuple, Optional, Any
 
