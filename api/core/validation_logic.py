@@ -72,7 +72,7 @@ class ValidationService:
         total_rows = stats.get("total", 0)
         samples = stats.get("sample_units", "NONE")
         
-        results["stats"]["backend_version"] = f"V105.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
+        results["stats"]["backend_version"] = f"V106.0-Expert (Rows:{total_rows}, Units:{samples}, Auth: {auth_status})"
         results["stats"]["unit_selected"] = unit
         
         for exam in all_exams:

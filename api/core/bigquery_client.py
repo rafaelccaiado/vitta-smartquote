@@ -31,17 +31,26 @@ class BigQueryClient:
         if not self.session:
             return []
             
+        # V106: Strictly sanitized payload to avoid BQ_ERR_400
         payload = {
             "query": query,
-            "useLegacySql": False,
-            "queryParameters": parameters or []
+            "useLegacySql": False
         }
+        
+        if parameters:
+            payload["queryParameters"] = parameters
+            payload["parameterMode"] = "NAMED"
         
         try:
             resp = self.session.post(self.base_url, json=payload)
             if resp.status_code != 200:
-                err_msg = resp.text[:50].replace('"', "'")
-                self.auth_info = f"BQ_ERR_{resp.status_code}: {err_msg}"
+                # Capture accurate error info for V106 probe
+                try:
+                    full_err = resp.json().get("error", {}).get("message", resp.text[:100])
+                except:
+                    full_err = resp.text[:100]
+                
+                self.auth_info = f"BQ_ERR_{resp.status_code}: {full_err[:80]}"
                 print(f"BQ Error {resp.status_code}: {resp.text}")
                 return []
                 
@@ -136,7 +145,7 @@ class BigQueryClient:
         res = self._run_query(query)
         total = res[0].get("total", 0) if res else 0
         
-        query_units = f"SELECT price_table_name, count(*) as c FROM `{self.project_id}.{self.dataset_id}.{self.table_id}` GROUP BY 1 LIMIT 5"
+        query_units = f"SELECT price_table_name, count(*) as c FROM `{self.project_id}.{self.dataset_id}.{self.table_id}` GROUP BY price_table_name LIMIT 5"
         units_res = self._run_query(query_units)
         units_str = "|".join([str(u.get("price_table_name")) for u in units_res])
         
